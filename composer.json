@@ -12,6 +12,11 @@
         "laravel/jetstream": "^4.2",
         "laravel/sanctum": "^3.3",
         "laravel/tinker": "^2.8",
+        "maatwebsite/excel": "^3.1",
+        "pusher/pusher-php-server": "^7.2",
+        "spatie/laravel-model-states": "^2.6",
+        "spatie/laravel-schemaless-attributes": "^2.4",
+        "spatie/laravel-webhook-server": "^3.8",
         "tightenco/ziggy": "^1.0"
     },
     "require-dev": {
@@ -27,7 +32,10 @@
         "psr-4": {
             "App\\": "app/",
             "Database\\Factories\\": "database/factories/",
-            "Database\\Seeders\\": "database/seeders/"
+            "Database\\Seeders\\": "database/seeders/",
+            "RLI\\Booking\\": "src/app/",
+            "RLI\\Booking\\Factories\\": "src/database/factories",
+            "RLI\\Booking\\Seeders\\": "src/database/seeders"
         }
     },
     "autoload-dev": {
