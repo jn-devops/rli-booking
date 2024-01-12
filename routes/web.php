@@ -32,4 +32,10 @@ Route::middleware([
     Route::get('/dashboard', function () {
         return Inertia::render('Dashboard');
     })->name('dashboard');
+
+    Route::resource('refs', \RLI\Booking\Http\Controllers\VoucherController::class)
+        ->only(['show'])->parameters(['refs' => 'voucher']);
+    Route::resource('orders', \RLI\Booking\Http\Controllers\OrderController::class)
+        ->only(['update', 'show']);
 });
+

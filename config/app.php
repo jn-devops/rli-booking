@@ -159,6 +159,7 @@ return [
         /*
          * Package Service Providers...
          */
+        RLI\Booking\Providers\BookingServiceProvider::class,
 
         /*
          * Application Service Providers...

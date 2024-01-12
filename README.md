@@ -70,6 +70,8 @@ Basically, it should
 - spatie/laravel-schemaless-attributes
 - pusher/pusher-php-server
 - bacon/bacon-qr-code (default with Laravel)
+- lorisleiva/laravel-actions
+- frittenkeez/laravel-vouchers
 ## Actions
 - SetOrderSeller
 - SetOrderProduct
@@ -87,6 +89,8 @@ Basically, it should
 - GenerateInvoice
 - GetOrderStatus
 - SendOrder
+- xxx
+- NewOrder
 ## Routes
 - GET /?sku=<SKU>&reference=<REFERENCE>&email=<EMAIL>
 - GET status/?reference=<REFERENCE>
