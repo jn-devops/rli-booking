@@ -3,9 +3,9 @@
 namespace RLI\Booking\Factories;
 
 
-use RLI\Booking\Models\{Order, Product, Property, Buyer, Seller, MonthsToPayDownPayment, PercentDownPayment};
+use RLI\Booking\Models\{Order, Product, Buyer};
 use Illuminate\Database\Eloquent\Factories\Factory;
-
+use App\Models\User;
 
 class OrderFactory extends Factory
 {
@@ -13,14 +13,15 @@ class OrderFactory extends Factory
 
     public function definition(): array
     {
+        $product = Product::factory()->create();
         return [
             'reference' => $this->faker->uuid(),
-            'product_id' => Product::factory()->create(),
-            'property_id' => Property::factory()->create(),
+            'sku' => $product->sku,
+            'property_code' => $this->faker->word(),
             'buyer_id' => Buyer::factory()->create(),
-            'seller_id' => Seller::factory()->create(),
-            'months_to_pay_down_payment_id' => MonthsToPayDownPayment::factory()->create(),
-            'percent_down_payment_id' => PercentDownPayment::factory()->create(),
+            'user_id' => User::factory()->create(),
+            'dp_percent' => $this->faker->numberBetween(0,20),
+            'dp_months' => $this->faker->numberBetween(0,24),
         ];
     }
 }

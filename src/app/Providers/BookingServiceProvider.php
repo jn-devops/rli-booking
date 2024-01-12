@@ -2,6 +2,7 @@
 
 namespace RLI\Booking\Providers;
 
+use Lorisleiva\Actions\Facades\Actions;
 use Illuminate\Support\ServiceProvider;
 
 class BookingServiceProvider extends ServiceProvider
@@ -11,7 +12,7 @@ class BookingServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        Actions::registerRoutes('src/app/Actions');
     }
 
     /**

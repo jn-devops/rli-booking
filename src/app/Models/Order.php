@@ -6,16 +6,20 @@ use RLI\Booking\Traits\HasPackageFactory as HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Model;
 use RLI\Booking\Traits\HasMeta;
+use App\Models\User;
 
 /**
  * Class Order
  *
+ * @property string    $reference
+ * @property string    $sku
+ * @property string    $property_code
+ * @property int       $dp_percent
+ * @property int       $dp_months
  * @property BelongsTo $product
- * @property BelongsTo $property
  * @property BelongsTo $buyer
  * @property BelongsTo $seller
- * @property BelongsTo $months_to_pay_down_payment
- * @property BelongsTo $percent_down_payment
+ *
  *
  * @method   int    getKey()
  */
@@ -24,14 +28,11 @@ class Order extends Model
     use HasFactory;
     use HasMeta;
 
+    protected $fillable = ['reference', 'sku', 'property_code', 'dp_percent', 'dp_months'];
+
     public function product(): BelongsTo
     {
-        return $this->belongsTo(Product::class);
-    }
-
-    public function property(): BelongsTo
-    {
-        return $this->belongsTo(Property::class);
+        return $this->belongsTo(Product::class, 'sku', 'sku');
     }
 
     public function buyer(): BelongsTo
@@ -41,16 +42,6 @@ class Order extends Model
 
     public function seller(): BelongsTo
     {
-        return $this->belongsTo(Seller::class);
-    }
-
-    public function months_to_pay_down_payment(): BelongsTo
-    {
-        return $this->belongsTo(MonthsToPayDownPayment::class);
-    }
-
-    public function percent_down_payment(): BelongsTo
-    {
-        return $this->belongsTo(PercentDownPayment::class);
+        return $this->belongsTo(User::class, 'user_id');
     }
 }

@@ -14,12 +14,12 @@ return new class extends Migration
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
             $table->uuid('reference')->unique();
-            $table->foreignId('product_id')->constrained()->cascadeOnDelete();
-            $table->foreignId('property_id')->constrained()->cascadeOnDelete();
-            $table->foreignId('buyer_id')->constrained()->cascadeOnDelete();
-            $table->foreignId('seller_id')->constrained()->cascadeOnDelete();
-            $table->foreignId('months_to_pay_down_payment_id')->constrained()->cascadeOnDelete();
-            $table->foreignId('percent_down_payment_id')->constrained()->cascadeOnDelete();
+            $table->string('sku')->nullable();
+            $table->string('property_code')->nullable();
+            $table->integer('dp_percent')->nullable();
+            $table->integer('dp_months')->nullable();
+            $table->foreignId('user_id')->nullable()->constrained()->cascadeOnDelete();
+            $table->foreignId('buyer_id')->nullable()->constrained()->cascadeOnDelete();
             $table->timestamps();
         });
     }

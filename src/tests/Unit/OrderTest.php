@@ -1,7 +1,8 @@
 <?php
 
-use RLI\Booking\Models\{Order, Product, Property, Buyer, Seller, MonthsToPayDownPayment, PercentDownPayment};
+use RLI\Booking\Models\{Order, Product, Buyer, Seller};
 use Illuminate\Foundation\Testing\{RefreshDatabase, WithFaker};
+use App\Models\User;
 
 uses(RefreshDatabase::class, WithFaker::class);
 
@@ -12,10 +13,38 @@ beforeEach(function() {
 test('order has schema attributes', function () {
     $order = Order::factory()->create();
     expect($order->reference)->toBeUuid();
+    expect($order->property_code)->toBeString();
     expect($order->product)->toBeInstanceOf(Product::class);
-    expect($order->property)->toBeInstanceOf(Property::class);
+    expect($order->sku)->toBe($order->product->sku);
     expect($order->buyer)->toBeInstanceOf(Buyer::class);
-    expect($order->seller)->toBeInstanceOf(Seller::class);
-    expect($order->months_to_pay_down_payment)->toBeInstanceOf(MonthsToPayDownPayment::class);
-    expect($order->percent_down_payment)->toBeInstanceOf(PercentDownPayment::class);
+    expect($order->seller)->toBeInstanceOf(User::class);
+    expect($order->dp_percent)->toBeInt();
+    expect($order->dp_months)->toBeInt();
 });
+
+test('order can associate product', function (Order $order, Product $product) {
+    $sku = $product->sku;
+    $reference = $order->reference;
+    $order->product()->associate($product);
+    $order->save();
+    $ord = Order::where('reference', $reference)->first();
+    expect($ord->id)->toBe($order->id);
+    $prod = Product::where('sku', $sku)->first();
+    expect($ord->product->id)->toBe($prod->id);
+})->with([
+    [ fn() => Order::factory()->create(), fn() => Product::factory()->create() ]
+]);
+
+test('order can associate user as seller', function (Order $order, User $seller) {
+    $email = $seller->email;
+    $reference = $order->reference;
+    $order->seller()->associate($seller);
+    $order->save();
+    $ord = Order::where('reference', $reference)->first();
+    expect($ord->id)->toBe($order->id);
+    $user = User::where('email', $email)->first();
+    expect($ord->seller->id)->toBe($user->id);
+})->with([
+    [ fn() => Order::factory()->create(), fn() => User::factory()->create() ]
+]);
+
