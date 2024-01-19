@@ -16,12 +16,12 @@ return new class extends Migration
             $table->string('name');
             $table->string('address');
             $table->string('birthdate');
-            $table->string('mobile');
+            $table->string('mobile')->nullable();
             $table->string('id_type');
             $table->string('id_number');
-            $table->string('id_image_url');
-            $table->string('selfie_image_url');
-            $table->string('id_mark_url');
+            $table->string('id_image_url')->nullable();
+            $table->string('selfie_image_url')->nullable();
+            $table->string('id_mark_url')->nullable();
             $table->timestamps();
         });
     }

@@ -7,13 +7,10 @@ import InputLabel from '@/Components/InputLabel.vue';
 import TextInput from '@/Components/TextInput.vue';
 import { useForm, usePage } from '@inertiajs/vue3';
 
-const props = defineProps({
-    sku: String
-});
-
 const form = useForm({
     email: usePage().props.auth.user.email,
     sku: null,
+    callback_url: 'https://eomuckur5juqabu.m.pipedream.net',
     discount: '0'
 });
 
@@ -35,6 +32,7 @@ const generateVoucher = () => {
             A control number for this sales transaction.
         </template>
 
+
         <template #form>
             <!-- Product SKU -->
             <div class="col-span-6 sm:col-span-4">
@@ -44,9 +42,26 @@ const generateVoucher = () => {
                     v-model="form.sku"
                     type="text"
                     class="mt-1 block w-full"
+                    placeholder="e.g., ABC-123, DEF-456"
+                    required
+                    autofocus
                 />
 
                 <InputError :message="form.errors.sku" class="mt-2" />
+            </div>
+
+            <!-- Callback URL -->
+            <div class="col-span-6 sm:col-span-4">
+                <InputLabel for="callback_url" value="Callback URL" />
+                <TextInput
+                    id="sku"
+                    v-model="form.callback_url"
+                    type="text"
+                    class="mt-1 block w-full"
+                    required
+                />
+
+                <InputError :message="form.errors.callback_url" class="mt-2" />
             </div>
 
             <!-- Percent Discount -->

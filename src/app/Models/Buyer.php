@@ -9,6 +9,7 @@ use RLI\Booking\Traits\HasMeta;
 /**
  * Class Buyer
  *
+ * @property int    $id
  * @property string $name
  * @property string $address
  * @property string $birthdate

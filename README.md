@@ -72,6 +72,8 @@ Basically, it should
 - bacon/bacon-qr-code (default with Laravel)
 - lorisleiva/laravel-actions
 - frittenkeez/laravel-vouchers
+- laravel-notification-channels/webhook
+- beyondcode/expose
 ## Actions
 - SetOrderSeller
 - SetOrderProduct

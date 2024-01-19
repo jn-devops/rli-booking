@@ -33,9 +33,12 @@ Route::middleware([
         return Inertia::render('Dashboard');
     })->name('dashboard');
 
-    Route::resource('refs', \RLI\Booking\Http\Controllers\VoucherController::class)
-        ->only(['show'])->parameters(['refs' => 'voucher']);
-    Route::resource('orders', \RLI\Booking\Http\Controllers\OrderController::class)
-        ->only(['update', 'show']);
+    Route::post('generate-voucher', \RLI\Booking\Actions\GenerateVoucherAction::class)->name('generate-voucher');
+    Route::get('edit-order/{voucher}/{order}', [\RLI\Booking\Http\Controllers\OrderController::class, 'edit'])->name('edit-order');
+    Route::post('update-order/{voucher}', \RLI\Booking\Actions\UpdateOrderAction::class)->name('update-order');
+//    Route::resource('references', \RLI\Booking\Http\Controllers\VoucherController::class)
+//        ->only(['show'])->parameters(['references' => 'voucher']);
+    Route::get('references/{voucher}', [\RLI\Booking\Http\Controllers\VoucherController::class, 'show'])->name('references.show');
 });
 
+Route::post('create-buyer', \RLI\Booking\Actions\CreateBuyerAction::class)->name('create-buyer');
