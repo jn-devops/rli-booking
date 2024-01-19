@@ -1,0 +1,54 @@
+<script setup>
+
+import AuthenticationCardLogo from '@/Components/AuthenticationCardLogo.vue';
+import AuthenticationCard from '@/Components/AuthenticationCard.vue';
+import { Head, Link, useForm } from '@inertiajs/vue3';
+import { router } from "@inertiajs/vue3";
+
+const props = defineProps({
+    voucherCode: String,
+    product: Object,
+    qrCode: String,
+    seller: Object,
+    buyer: Object,
+    url: String,
+});
+
+Echo.channel(`voucher.${props.voucherCode}`)
+    .listen('.buyer.created', (e) => {
+        router.reload();
+        console.log(e);
+    })
+</script>
+
+<template>
+    <Head title="RLI Booking" />
+
+    <AuthenticationCard>
+        <template #logo>
+            <AuthenticationCardLogo />
+        </template>
+        <template v-if="buyer">
+            <div>Buyer:</div>
+            <div>{{ buyer.name }}</div>
+            <div>{{ buyer.address }}</div>
+            <div>{{ buyer.birthdate }}</div>
+            <div>{{ buyer.id_type }}</div>
+            <div>{{ buyer.id_number }}</div>
+            <div>Seller:</div>
+            <div>{{ seller.name }}</div>
+            <div>{{ seller.email }}</div>
+            <div>Product:</div>
+            <div>{{ product.name }}</div>
+            <div>{{ product.sku }}</div>
+            <div>{{ product.processing_fee }}</div>
+        </template>
+        <template v-else>
+            Take note of the reservation code:
+            <div class="font-extrabold text-blue-500">{{ props.voucherCode }}</div>
+            Scan the QR code below to authenticate (eKYC)
+            <div class="mt-4 p-2 inline-block bg-white center" v-html="qrCode" />
+            <div><button class="bg-gray-500 text-white"><a :href="url">Or click this ugly button to authenticate (eKYC)</a></button></div>
+        </template>
+    </AuthenticationCard>
+</template>

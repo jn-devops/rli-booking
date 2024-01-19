@@ -7,25 +7,20 @@ import { Head, Link, useForm } from '@inertiajs/vue3';
 import InputError from '@/Components/InputError.vue';
 import InputLabel from '@/Components/InputLabel.vue';
 import TextInput from '@/Components/TextInput.vue';
-import Checkbox from '@/Components/Checkbox.vue';
 
 const props = defineProps({
-    order: Object,
-    voucher: Object,
-    voucherCode: String
+    voucherCode: String,
+    order: Object
 });
 
 const form = useForm({
-    voucherCode: props.voucher.code,
-    sku: props.order.sku,
     property_code: null,
-    sellerEmail:  props.order.seller.email,
     dp_percent: '10',
     dp_months: '24',
 });
 
 const submit = () => {
-    form.put(route('orders.update', { order: props.order.id }), {
+    form.post(route('update-order', { voucher: props.voucherCode }), {
         onFinish: () => form.reset('property_code'),
     });
 };
@@ -47,7 +42,7 @@ const submit = () => {
 
             <!-- References -->
             <div class="col-span-6">
-                <InputLabel :value="props.voucher.code" class="text-blue-500 dark:text-blue-200 font-extrabold"/>
+                <InputLabel :value="props.voucherCode" class="text-blue-500 dark:text-blue-200 font-extrabold"/>
                 <div class="flex items-center">
                     <div class="ms-4 leading-tight">
                         <div class="text-gray-700 dark:text-gray-300 text-sm">
@@ -66,6 +61,7 @@ const submit = () => {
                     type="text"
                     class="mt-1 block w-full"
                     required
+                    placeholder="e.g., PC-001, PC-002, PC-003, PC-004, PC-005"
                     autofocus
                 />
                 <div class="text-xs text-gray-600 dark:text-gray-400">{{ props.order.product.name }} ({{ props.order.product.sku }})}</div>
@@ -83,6 +79,7 @@ const submit = () => {
                     max="12"
                     class="mt-1 block w-full"
                     required
+                    placeholder="e.g., 0-20"
                 />
                 <div class="text-xs text-gray-600 dark:text-gray-400">% of total contract price</div>
                 <InputError class="mt-2" :message="form.errors.dp_percent" />
@@ -99,6 +96,7 @@ const submit = () => {
                     max="24"
                     class="mt-1 block w-full"
                     required
+                    placeholder="e.g., 0-24"
                 />
                 <div class="text-xs text-gray-600 dark:text-gray-400">to pay downpayment</div>
                 <InputError class="mt-2" :message="form.errors.dp_months" />

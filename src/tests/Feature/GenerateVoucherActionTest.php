@@ -14,9 +14,12 @@ beforeEach(function() {
 test('new order action', function () {
     $product = Product::factory()->create();
     $seller = User::factory()->create();
+    $url = str_replace('http:', 'https:', $this->faker->url());
+
     $order = GenerateVoucherAction::run([
         'email' => $seller->email,
-        'sku' => $product->sku
+        'sku' => $product->sku,
+        'callback_url' => $url,
     ]);
     expect($order)->toBeInstanceOf(Order::class);
     expect($order->reference)->toBeUuid();

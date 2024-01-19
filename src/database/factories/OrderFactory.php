@@ -22,6 +22,7 @@ class OrderFactory extends Factory
             'user_id' => User::factory()->create(),
             'dp_percent' => $this->faker->numberBetween(0,20),
             'dp_months' => $this->faker->numberBetween(0,24),
+            'callback_url' => $this->faker->url(),
         ];
     }
 }

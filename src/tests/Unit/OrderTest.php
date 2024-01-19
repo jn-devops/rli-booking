@@ -1,6 +1,6 @@
 <?php
 
-use RLI\Booking\Models\{Order, Product, Buyer, Seller};
+use RLI\Booking\Models\{Order, Product, Buyer};
 use Illuminate\Foundation\Testing\{RefreshDatabase, WithFaker};
 use App\Models\User;
 
@@ -20,6 +20,7 @@ test('order has schema attributes', function () {
     expect($order->seller)->toBeInstanceOf(User::class);
     expect($order->dp_percent)->toBeInt();
     expect($order->dp_months)->toBeInt();
+    expect($order->callback_url)->toBeUrl();
 });
 
 test('order can associate product', function (Order $order, Product $product) {
@@ -46,5 +47,18 @@ test('order can associate user as seller', function (Order $order, User $seller)
     expect($ord->seller->id)->toBe($user->id);
 })->with([
     [ fn() => Order::factory()->create(), fn() => User::factory()->create() ]
+]);
+
+test('order can associate buyer', function (Order $order, Buyer $buyer) {
+    $id = $buyer->id;
+    $reference = $order->reference;
+    $order->buyer()->associate($buyer);
+    $order->save();
+    $ord = Order::where('reference', $reference)->first();
+    expect($ord->id)->toBe($order->id);
+    $buyer = Buyer::find($id);
+    expect($ord->buyer->id)->toBe($buyer->id);
+})->with([
+    [ fn() => Order::factory()->create(), fn() => Buyer::factory()->create() ]
 ]);
 

@@ -14,6 +14,7 @@ test('product has schema and schemaless attributes', function () {
     expect($product->sku)->toBeString();
     expect($product->name)->toBeString();
     expect($product->description)->toBeEmpty();
+    expect($product->processing_fee)->toBeInt();
     $product->description = $description = $this->faker->name();
     $product->save();
     $prod = app(Product::class)->first();
