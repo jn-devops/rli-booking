@@ -6,11 +6,11 @@ use Illuminate\Support\Facades\Validator;
 use Lorisleiva\Actions\Concerns\AsAction;
 use RLI\Booking\Models\{Buyer, Voucher};
 use Lorisleiva\Actions\ActionRequest;
-use RLI\Booking\Events\BuyerCreated;
+use RLI\Booking\Events\BuyerConfirmed;
 use Illuminate\Support\Arr;
 use App\Models\User;
 
-class CreateBuyerAction
+class ConfirmBuyerAction
 {
     use AsAction;
 
@@ -37,7 +37,7 @@ class CreateBuyerAction
         $order->save();
         $voucher->save();
 
-        BuyerCreated::dispatch($voucher);
+        BuyerConfirmed::dispatch($voucher);
 
         return $voucher;
     }

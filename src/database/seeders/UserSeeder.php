@@ -16,5 +16,11 @@ class UserSeeder extends Seeder
             'password' => '#Password1',
             'password_confirmation' => '#Password1',
         ]);
+        app(CreateNewUser::class)->create([
+            'name' => 'In-house Sales',
+            'email' => config('booking.defaults.seller.email'),
+            'password' => '#Password1',
+            'password_confirmation' => '#Password1',
+        ]);
     }
 }

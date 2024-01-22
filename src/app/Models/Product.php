@@ -9,6 +9,7 @@ use RLI\Booking\Traits\HasMeta;
 /**
  * Class Product
  *
+ * @property int    $id
  * @property string $sku
  * @property string $name
  * @property int    $processing_fee

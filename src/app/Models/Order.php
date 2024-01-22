@@ -13,16 +13,14 @@ use App\Models\User;
  * Class Order
  *
  * @property integer   $id
- * @property string    $reference
  * @property string    $sku
  * @property string    $property_code
  * @property int       $dp_percent
  * @property int       $dp_months
- * @property string    $callback_url
  * @property BelongsTo $product
  * @property BelongsTo $buyer
  * @property BelongsTo $seller
- *
+ * @property string    $transaction_id
  *
  * @method   int    getKey()
  */
@@ -32,7 +30,7 @@ class Order extends Model
     use Notifiable;
     use HasMeta;
 
-    protected $fillable = ['reference', 'sku', 'property_code', 'dp_percent', 'dp_months', 'callback_url'];
+    protected $fillable = ['property_code', 'dp_percent', 'dp_months', 'transaction_id'];
 
     public function product(): BelongsTo
     {

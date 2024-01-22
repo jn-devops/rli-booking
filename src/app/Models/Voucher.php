@@ -2,6 +2,7 @@
 
 namespace RLI\Booking\Models;
 
+use FrittenKeeZ\Vouchers\Models\Voucher as BaseVoucher;
 /**
  * Class Voucher
  *
@@ -11,6 +12,17 @@ namespace RLI\Booking\Models;
  */
 class Voucher extends \FrittenKeeZ\Vouchers\Models\Voucher
 {
+    static public function from(BaseVoucher $voucher): self
+    {
+        $model = new self;
+        $model->setRawAttributes($voucher->getAttributes(), true);
+        $model->exists = true;
+        $model->setConnection($voucher->getConnectionName());
+        $model->fireModelEvent('retrieved', false);
+
+        return $model;
+    }
+
     /**
      * Retrieve the model for a bound value.
      *

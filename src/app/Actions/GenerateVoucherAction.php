@@ -2,11 +2,11 @@
 
 namespace RLI\Booking\Actions;
 
-use Illuminate\Support\{Arr, Facades\Validator, Str};
+use Illuminate\Database\Eloquent\ModelNotFoundException;
+use RLI\Booking\Models\{Order, Product, Voucher};
+use Illuminate\Support\{Arr, Facades\Validator};
 use FrittenKeeZ\Vouchers\Facades\Vouchers;
 use Lorisleiva\Actions\Concerns\AsAction;
-use FrittenKeeZ\Vouchers\Models\Voucher;
-use RLI\Booking\Models\{Order, Product};
 use Lorisleiva\Actions\ActionRequest;
 use App\Models\User;
 
@@ -19,43 +19,37 @@ class GenerateVoucherAction
 
     /**
      * @param array $validated
-     * @return Order
+     * @return Voucher
      */
-    protected function createOrder(array $validated): Order
+    protected function createVoucherOrder(array $validated): Voucher
     {
-        $seller = User::where('email', Arr::get($validated,'email'))->first();
-        $product = Product::where('sku', Arr::get($validated,'sku'))->first();
-        $order = new Order;
-        $order->reference = Str::uuid()->toString();
-        $order->seller()->associate($seller);
-        $order->product()->associate($product);
-        $order->callback_url = Arr::get($validated, 'callback_url');
-        $order->save();
+        $order = $this->createOrder($validated);
 
-        return $order;
+        return $this->generateVoucher($order);
     }
 
     /**
      * @param array $attributes
-     * @return Order
+     * @return Voucher
      */
-    public function handle(array $attributes): Order
+    public function handle(array $attributes): Voucher
     {
         $validated = Validator::validate($attributes, $this->rules());
 
-        return $this->createOrder($validated);
+        return $this->createVoucherOrder($validated);
     }
 
     /**
+     * TODO: replace callback_url to transaction_id
      * @return array[]
      */
     public function rules(): array
     {
         return [
-            'email' => ['required', 'email', 'exists:users'],
+            'discount' => ['nullable', 'integer', 'min:0', 'max:100'],
+            'email' => ['nullable', 'email', 'exists:users'],
             'sku' => ['required', 'exists:products'],
-            'callback_url' => ['required', 'url:https'],
-            'discount' => ['integer', 'min:0', 'max:100'],
+            'transaction_id' => ['nullable', 'string', 'min:2'],
         ];
     }
 
@@ -65,8 +59,8 @@ class GenerateVoucherAction
      */
     public function asController(ActionRequest $request): \Illuminate\Http\RedirectResponse
     {
-        $order = $this->createOrder($request->validated());
-        $voucher = $this->generateVoucher($order);
+        $voucher = $this->handle($request->validated());
+        $order = $voucher->getOrder();
 
         return redirect()->route('edit-order', [
             'voucher' => $voucher->code,
@@ -84,11 +78,33 @@ class GenerateVoucherAction
             'author' => 'RLI'
         ];
 
-         return Vouchers::withPrefix(self::VOUCHER_PREFIX)
+         $voucher = Vouchers::withPrefix(self::VOUCHER_PREFIX)
              ->withMask(self::VOUCHER_MASK)
              ->withOwner($order->seller)
              ->withEntities($order)
              ->withMetadata($metadata)
              ->create();
+
+         return Voucher::from($voucher);
+    }
+
+    protected function createOrder(array $validated): Order
+    {
+        try {
+            $seller = User::where('email', Arr::pull($validated,'email'))->firstOrFail();
+        }
+        catch (ModelNotFoundException $e) {
+            $default_seller_email = config('booking.defaults.seller.email');
+            $seller = User::where('email', $default_seller_email)->first();
+        }
+        $product = Product::where('sku', Arr::pull($validated,'sku'))->first();
+        $transaction_id = Arr::pull($validated, 'transaction_id');
+
+        return tap(new Order, function ($order) use ($seller, $product, $transaction_id) {
+            $order->seller()->associate($seller);
+            $order->product()->associate($product);
+            $order->transaction_id = $transaction_id;
+            $order->save();
+        });
     }
 }
