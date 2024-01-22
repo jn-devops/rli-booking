@@ -10,7 +10,7 @@ use RLI\Booking\Models\{Buyer, Voucher};
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Broadcasting\Channel;
 
-class BuyerConfirmed implements ShouldBroadcast
+class BuyerProcessed implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
@@ -37,7 +37,7 @@ class BuyerConfirmed implements ShouldBroadcast
 
     public function broadcastAs(): string
     {
-        return 'buyer.confirmed';
+        return 'buyer.processed';
     }
 
     public function broadcastWith(): array

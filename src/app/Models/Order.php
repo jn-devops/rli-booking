@@ -49,6 +49,6 @@ class Order extends Model
 
     public function routeNotificationForWebhook(): string
     {
-        return 'https://eomuckur5juqabu.m.pipedream.net';
+        return config('booking.defaults.order.webhook');
     }
 }

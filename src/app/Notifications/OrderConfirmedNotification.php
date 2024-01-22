@@ -7,7 +7,7 @@ use NotificationChannels\Webhook\WebhookMessage;
 use Illuminate\Notifications\Notification;
 use Illuminate\Bus\Queueable;
 
-class OrderCreatedNotification extends Notification
+class OrderConfirmedNotification extends Notification
 {
     use Queueable;
 
@@ -26,7 +26,6 @@ class OrderCreatedNotification extends Notification
      */
     public function via(object $notifiable): array
     {
-//        return [];
         return [ WebhookChannel::class ];
     }
 

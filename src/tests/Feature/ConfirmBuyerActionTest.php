@@ -1,11 +1,11 @@
 <?php
 
 use Illuminate\Foundation\Testing\{RefreshDatabase, WithFaker};
-use RLI\Booking\Actions\ConfirmBuyerAction;
+use RLI\Booking\Actions\ProcessBuyerAction;
 use FrittenKeeZ\Vouchers\Facades\Vouchers;
 use RLI\Booking\Models\{Order, Voucher};
 use Illuminate\Support\Facades\Event;
-use RLI\Booking\Events\BuyerConfirmed;
+use RLI\Booking\Events\BuyerProcessed;
 use RLI\Booking\Models\{Buyer};
 use Carbon\CarbonInterval;
 use App\Models\User;
@@ -13,7 +13,7 @@ use App\Models\User;
 uses(RefreshDatabase::class, WithFaker::class);
 
 beforeEach(function() {
-    Event::fake(BuyerConfirmed::class);
+    Event::fake(BuyerProcessed::class);
     $this->faker = $this->makeFaker('en_PH');
 });
 
@@ -55,7 +55,7 @@ test('create buyer action', function () {
 
     $array = json_decode($json, true);
     expect($order->buyer)->toBeEmpty();
-    expect($voucher = ConfirmBuyerAction::run($array))->toBeInstanceOf(Voucher::class);
+    expect($voucher = ProcessBuyerAction::run($array))->toBeInstanceOf(Voucher::class);
     $order->refresh();
     expect($voucher->getOrder())->toBeInstanceOf(Order::class);
     expect($voucher->getOrder()->id)->toBe($order->id);

@@ -15,7 +15,7 @@ const props = defineProps({
 });
 
 Echo.channel(`voucher.${props.voucherCode}`)
-    .listen('.buyer.confirmed', (e) => {
+    .listen('.buyer.processed', (e) => {
         router.reload();
         console.log(e);
     })

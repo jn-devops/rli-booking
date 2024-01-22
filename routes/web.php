@@ -38,5 +38,5 @@ Route::middleware([
 Route::post('update-order/{voucher}', \RLI\Booking\Actions\UpdateOrderAction::class)->name('update-order');
 Route::get('references/{voucher}', [\RLI\Booking\Http\Controllers\VoucherController::class, 'show'])->name('references.show');
 Route::get('edit-order/{voucher}/{order}', [\RLI\Booking\Http\Controllers\OrderController::class, 'edit'])->name('edit-order');
-Route::post('confirm-buyer', \RLI\Booking\Actions\ConfirmBuyerAction::class)->name('confirm-buyer');
 Route::get('auto-reserve/{sku}/{transaction_id}', \RLI\Booking\Actions\AutoReserveAction::class)->name('auto-reserve');
+Route::post('process-buyer', \RLI\Booking\Actions\ProcessBuyerAction::class)->name('process-buyer');

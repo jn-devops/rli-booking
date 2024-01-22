@@ -12,6 +12,7 @@ class BookingServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->mergeConfigFrom(base_path('src/config.php'), 'booking');
+        $this->app->register(EventServiceProvider::class);
     }
 
     /**
