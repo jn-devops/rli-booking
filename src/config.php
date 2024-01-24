@@ -9,4 +9,7 @@ return [
             'webhook' => env('BOOKING_DEFAULT_ORDER_WEBHOOK')
         ],
     ],
+    'webhook' => [
+        'client_secret' => env('WEBHOOK_CLIENT_SECRET')
+    ],
 ];
