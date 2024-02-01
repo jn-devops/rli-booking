@@ -1,7 +1,8 @@
 <?php
 
+use RLI\Booking\Classes\State\{Abandoned, CreatedPendingUpdate, UpdatedPendingConfirmation, ConfirmedPendingInvoice, InvoicedPendingPayment, PaidPendingFulfillment, Fulfilled};
 use Illuminate\Foundation\Testing\{RefreshDatabase, WithFaker};
-use RLI\Booking\Models\{Order, Product, Buyer};
+use RLI\Booking\Models\{Buyer, Order, Product};
 use Illuminate\Database\QueryException;
 use App\Models\User;
 
@@ -96,5 +97,36 @@ test('order can associate buyer', function (Order $order, Buyer $buyer) {
     expect($ord->buyer->id)->toBe($buyer->id);
 })->with([
     [ fn() => Order::factory()->create(), fn() => Buyer::factory()->create() ]
+]);
+
+test('order has default CreatedPendingUpdate state', function (Order $order) {
+    expect($order->state)->toBeInstanceOf(CreatedPendingUpdate::class);
+})->with([
+    [ fn() => Order::factory()->create() ]
+]);
+
+test('order has state transitions', function (Order $order) {
+    $order->state->transitionTo(UpdatedPendingConfirmation::class);
+    expect($order->state)->toBeInstanceOf(UpdatedPendingConfirmation::class);
+    $order->state->transitionTo(ConfirmedPendingInvoice::class);
+    expect($order->state)->toBeInstanceOf(ConfirmedPendingInvoice::class);
+    $order->state->transitionTo(InvoicedPendingPayment::class);
+    expect($order->state)->toBeInstanceOf(InvoicedPendingPayment::class);
+    $order->state->transitionTo(PaidPendingFulfillment::class);
+    expect($order->state)->toBeInstanceOf(PaidPendingFulfillment::class);
+    $order->state->transitionTo(Fulfilled::class);
+    expect($order->state)->toBeInstanceOf(Fulfilled::class);
+})->with([
+    [ fn() => Order::factory()->create() ]
+]);
+
+test('order can be abandoned', function (Order $order) {
+    $order->state->transitionTo(UpdatedPendingConfirmation::class);
+    $order->state->transitionTo(ConfirmedPendingInvoice::class);
+    $order->state->transitionTo(InvoicedPendingPayment::class);
+    $order->state->transitionTo(Abandoned::class);
+    expect($order->state)->toBeInstanceOf(Abandoned::class);
+})->with([
+    [ fn() => Order::factory()->create() ]
 ]);
 

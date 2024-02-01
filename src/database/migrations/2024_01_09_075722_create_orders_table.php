@@ -20,6 +20,7 @@ return new class extends Migration
             $table->integer('dp_months')->nullable();
             $table->foreignId('buyer_id')->nullable()->constrained()->cascadeOnDelete();
             $table->uuid('transaction_id')->nullable();
+            $table->string('state')->nullable();
             $table->timestamps();
         });
     }
