@@ -12,9 +12,6 @@ class OrderConfirmedNotification extends Notification
 {
     use Queueable;
 
-    const CUSTOM_HEADER = 'X-Krayin-Bagisto-Signature';
-    const ENTITY_TYPE = 'checkout.property.kyc.authenticate.after';
-
     protected Voucher $voucher;
 
     public function __construct(Voucher $voucher)
@@ -34,19 +31,15 @@ class OrderConfirmedNotification extends Notification
 
     public function toWebhook($notifiable): WebhookMessage
     {
-        $data = 'X-Krayin-Bagisto-Signature';
-        $secret = config('booking.webhook.client_secret');
-//        $signature = hash_hmac('sha256', $data, $secret);
-        $signature = '2b91413f1c973ca506c64f0894790aca4d08697d136c959fb485c0e5c11670ab';
         $application = config('app.name');
 
         return WebhookMessage::create()
             ->data([
-                'entity_type' => self::ENTITY_TYPE,
+                'entity_type' => $this->getEntityType(),
                 'payload' => $this->getPayload(),
             ])
             ->userAgent($application)
-            ->header(self::CUSTOM_HEADER, $signature)
+            ->header($this->getCustomHeader(),  $this->getSignature())
             ->header('Accept', 'application/json')
             ;
     }
@@ -66,5 +59,24 @@ class OrderConfirmedNotification extends Notification
     public function getPayload(): VoucherResource
     {
         return new VoucherResource($this->voucher);
+    }
+
+    public function getEntityType(): string
+    {
+        return 'checkout.property.kyc.authenticate.after';
+    }
+
+    public function getCustomHeader(): string
+    {
+        return 'X-Krayin-Bagisto-Signature';
+    }
+
+
+    public function getSignature(): string
+    {
+        $data = $this->getCustomHeader();
+        $secret = config('booking.webhook.client_secret');
+
+        return hash_hmac('sha256', $data, $secret);
     }
 }

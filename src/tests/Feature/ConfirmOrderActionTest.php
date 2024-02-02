@@ -52,8 +52,11 @@ test('confirm order action', function (Voucher $voucher) {
     ConfirmOrderAction::run($voucher);
     Notification::assertCount(1);
     Notification::assertSentTo($order, function (OrderConfirmedNotification $notification) use ($voucher) {
-        $resource = new VoucherResource($voucher);
-        return $notification->getPayload()->is(new VoucherResource($voucher));
+        return
+            $notification->getCustomHeader() === 'X-Krayin-Bagisto-Signature' and
+            $notification->getEntityType() === 'checkout.property.kyc.authenticate.after' and
+            $notification->getSignature() === '2b91413f1c973ca506c64f0894790aca4d08697d136c959fb485c0e5c11670ab' and
+            $notification->getPayload()->is(new VoucherResource($voucher));
     });
     expect($order->fresh()->state)->toBeInstanceOf(ConfirmedPendingInvoice::class);
 })->with('voucher');
