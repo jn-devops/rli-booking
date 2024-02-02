@@ -74,6 +74,7 @@ Basically, it should
 - frittenkeez/laravel-vouchers
 - laravel-notification-channels/webhook
 - beyondcode/expose
+- spatie/laravel-data
 ## Actions
 - SetOrderSeller
 - SetOrderProduct

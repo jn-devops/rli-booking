@@ -6,19 +6,16 @@ use RLI\Booking\Notifications\OrderConfirmedNotification;
 use RLI\Booking\Classes\State\ConfirmedPendingInvoice;
 use Lorisleiva\Actions\Concerns\AsAction;
 use RLI\Booking\Events\BuyerProcessed;
-use RLI\Booking\Models\Order;
+use RLI\Booking\Models\Voucher;
 
 class ConfirmOrderAction
 {
     use AsAction;
 
-    /**
-     * @param Order $order
-     * @return void
-     */
-    public function handle(Order $order): void
+    public function handle(Voucher $voucher): void
     {
-        $order->notify(new OrderConfirmedNotification);
+        $order = $voucher->getOrder();
+        $order->notify(new OrderConfirmedNotification($voucher));
         $order->state->transitionTo(ConfirmedPendingInvoice::class);
     }
 
@@ -28,8 +25,6 @@ class ConfirmOrderAction
      */
     public function asListener(BuyerProcessed $event): void
     {
-        $order = $event->voucher->getOrder();
-
-        $this->handle($order);
+        $this->handle($event->voucher);
     }
 }

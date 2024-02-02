@@ -3,10 +3,11 @@
 namespace RLI\Booking\Notifications;
 
 use NotificationChannels\Webhook\{WebhookChannel, WebhookMessage};
+use RLI\Booking\Http\Resources\VoucherResource;
 use Illuminate\Notifications\Notification;
+use RLI\Booking\Models\Voucher;
 use Illuminate\Bus\Queueable;
 
-//TODO: use voucher instead of order
 class OrderConfirmedNotification extends Notification
 {
     use Queueable;
@@ -14,12 +15,11 @@ class OrderConfirmedNotification extends Notification
     const CUSTOM_HEADER = 'X-Krayin-Bagisto-Signature';
     const ENTITY_TYPE = 'checkout.property.kyc.authenticate.after';
 
-    /**
-     * Create a new notification instance.
-     */
-    public function __construct()
+    protected Voucher $voucher;
+
+    public function __construct(Voucher $voucher)
     {
-        //
+        $this->voucher = $voucher;
     }
 
     /**
@@ -38,11 +38,10 @@ class OrderConfirmedNotification extends Notification
         $secret = config('booking.webhook.client_secret');
         $signature = hash_hmac('sha256', $data, $secret);
         $application = config('app.name');
-        $payload = $this->getPayload($notifiable);
 
         return WebhookMessage::create()
             ->data([
-                'payload' => $payload,
+                'payload' => $this->getPayload(),
                 'entity_type' => self::ENTITY_TYPE
             ])
             ->userAgent($application)
@@ -59,12 +58,12 @@ class OrderConfirmedNotification extends Notification
     public function toArray(object $notifiable): array
     {
         return [
-            'payload' => $this->getPayload($notifiable)
+            'payload' => $this->getPayload()
         ];
     }
 
-    public function getPayload(object $notifiable): array
+    public function getPayload(): VoucherResource
     {
-        return $notifiable->getAttributes();
+        return new VoucherResource($this->voucher);
     }
 }

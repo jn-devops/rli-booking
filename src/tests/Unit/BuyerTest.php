@@ -14,6 +14,7 @@ test('buyer has schema attributes', function () {
     expect($buyer->name)->toBeString();
     expect($buyer->address)->toBeString();
     expect($buyer->birthdate)->toBeString();
+    expect($buyer->email)->toBeString();
     expect($buyer->mobile)->toBeString();
     expect($buyer->id_type)->toBeString();
     expect($buyer->id_number)->toBeString();

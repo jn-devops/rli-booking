@@ -19,9 +19,9 @@ use App\Models\User;
  * @property string     $property_code
  * @property int        $dp_percent
  * @property int        $dp_months
- * @property BelongsTo  $product
- * @property BelongsTo  $buyer
- * @property BelongsTo  $seller
+ * @property Product    $product
+ * @property Buyer      $buyer
+ * @property User       $seller
  * @property string     $transaction_id
  * @property OrderState $state
  *

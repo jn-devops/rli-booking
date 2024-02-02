@@ -1,10 +1,17 @@
 <?php
 
-use RLI\Booking\Classes\State\{Abandoned, InternallyCreatedPendingUpdate, UpdatedPendingProcessing, ProcessedPendingConfirmation, ConfirmedPendingInvoice, InvoicedPendingPayment, PaidPendingFulfillment};
-use Illuminate\Foundation\Testing\{RefreshDatabase, WithFaker};
-use RLI\Booking\Models\{Buyer, Order, Product};
-use Illuminate\Database\QueryException;
 use App\Models\User;
+use Illuminate\Database\QueryException;
+use Illuminate\Foundation\Testing\{RefreshDatabase, WithFaker};
+use RLI\Booking\Classes\State\{Abandoned,
+    ConfirmedPendingInvoice,
+    InternallyCreatedPendingUpdate,
+    InvoicedPendingPayment,
+    PaidPendingFulfillment,
+    ProcessedPendingConfirmation,
+    UpdatedPendingProcessing};
+use RLI\Booking\Data\OrderData;
+use RLI\Booking\Models\{Buyer, Order, Product};
 
 uses(RefreshDatabase::class, WithFaker::class);
 
@@ -126,6 +133,30 @@ test('order can be abandoned', function (Order $order) {
     $order->state->transitionTo(ConfirmedPendingInvoice::class);
     $order->state->transitionTo(Abandoned::class);
     expect($order->state)->toBeInstanceOf(Abandoned::class);
+})->with([
+    [ fn() => Order::factory()->create() ]
+]);
+
+test('order has data', function (Order $order) {
+    $order_data = OrderData::fromModel($order);
+    expect($order_data->property_code)->toBe($order->property_code);
+    expect($order_data->dp_percent)->toBe($order->dp_percent);
+    expect($order_data->dp_months)->toBe($order->dp_months);
+    expect($order_data->product->sku)->toBe($order->product->sku);
+    expect($order_data->product->sku)->toBe($order->product->sku);
+    expect($order_data->product->name)->toBe($order->product->name);
+    expect($order_data->product->processing_fee)->toBe($order->product->processing_fee);
+    expect($order_data->seller->email)->toBe($order->seller->getAttribute('email'));
+    expect($order_data->seller->name)->toBe($order->seller->getAttribute('name'));
+    expect($order_data->buyer->name)->toBe($order->buyer->name);
+    expect($order_data->buyer->address)->toBe($order->buyer->address);
+    expect($order_data->buyer->birthdate)->toBe($order->buyer->birthdate);
+    expect($order_data->buyer->mobile)->toBe($order->buyer->mobile);
+    expect($order_data->buyer->id_type)->toBe($order->buyer->id_type);
+    expect($order_data->buyer->id_number)->toBe($order->buyer->id_number);
+    expect($order_data->buyer->id_image_url)->toBe($order->buyer->id_image_url);
+    expect($order_data->buyer->selfie_image_url)->toBe($order->buyer->selfie_image_url);
+    expect($order_data->buyer->id_mark_url)->toBe($order->buyer->id_mark_url);
 })->with([
     [ fn() => Order::factory()->create() ]
 ]);

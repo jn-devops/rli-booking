@@ -13,6 +13,7 @@ use RLI\Booking\Traits\HasMeta;
  * @property string $name
  * @property string $address
  * @property string $birthdate
+ * @property string $email
  * @property string $mobile
  * @property string $id_type
  * @property string $id_number
@@ -27,5 +28,5 @@ class Buyer extends Model
     use HasFactory;
     use HasMeta;
 
-    protected $fillable = ['name', 'address', 'birthdate', 'mobile', 'id_type', 'id_number', 'id_image_url', 'selfie_image_url', 'id_mark_url'];
+    protected $fillable = ['name', 'address', 'birthdate', 'email', 'mobile', 'id_type', 'id_number', 'id_image_url', 'selfie_image_url', 'id_mark_url'];
 }

@@ -4,8 +4,9 @@ use RLI\Booking\Actions\{ConfirmOrderAction, GenerateVoucherAction, ProcessBuyer
 use RLI\Booking\Classes\State\{ConfirmedPendingInvoice, ProcessedPendingConfirmation};
 use Illuminate\Foundation\Testing\{RefreshDatabase, WithFaker};
 use RLI\Booking\Notifications\OrderConfirmedNotification;
+use RLI\Booking\Http\Resources\VoucherResource;
 use Illuminate\Support\Facades\Notification;
-use RLI\Booking\Models\{Order, Product};
+use RLI\Booking\Models\{Product, Voucher};
 use Illuminate\Support\Facades\Event;
 use RLI\Booking\Events\BuyerProcessed;
 use RLI\Booking\Seeders\UserSeeder;
@@ -19,7 +20,7 @@ beforeEach(function() {
     $this->faker = $this->makeFaker('en_PH');
 });
 
-dataset('order', [
+dataset('voucher', [
     [
         fn() => tap(GenerateVoucherAction::run(['sku' => Product::factory()->create()->sku]), function ($voucher) {
             $attribs = [
@@ -41,16 +42,18 @@ dataset('order', [
             ]);
             $array = json_decode($json, true);
             ProcessBuyerAction::run($array);
-        })->getOrder()
+        })
     ]
 ]);
 
-test('confirm order action', function (Order $order) {
+test('confirm order action', function (Voucher $voucher) {
+    $order = $voucher->getOrder();
     expect($order->state)->toBeInstanceOf(ProcessedPendingConfirmation::class);
-    ConfirmOrderAction::run($order);
+    ConfirmOrderAction::run($voucher);
     Notification::assertCount(1);
-    Notification::assertSentTo($order, function (OrderConfirmedNotification $notification) use ($order) {
-        return $notification->getPayload($order) == $order->getAttributes();
+    Notification::assertSentTo($order, function (OrderConfirmedNotification $notification) use ($voucher) {
+        $resource = new VoucherResource($voucher);
+        return $notification->getPayload()->is(new VoucherResource($voucher));
     });
-    expect($order->state)->toBeInstanceOf(ConfirmedPendingInvoice::class);
-})->with('order');
+    expect($order->fresh()->state)->toBeInstanceOf(ConfirmedPendingInvoice::class);
+})->with('voucher');

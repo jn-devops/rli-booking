@@ -21,11 +21,13 @@ class ProcessBuyerAction
         $voucher = $this->getVoucher($validated);
         $agent = $this->getSeller($validated);
         $fieldsExtracted = Arr::get($validated, 'body.data.fieldsExtracted');
+        $email = Arr::get($validated, 'body.inputs.email');
         $idType = Arr::get($validated, 'body.data.idType');
         $buyer = Buyer::create([
             'name' => Arr::get($fieldsExtracted, 'fullName'),
             'address' => Arr::get($fieldsExtracted, 'address'),
             'birthdate' => Arr::get($fieldsExtracted, 'dateOfBirth'),
+            'email' => $email,
 //            'mobile' => '09173011987',
             'id_type' => $idType,
             'id_number' => Arr::get($fieldsExtracted, 'idNumber'),
