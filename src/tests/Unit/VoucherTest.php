@@ -95,6 +95,6 @@ test('voucher has a prefix, mask, owner, related entity, metadata and expiry', f
 
 test('voucher has data', function (Voucher $voucher) {
     $voucher_data = VoucherData::fromModel($voucher);
-    expect($voucher_data->code)->toBe($voucher->code);
+    expect($voucher_data->reference_code)->toBe($voucher->code);
     expect($voucher_data->order)->toBeInstanceOf(OrderData::class);
 })->with('voucher');

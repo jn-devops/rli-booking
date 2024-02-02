@@ -151,6 +151,7 @@ test('order has data', function (Order $order) {
     expect($order_data->buyer->name)->toBe($order->buyer->name);
     expect($order_data->buyer->address)->toBe($order->buyer->address);
     expect($order_data->buyer->birthdate)->toBe($order->buyer->birthdate);
+    expect($order_data->buyer->email)->toBe($order->buyer->email);
     expect($order_data->buyer->mobile)->toBe($order->buyer->mobile);
     expect($order_data->buyer->id_type)->toBe($order->buyer->id_type);
     expect($order_data->buyer->id_number)->toBe($order->buyer->id_number);

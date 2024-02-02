@@ -42,8 +42,8 @@ class OrderConfirmedNotification extends Notification
 
         return WebhookMessage::create()
             ->data([
+                'entity_type' => self::ENTITY_TYPE,
                 'payload' => $this->getPayload(),
-                'entity_type' => self::ENTITY_TYPE
             ])
             ->userAgent($application)
             ->header(self::CUSTOM_HEADER, $signature)
