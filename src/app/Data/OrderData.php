@@ -13,7 +13,8 @@ class OrderData extends Data
         public int $dp_months,
         public ProductData $product,
         public SellerData $seller,
-        public BuyerData $buyer
+        public BuyerData $buyer,
+        public ?string $transaction_id
     ) {}
 
     public static function fromModel(Order $order): self
@@ -24,7 +25,8 @@ class OrderData extends Data
             dp_months: $order->dp_months,
             product: ProductData::fromModel($order->product),
             seller: SellerData::fromModel($order->seller),
-            buyer: BuyerData::fromModel($order->buyer)
+            buyer: BuyerData::fromModel($order->buyer),
+            transaction_id: $order->transaction_id
         );
     }
 }

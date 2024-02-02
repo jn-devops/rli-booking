@@ -36,7 +36,8 @@ class OrderConfirmedNotification extends Notification
     {
         $data = 'X-Krayin-Bagisto-Signature';
         $secret = config('booking.webhook.client_secret');
-        $signature = hash_hmac('sha256', $data, $secret);
+//        $signature = hash_hmac('sha256', $data, $secret);
+        $signature = '2b91413f1c973ca506c64f0894790aca4d08697d136c959fb485c0e5c11670ab';
         $application = config('app.name');
 
         return WebhookMessage::create()
