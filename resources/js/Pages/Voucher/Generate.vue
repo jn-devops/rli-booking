@@ -1,4 +1,5 @@
 <script setup>
+
 import ActionMessage from '@/Components/ActionMessage.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import FormSection from '@/Components/FormSection.vue';
@@ -7,9 +8,16 @@ import InputLabel from '@/Components/InputLabel.vue';
 import TextInput from '@/Components/TextInput.vue';
 import { useForm, usePage } from '@inertiajs/vue3';
 
+let params = new URLSearchParams(window.location.search)
+
+const sku = params.get('sku');
+const seller = params.get('seller') || usePage().props.auth.user.email;
+const reference = params.get('reference');
+
 const form = useForm({
-    email: usePage().props.auth.user.email,
-    sku: null,
+    email: seller,
+    sku: sku,
+    reference: reference,
     callback_url: 'https://eomuckur5juqabu.m.pipedream.net',
     discount: '0'
 });
@@ -25,7 +33,7 @@ const generateVoucher = () => {
 <template>
     <FormSection @submitted="generateVoucher">
         <template #title>
-            Reference
+            Reference {{ seller }}
         </template>
 
         <template #description>
@@ -48,6 +56,33 @@ const generateVoucher = () => {
                 />
 
                 <InputError :message="form.errors.sku" class="mt-2" />
+            </div>
+
+            <!-- Seller -->
+            <div class="col-span-6 sm:col-span-4">
+                <InputLabel for="seller" value="Seller" />
+                <TextInput
+                    id="seller"
+                    v-model="form.email"
+                    type="text"
+                    class="mt-1 block w-full"
+                    required
+                />
+
+                <InputError :message="form.errors.email" class="mt-2" />
+            </div>
+
+            <!-- Reference -->
+            <div class="col-span-6 sm:col-span-4">
+                <InputLabel for="reference" value="Reference" />
+                <TextInput
+                    id="reference"
+                    v-model="form.reference"
+                    type="text"
+                    class="mt-1 block w-full"
+                />
+
+                <InputError :message="form.errors.reference" class="mt-2" />
             </div>
 
             <!-- Callback URL -->

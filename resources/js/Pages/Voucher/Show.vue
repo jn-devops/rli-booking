@@ -15,14 +15,14 @@ const props = defineProps({
 });
 
 Echo.channel(`voucher.${props.voucherCode}`)
-    .listen('.buyer.created', (e) => {
+    .listen('.buyer.processed', (e) => {
         router.reload();
         console.log(e);
     })
 </script>
 
 <template>
-    <Head title="RLI Booking" />
+    <Head title="RLI Booking" http-equiv="Content-Security-Policy" content="upgrade-insecure-requests"/>
 
     <AuthenticationCard>
         <template #logo>

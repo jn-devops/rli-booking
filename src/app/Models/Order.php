@@ -4,25 +4,26 @@ namespace RLI\Booking\Models;
 
 use RLI\Booking\Traits\HasPackageFactory as HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use RLI\Booking\Classes\State\OrderState;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Model;
+use Spatie\ModelStates\HasStates;
 use RLI\Booking\Traits\HasMeta;
 use App\Models\User;
 
 /**
  * Class Order
  *
- * @property integer   $id
- * @property string    $reference
- * @property string    $sku
- * @property string    $property_code
- * @property int       $dp_percent
- * @property int       $dp_months
- * @property string    $callback_url
- * @property BelongsTo $product
- * @property BelongsTo $buyer
- * @property BelongsTo $seller
- *
+ * @property integer    $id
+ * @property string     $sku
+ * @property string     $property_code
+ * @property int        $dp_percent
+ * @property int        $dp_months
+ * @property BelongsTo  $product
+ * @property BelongsTo  $buyer
+ * @property BelongsTo  $seller
+ * @property string     $transaction_id
+ * @property OrderState $state
  *
  * @method   int    getKey()
  */
@@ -30,9 +31,14 @@ class Order extends Model
 {
     use HasFactory;
     use Notifiable;
+    use HasStates;
     use HasMeta;
 
-    protected $fillable = ['reference', 'sku', 'property_code', 'dp_percent', 'dp_months', 'callback_url'];
+    protected $fillable = ['property_code', 'dp_percent', 'dp_months', 'transaction_id'];
+
+    protected $casts = [
+        'state' => OrderState::class
+    ];
 
     public function product(): BelongsTo
     {
@@ -51,6 +57,6 @@ class Order extends Model
 
     public function routeNotificationForWebhook(): string
     {
-        return 'https://eomuckur5juqabu.m.pipedream.net';
+        return config('booking.defaults.order.webhook');
     }
 }

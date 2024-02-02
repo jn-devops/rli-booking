@@ -20,3 +20,11 @@ test('product has schema and schemaless attributes', function () {
     $prod = app(Product::class)->first();
     expect($prod->description)->toBe($description);
 });
+
+test('product can be referenced', function (Product $product) {
+    $reference = $product->sku;
+    $prod = Product::where('sku', $reference)->first();
+    expect($prod->id)->toBe($product->id);
+})->with([
+    [ fn() => Product::factory()->create() ]
+]);

@@ -29,16 +29,14 @@ Route::middleware([
     config('jetstream.auth_session'),
     'verified',
 ])->group(function () {
-    Route::get('/dashboard', function () {
+    Route::get('/reserve', function () {
         return Inertia::render('Dashboard');
     })->name('dashboard');
 
     Route::post('generate-voucher', \RLI\Booking\Actions\GenerateVoucherAction::class)->name('generate-voucher');
-    Route::get('edit-order/{voucher}/{order}', [\RLI\Booking\Http\Controllers\OrderController::class, 'edit'])->name('edit-order');
-    Route::post('update-order/{voucher}', \RLI\Booking\Actions\UpdateOrderAction::class)->name('update-order');
-//    Route::resource('references', \RLI\Booking\Http\Controllers\VoucherController::class)
-//        ->only(['show'])->parameters(['references' => 'voucher']);
-    Route::get('references/{voucher}', [\RLI\Booking\Http\Controllers\VoucherController::class, 'show'])->name('references.show');
 });
-
-Route::post('create-buyer', \RLI\Booking\Actions\CreateBuyerAction::class)->name('create-buyer');
+Route::post('update-order/{voucher}', \RLI\Booking\Actions\UpdateOrderAction::class)->name('update-order');
+Route::get('references/{voucher}', [\RLI\Booking\Http\Controllers\VoucherController::class, 'show'])->name('references.show');
+Route::get('edit-order/{voucher}/{order}', [\RLI\Booking\Http\Controllers\OrderController::class, 'edit'])->name('edit-order');
+Route::get('auto-reserve/{sku}/{transaction_id}', \RLI\Booking\Actions\AutoReserveAction::class)->name('auto-reserve');
+Route::post('process-buyer', \RLI\Booking\Actions\ProcessBuyerAction::class)->name('process-buyer');

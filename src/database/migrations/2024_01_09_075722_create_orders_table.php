@@ -13,14 +13,14 @@ return new class extends Migration
     {
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
-            $table->uuid('reference')->unique();
-            $table->string('sku')->nullable();
+            $table->foreignId('user_id')->constrained()->cascadeOnDelete();
+            $table->string('sku')->index();
             $table->string('property_code')->nullable();
             $table->integer('dp_percent')->nullable();
             $table->integer('dp_months')->nullable();
-            $table->foreignId('user_id')->nullable()->constrained()->cascadeOnDelete();
             $table->foreignId('buyer_id')->nullable()->constrained()->cascadeOnDelete();
-            $table->string('callback_url')->nullable();
+            $table->uuid('transaction_id')->nullable();
+            $table->string('state')->nullable();
             $table->timestamps();
         });
     }
