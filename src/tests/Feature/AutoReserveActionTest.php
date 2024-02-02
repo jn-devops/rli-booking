@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Foundation\Testing\{RefreshDatabase, WithFaker};
+use RLI\Booking\Classes\State\ExternallyPopulatedPendingUpdate;
 use RLI\Booking\Models\{Order, Product, Voucher};
 use RLI\Booking\Actions\AutoReserveAction;
 use RLI\Booking\Seeders\UserSeeder;
@@ -25,6 +26,7 @@ test('client api action accepts reference and sku', function (Product $product, 
         expect($order->transaction_id)->toBe($transaction_id);
         expect($order->product->is($product))->toBe(true);
         expect($order->seller->is($default_seller))->toBeTrue();
+        expect($order->state)->toBeInstanceOf(ExternallyPopulatedPendingUpdate::class);
     });
 })->with([
     [ fn() => Product::factory()->create() ]

@@ -2,6 +2,7 @@
 
 namespace RLI\Booking\Actions;
 
+use RLI\Booking\Classes\State\ProcessedPendingConfirmation;
 use Illuminate\Support\Facades\Validator;
 use Lorisleiva\Actions\Concerns\AsAction;
 use RLI\Booking\Models\{Buyer, Voucher};
@@ -34,6 +35,7 @@ class ProcessBuyerAction
         ]);
         $order = $voucher->getOrder();
         $order->buyer()->associate($buyer);
+        $order->state->transitionTo(ProcessedPendingConfirmation::class);
         $order->save();
         $voucher->save();
 

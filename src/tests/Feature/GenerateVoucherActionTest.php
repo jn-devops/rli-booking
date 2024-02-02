@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Foundation\Testing\{RefreshDatabase, WithFaker};
+use RLI\Booking\Classes\State\InternallyCreatedPendingUpdate;
 use RLI\Booking\Models\{Order, Product, Voucher};
 use RLI\Booking\Actions\GenerateVoucherAction;
 use RLI\Booking\Seeders\UserSeeder;
@@ -27,6 +28,7 @@ test('generate voucher action requires sku attribute with default email', functi
         expect($order->seller->is($default_seller))->toBeTrue();
         expect($order->product->is($product))->toBeTrue();
         expect($order->reference)->toBeNull();
+        expect($order->state)->toBeInstanceOf(InternallyCreatedPendingUpdate::class);
     });
 
 })->with([

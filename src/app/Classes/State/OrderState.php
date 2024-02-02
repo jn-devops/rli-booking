@@ -2,8 +2,8 @@
 
 namespace RLI\Booking\Classes\State;
 
-use Spatie\ModelStates\State;
 use Spatie\ModelStates\StateConfig;
+use Spatie\ModelStates\State;
 
 abstract class OrderState extends State
 {
@@ -12,15 +12,20 @@ abstract class OrderState extends State
     public static function config(): StateConfig
     {
         return parent::config()
-            ->default(CreatedPendingUpdate::class)
-            ->allowTransition(CreatedPendingUpdate::class, UpdatedPendingConfirmation::class)
-            ->allowTransition(UpdatedPendingConfirmation::class, ConfirmedPendingInvoice::class)
+            ->default(InternallyCreatedPendingUpdate::class)
+            ->allowTransition(InternallyCreatedPendingUpdate::class, ExternallyPopulatedPendingUpdate::class)
+            ->allowTransition(InternallyCreatedPendingUpdate::class, UpdatedPendingProcessing::class)
+            ->allowTransition(ExternallyPopulatedPendingUpdate::class, UpdatedPendingProcessing::class)
+            ->allowTransition(UpdatedPendingProcessing::class, ProcessedPendingConfirmation::class)
+            ->allowTransition(ProcessedPendingConfirmation::class, ConfirmedPendingInvoice::class)
             ->allowTransition(ConfirmedPendingInvoice::class, InvoicedPendingPayment::class)
             ->allowTransition(InvoicedPendingPayment::class, PaidPendingFulfillment::class)
             ->allowTransition(PaidPendingFulfillment::class, Fulfilled::class)
 
-            ->allowTransition(CreatedPendingUpdate::class, Abandoned::class)
-            ->allowTransition(UpdatedPendingConfirmation::class, Abandoned::class)
+            ->allowTransition(InternallyCreatedPendingUpdate::class, Abandoned::class)
+            ->allowTransition(ExternallyPopulatedPendingUpdate::class, Abandoned::class)
+            ->allowTransition(UpdatedPendingProcessing::class, Abandoned::class)
+            ->allowTransition(ProcessedPendingConfirmation::class, Abandoned::class)
             ->allowTransition(ConfirmedPendingInvoice::class, Abandoned::class)
             ->allowTransition(InvoicedPendingPayment::class, Abandoned::class)
             ;

@@ -38,7 +38,7 @@ class OrderConfirmedNotification extends Notification
         $secret = config('booking.webhook.client_secret');
         $signature = hash_hmac('sha256', $data, $secret);
         $application = config('app.name');
-        $payload = $notifiable->toArray();
+        $payload = $this->getPayload($notifiable);
 
         return WebhookMessage::create()
             ->data([
@@ -59,7 +59,12 @@ class OrderConfirmedNotification extends Notification
     public function toArray(object $notifiable): array
     {
         return [
-            'payload' => $notifiable->toArray()
+            'payload' => $this->getPayload($notifiable)
         ];
+    }
+
+    public function getPayload(object $notifiable): array
+    {
+        return $notifiable->getAttributes();
     }
 }
