@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained()->cascadeOnDelete();
+            $table->unsignedBigInteger('seller_id');
             $table->string('sku')->index();
             $table->string('property_code')->nullable();
             $table->integer('dp_percent')->nullable();
@@ -22,6 +22,7 @@ return new class extends Migration
             $table->uuid('transaction_id')->nullable();
             $table->string('state')->nullable();
             $table->timestamps();
+            $table->foreign('seller_id')->references('id')->on('users')->cascadeOnDelete();
         });
     }
 

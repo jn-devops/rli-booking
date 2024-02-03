@@ -53,7 +53,7 @@ class Order extends Model implements AttributableData
 
     public function seller(): BelongsTo
     {
-        return $this->belongsTo(Seller::class, 'user_id');
+        return $this->belongsTo(Seller::class, 'seller_id', 'id', 'users');
     }
 
     public function routeNotificationForWebhook(): string

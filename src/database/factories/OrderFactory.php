@@ -3,9 +3,8 @@
 namespace RLI\Booking\Factories;
 
 
-use RLI\Booking\Models\{Order, Product, Buyer};
+use RLI\Booking\Models\{Buyer, Order, Product, Seller};
 use Illuminate\Database\Eloquent\Factories\Factory;
-use App\Models\User;
 
 class OrderFactory extends Factory
 {
@@ -15,7 +14,7 @@ class OrderFactory extends Factory
     {
         $product = Product::factory()->create();
         return [
-            'user_id' => User::factory()->create(),
+            'seller_id' => Seller::factory()->create(),
             'sku' => $product->sku,
             'property_code' => $this->faker->word(),
             'buyer_id' => Buyer::factory()->create(),
