@@ -7,8 +7,8 @@ use RLI\Booking\Notifications\OrderConfirmedNotification;
 use RLI\Booking\Http\Resources\VoucherResource;
 use Illuminate\Support\Facades\Notification;
 use RLI\Booking\Models\{Product, Voucher};
-use Illuminate\Support\Facades\Event;
 use RLI\Booking\Events\BuyerProcessed;
+use Illuminate\Support\Facades\Event;
 use RLI\Booking\Seeders\UserSeeder;
 
 uses(RefreshDatabase::class, WithFaker::class);

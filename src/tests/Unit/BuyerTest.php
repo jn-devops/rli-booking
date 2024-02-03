@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Foundation\Testing\{RefreshDatabase, WithFaker};
+use RLI\Booking\Data\BuyerData;
 use RLI\Booking\Models\Buyer;
 
 uses(RefreshDatabase::class, WithFaker::class);
@@ -21,4 +22,18 @@ test('buyer has schema attributes', function () {
     expect($buyer->id_image_url)->toBeString();
     expect($buyer->selfie_image_url)->toBeString();
     expect($buyer->id_mark_url)->toBeString();
+});
+
+test('buyer has data', function () {
+    $buyer = Buyer::factory()->create();
+    $data = BuyerData::fromModel($buyer);
+    expect($data->name)->toBe($buyer->name);
+    expect($data->address)->toBe($buyer->address);
+    expect($data->birthdate)->toBe($buyer->birthdate);
+    expect($data->email)->toBe($buyer->email);
+    expect($data->mobile)->toBe($buyer->mobile);
+    expect($data->id_type)->toBe($buyer->id_type);
+    expect($data->id_image_url)->toBe($buyer->id_image_url);
+    expect($data->selfie_image_url)->toBe($buyer->selfie_image_url);
+    expect($data->id_mark_url)->toBe($buyer->id_mark_url);
 });

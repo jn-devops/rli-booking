@@ -2,11 +2,14 @@
 
 namespace RLI\Booking\Data;
 
-use RLI\Booking\Models\Order;
+use RLI\Booking\Interfaces\CanHydrateFromModel;
+use RLI\Booking\Traits\HydrateFromModel;
 use Spatie\LaravelData\Data;
 
-class OrderData extends Data
+class OrderData extends Data implements CanHydrateFromModel
 {
+    use HydrateFromModel;
+
     public function __construct(
         public string $property_code,
         public int $dp_percent,
@@ -16,17 +19,4 @@ class OrderData extends Data
         public BuyerData $buyer,
         public ?string $transaction_id
     ) {}
-
-    public static function fromModel(Order $order): self
-    {
-        return new self(
-            property_code: $order->property_code,
-            dp_percent: $order->dp_percent,
-            dp_months: $order->dp_months,
-            product: ProductData::fromModel($order->product),
-            seller: SellerData::fromModel($order->seller),
-            buyer: BuyerData::fromModel($order->buyer),
-            transaction_id: $order->transaction_id
-        );
-    }
 }

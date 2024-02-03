@@ -1,18 +1,16 @@
 <?php
 
-use Illuminate\Support\Facades\Event;
+use RLI\Booking\Models\{Buyer, Order, Product, Seller, Voucher};
 use Illuminate\Foundation\Testing\{RefreshDatabase, WithFaker};
-use RLI\Booking\Models\{Buyer, Order, Product, Voucher};
 use RLI\Booking\Data\{OrderData, VoucherData};
 use RLI\Booking\Actions\GenerateVoucherAction;
 use RLI\Booking\Actions\ProcessBuyerAction;
 use RLI\Booking\Actions\UpdateOrderAction;
 use FrittenKeeZ\Vouchers\Facades\Vouchers;
 use RLI\Booking\Events\BuyerProcessed;
+use Illuminate\Support\Facades\Event;
 use RLI\Booking\Seeders\UserSeeder;
-
 use Carbon\CarbonInterval;
-use App\Models\User;
 
 uses(RefreshDatabase::class, WithFaker::class);
 
@@ -52,7 +50,7 @@ test('voucher has a prefix, mask, owner, related entity, metadata and expiry', f
     $prefix = 'jn';
     $mask = '***-***-***';
     $expiry = CarbonInterval::create('P30D');
-    $seller = User::factory()->create();
+    $seller = Seller::factory()->create();
     $order = Order::factory()->create();
     $metadata = [
         'discount' => 10

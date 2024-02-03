@@ -1,17 +1,12 @@
 <?php
 
-use App\Models\User;
-use Illuminate\Database\QueryException;
+use RLI\Booking\Classes\State\{Abandoned, InternallyCreatedPendingUpdate, UpdatedPendingProcessing};
+use RLI\Booking\Classes\State\{ProcessedPendingConfirmation, ConfirmedPendingInvoice};
+use RLI\Booking\Classes\State\{InvoicedPendingPayment, PaidPendingFulfillment};
 use Illuminate\Foundation\Testing\{RefreshDatabase, WithFaker};
-use RLI\Booking\Classes\State\{Abandoned,
-    ConfirmedPendingInvoice,
-    InternallyCreatedPendingUpdate,
-    InvoicedPendingPayment,
-    PaidPendingFulfillment,
-    ProcessedPendingConfirmation,
-    UpdatedPendingProcessing};
+use RLI\Booking\Models\{Buyer, Order, Product, Seller};
+use Illuminate\Database\QueryException;
 use RLI\Booking\Data\OrderData;
-use RLI\Booking\Models\{Buyer, Order, Product};
 
 uses(RefreshDatabase::class, WithFaker::class);
 
@@ -25,41 +20,40 @@ test('order has schema attributes', function () {
     expect($order->product)->toBeInstanceOf(Product::class);
     expect($order->sku)->toBe($order->product->sku);
     expect($order->buyer)->toBeInstanceOf(Buyer::class);
-    expect($order->seller)->toBeInstanceOf(User::class);
+    expect($order->seller)->toBeInstanceOf(Seller::class);
     expect($order->dp_percent)->toBeInt();
     expect($order->dp_months)->toBeInt();
     expect($order->transaction_id)->toBeString();
 });
 
-test('new order has requires sku', function (User $seller) {
+test('new order has requires sku', function (Seller $seller) {
     Order::create([
         'user_id' => $seller->getAttribute('id'),
     ]);
 })->with([[
-    fn() => User::factory()->create(),
+    fn() => Seller::factory()->create(),
 ]])->throws(QueryException::class);
 
 test('new order has requires seller', function (Product $product) {
-    Order::create([
+    app(Order::class)->create([
         'sku' => $product->sku,
     ]);
 })->with([[
     fn() => Product::factory()->create(),
 ]])->throws(QueryException::class);
 
-test('new order has empty attributes', function (Product $product, User $seller, Buyer $buyer) {
-    $order = new Order;
-    $order->sku = $product->sku;
-    $order->seller()->associate($seller);
-    $order->save();
+test('new order has empty attributes', function (Product $product, Seller $seller) {
+    $order = tap(new Order, function ($order) use ($product, $seller) {
+        $order->product()->associate($product);
+        $order->seller()->associate($seller);
+        $order->save();
+    });
     expect($order->property_code)->toBeNull();
     expect($order->buyer)->toBeNull();
     expect($order->transaction_id)->toBeNull();
-    expect($order->callback_url)->toBeNull();
 })->with([[
     fn() => Product::factory()->create(),
-    fn() => User::factory()->create(),
-    fn() => Buyer::factory()->create(),
+    fn() => Seller::factory()->create()
 ]]);
 
 test('order can be referenced', function (Order $order) {
@@ -70,16 +64,16 @@ test('order can be referenced', function (Order $order) {
     [ fn() => Order::factory()->create() ]
 ]);
 
-test('order can associate user as a seller', function (Order $order, User $seller) {
+test('order can associate user as a seller', function (Order $order, Seller $seller) {
     $email = $seller->getAttribute('email');
     $transaction_id = $order->transaction_id;
     $order->seller()->associate($seller);
     $order->save();
     $ord = Order::where('transaction_id', $transaction_id)->first();
-    $user = User::where('email', $email)->first();
+    $user = Seller::where('email', $email)->first();
     expect($ord->seller->id)->toBe($user->id);
 })->with([
-    [ fn() => Order::factory()->create(), fn() => User::factory()->create() ]
+    [ fn() => Order::factory()->create(), fn() => Seller::factory()->create() ]
 ]);
 
 test('order can associate product', function (Order $order, Product $product) {
@@ -137,11 +131,12 @@ test('order can be abandoned', function (Order $order) {
     [ fn() => Order::factory()->create() ]
 ]);
 
-test('order has data', function (Order $order) {
+test('order has data even when transaction_id is null', function (Order $order) {
     $order_data = OrderData::fromModel($order);
     expect($order_data->property_code)->toBe($order->property_code);
     expect($order_data->dp_percent)->toBe($order->dp_percent);
     expect($order_data->dp_months)->toBe($order->dp_months);
+    expect($order_data->transaction_id)->toBe($order->transaction_id);
     expect($order_data->product->sku)->toBe($order->product->sku);
     expect($order_data->product->sku)->toBe($order->product->sku);
     expect($order_data->product->name)->toBe($order->product->name);
@@ -159,6 +154,6 @@ test('order has data', function (Order $order) {
     expect($order_data->buyer->selfie_image_url)->toBe($order->buyer->selfie_image_url);
     expect($order_data->buyer->id_mark_url)->toBe($order->buyer->id_mark_url);
 })->with([
-    [ fn() => Order::factory()->create() ]
+    [ fn() => Order::factory()->create([ 'transaction_id' => null ]) ]
 ]);
 

@@ -3,6 +3,9 @@
 namespace RLI\Booking\Models;
 
 use FrittenKeeZ\Vouchers\Models\Voucher as BaseVoucher;
+use RLI\Booking\Interfaces\AttributableData;
+use RLI\Booking\Data\OrderData;
+
 /**
  * Class Voucher
  *
@@ -10,7 +13,7 @@ use FrittenKeeZ\Vouchers\Models\Voucher as BaseVoucher;
  *
  * @method   int    getKey()
  */
-class Voucher extends \FrittenKeeZ\Vouchers\Models\Voucher
+class Voucher extends BaseVoucher implements AttributableData
 {
     static public function from(BaseVoucher $voucher): self
     {
@@ -43,5 +46,13 @@ class Voucher extends \FrittenKeeZ\Vouchers\Models\Voucher
     public function getOrder(): Order
     {
         return $this->getEntities(Order::class)->first();
+    }
+
+    public function toData(): array
+    {
+        return array_merge(
+            [ 'reference_code' => $this->code ],
+            [ 'order' => OrderData::fromModel($this->getOrder()) ]
+        );
     }
 }

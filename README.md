@@ -75,6 +75,7 @@ Basically, it should
 - laravel-notification-channels/webhook
 - beyondcode/expose
 - spatie/laravel-data
+- tightenco/parental
 ## Actions
 - SetOrderSeller
 - SetOrderProduct

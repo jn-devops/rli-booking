@@ -2,22 +2,16 @@
 
 namespace RLI\Booking\Data;
 
-use RLI\Booking\Models\Product;
+use RLI\Booking\Interfaces\CanHydrateFromModel;
+use RLI\Booking\Traits\HydrateFromModel;
 use Spatie\LaravelData\Data;
-class ProductData extends Data
+class ProductData extends Data implements CanHydrateFromModel
 {
+    use HydrateFromModel;
+
     public function __construct(
         public string $sku,
         public string $name,
         public int $processing_fee,
     ) {}
-
-    public static function fromModel(Product $product): self
-    {
-        return new self(
-            sku: $product->sku,
-            name: $product->name,
-            processing_fee: $product->processing_fee
-        );
-    }
 }
