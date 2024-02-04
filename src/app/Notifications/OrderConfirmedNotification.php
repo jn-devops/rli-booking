@@ -3,7 +3,7 @@
 namespace RLI\Booking\Notifications;
 
 use NotificationChannels\Webhook\{WebhookChannel, WebhookMessage};
-use RLI\Booking\Http\Resources\VoucherResource;
+use RLI\Booking\Http\Resources\PayloadResource;
 use Illuminate\Notifications\Notification;
 use RLI\Booking\Models\Voucher;
 use Illuminate\Bus\Queueable;
@@ -34,10 +34,7 @@ class OrderConfirmedNotification extends Notification
         $application = config('app.name');
 
         return WebhookMessage::create()
-            ->data([
-                'entity_type' => $this->getEntityType(),
-                'payload' => $this->getPayload(),
-            ])
+            ->data($this->getPayload())
             ->userAgent($application)
             ->header($this->getCustomHeader(),  $this->getSignature())
             ->header('Accept', 'application/json')
@@ -56,21 +53,15 @@ class OrderConfirmedNotification extends Notification
         ];
     }
 
-    public function getPayload(): VoucherResource
+    public function getPayload(): PayloadResource
     {
-        return new VoucherResource($this->voucher);
-    }
-
-    public function getEntityType(): string
-    {
-        return 'checkout.property.kyc.authenticate.after';
+        return new PayloadResource($this->voucher);
     }
 
     public function getCustomHeader(): string
     {
-        return 'X-Krayin-Bagisto-Signature';
+        return config('booking.webhook.customer_header');
     }
-
 
     public function getSignature(): string
     {

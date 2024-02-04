@@ -2,7 +2,7 @@
 
 use RLI\Booking\Models\{Buyer, Order, Product, Seller, Voucher};
 use Illuminate\Foundation\Testing\{RefreshDatabase, WithFaker};
-use RLI\Booking\Data\{OrderData, VoucherData};
+use RLI\Booking\Data\{OrderData, PayloadData, VoucherData};
 use RLI\Booking\Actions\GenerateVoucherAction;
 use RLI\Booking\Actions\ProcessBuyerAction;
 use RLI\Booking\Actions\UpdateOrderAction;
@@ -95,4 +95,13 @@ test('voucher has data', function (Voucher $voucher) {
     $voucher_data = VoucherData::fromModel($voucher);
     expect($voucher_data->reference_code)->toBe($voucher->code);
     expect($voucher_data->order)->toBeInstanceOf(OrderData::class);
+})->with('voucher');
+
+test('voucher is payload data', function (Voucher $voucher) {
+    $entity_type = $this->faker->word();
+    $payload_data_1 = PayloadData::fromVoucher($voucher, $entity_type);
+    expect($payload_data_1->entity_type)->toBe($entity_type);
+    expect($payload_data_1->payload)->toBeInstanceOf(VoucherData::class);
+    $payload_data_2 = PayloadData::fromVoucher($voucher);
+    expect($payload_data_2->entity_type)->toBe('checkout.property.kyc.authenticate.after');
 })->with('voucher');

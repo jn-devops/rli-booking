@@ -4,7 +4,7 @@ use RLI\Booking\Actions\{ConfirmOrderAction, GenerateVoucherAction, ProcessBuyer
 use RLI\Booking\Classes\State\{ConfirmedPendingInvoice, ProcessedPendingConfirmation};
 use Illuminate\Foundation\Testing\{RefreshDatabase, WithFaker};
 use RLI\Booking\Notifications\OrderConfirmedNotification;
-use RLI\Booking\Http\Resources\VoucherResource;
+use RLI\Booking\Http\Resources\PayloadResource;
 use Illuminate\Support\Facades\Notification;
 use RLI\Booking\Models\{Product, Voucher};
 use RLI\Booking\Events\BuyerProcessed;
@@ -54,9 +54,8 @@ test('confirm order action', function (Voucher $voucher) {
     Notification::assertSentTo($order, function (OrderConfirmedNotification $notification) use ($voucher) {
         return
             $notification->getCustomHeader() === 'X-Krayin-Bagisto-Signature' and
-            $notification->getEntityType() === 'checkout.property.kyc.authenticate.after' and
             $notification->getSignature() === '2b91413f1c973ca506c64f0894790aca4d08697d136c959fb485c0e5c11670ab' and
-            $notification->getPayload()->is(new VoucherResource($voucher));
+            $notification->getPayload()->is(new PayloadResource($voucher));
     });
     expect($order->fresh()->state)->toBeInstanceOf(ConfirmedPendingInvoice::class);
 })->with('voucher');
