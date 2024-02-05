@@ -14,7 +14,7 @@ const props = defineProps({
 });
 
 const form = useForm({
-    property_code: null,
+    property_code: props.order?.property_code,
     dp_percent: '10',
     dp_months: '24',
 });
