@@ -20,6 +20,16 @@ class ProductSeeder extends Seeder
                 'name' => 'Product 456',
                 'processing_fee' => 2000.00
             ],
+            [
+                'sku' => 'JN-ZYA-SRL-C',
+                'name' => 'Product 456',
+                'processing_fee' => 10000.00
+            ],
+            [
+                'sku' => 'JN-ZYA-SRL-CB-SEU-R',
+                'name' => 'Zaya Studio Condominium',
+                'processing_fee' => 10000.00
+            ],
         ]);
     }
 }
