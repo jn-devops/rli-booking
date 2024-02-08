@@ -12,7 +12,6 @@ beforeEach(function() {
 
 test('upload products action requires an excel file', function () {
     $path = documents_path('bulk_upload.xlsx');
-    dd($path);
     expect(file_exists($path))->toBeTrue();
     expect(Product::all()->count())->toBe(0);
     UploadProductsAction::run($path);
