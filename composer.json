@@ -45,7 +45,10 @@
             "RLI\\Booking\\": "src/app/",
             "RLI\\Booking\\Factories\\": "src/database/factories/",
             "RLI\\Booking\\Seeders\\": "src/database/seeders/"
-        }
+        },
+        "files": [
+            "src/app/Helpers/Utils.php"
+        ]
     },
     "autoload-dev": {
         "psr-4": {
