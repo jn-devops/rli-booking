@@ -18,3 +18,15 @@ test('upload products action requires an excel file', function () {
     UploadProductsAction::run($path);
     expect(Product::all()->count() > 0)->toBeTrue();
 });
+
+test('upload products action is a command', function () {
+    $path = documents_path('bulk_upload.xlsx');
+    expect(Product::all()->count())->toBe(0);
+    $this->artisan('upload:products', [
+        'path' => $path,
+    ]);
+    $this->artisan('upload:products', [
+        'path' => $path,
+    ]);
+    expect(Product::all()->count() > 0)->toBeTrue();
+});
