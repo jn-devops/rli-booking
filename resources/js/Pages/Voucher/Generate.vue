@@ -1,5 +1,6 @@
 <script setup>
 
+import SecondaryButton from "@/Components/SecondaryButton.vue";
 import ActionMessage from '@/Components/ActionMessage.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import FormSection from '@/Components/FormSection.vue';
@@ -10,16 +11,14 @@ import { useForm, usePage } from '@inertiajs/vue3';
 
 let params = new URLSearchParams(window.location.search)
 
-const sku = params.get('sku');
 const seller = params.get('seller') || usePage().props.auth.user.email;
 const reference = params.get('reference');
+const sku = params.get('sku');
 
 const form = useForm({
     email: seller,
-    sku: sku,
-    reference: reference,
-    callback_url: 'https://eomuckur5juqabu.m.pipedream.net',
-    discount: '0'
+    discount: '0',
+    sku: sku
 });
 
 const generateVoucher = () => {
@@ -33,13 +32,12 @@ const generateVoucher = () => {
 <template>
     <FormSection @submitted="generateVoucher">
         <template #title>
-            Reference {{ seller }}
+            Select a Product to Sell
         </template>
 
         <template #description>
-            A control number for this sales transaction.
+            Enter the Product SKU that you intend to offer to your prospect. You may also give a discount on the processing.
         </template>
-
 
         <template #form>
             <!-- Product SKU -->
@@ -50,53 +48,12 @@ const generateVoucher = () => {
                     v-model="form.sku"
                     type="text"
                     class="mt-1 block w-full"
-                    placeholder="e.g., ABC-123, DEF-456"
+                    placeholder="e.g., JN-AGM-CL-HLDUS-GRN, JN-AGM-CL-HLDUS-PUR"
                     required
                     autofocus
                 />
 
                 <InputError :message="form.errors.sku" class="mt-2" />
-            </div>
-
-            <!-- Seller -->
-            <div class="col-span-6 sm:col-span-4">
-                <InputLabel for="seller" value="Seller" />
-                <TextInput
-                    id="seller"
-                    v-model="form.email"
-                    type="text"
-                    class="mt-1 block w-full"
-                    required
-                />
-
-                <InputError :message="form.errors.email" class="mt-2" />
-            </div>
-
-            <!-- Reference -->
-            <div class="col-span-6 sm:col-span-4">
-                <InputLabel for="reference" value="Reference" />
-                <TextInput
-                    id="reference"
-                    v-model="form.reference"
-                    type="text"
-                    class="mt-1 block w-full"
-                />
-
-                <InputError :message="form.errors.reference" class="mt-2" />
-            </div>
-
-            <!-- Callback URL -->
-            <div class="col-span-6 sm:col-span-4">
-                <InputLabel for="callback_url" value="Callback URL" />
-                <TextInput
-                    id="sku"
-                    v-model="form.callback_url"
-                    type="text"
-                    class="mt-1 block w-full"
-                    required
-                />
-
-                <InputError :message="form.errors.callback_url" class="mt-2" />
             </div>
 
             <!-- Percent Discount -->
@@ -117,12 +74,18 @@ const generateVoucher = () => {
 
         <template #actions>
             <ActionMessage :on="form.recentlySuccessful" class="me-3">
-                Generated.
+                Customized.
             </ActionMessage>
 
-            <PrimaryButton :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
-                Generate
-            </PrimaryButton>
+            <div class="flex items-center space-x-4 px-4 py-3">
+                <SecondaryButton>
+                    Share
+                </SecondaryButton>
+
+                <PrimaryButton :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
+                    Customize
+                </PrimaryButton>
+            </div>
         </template>
     </FormSection>
 </template>
