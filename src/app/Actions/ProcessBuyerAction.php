@@ -71,6 +71,7 @@ class ProcessBuyerAction
             'body.data.fieldsExtracted.idNumber' => ['required', 'string'],
         ];
     }
+
     public function asController(ActionRequest $request): \Illuminate\Http\RedirectResponse
     {
         $buyer = $this->createBuyer($request->validated());

@@ -44,11 +44,19 @@ Echo.channel(`voucher.${props.voucherCode}`)
             <div>{{ product.processing_fee }}</div>
         </template>
         <template v-else>
-            Take note of the reservation code:
-            <div class="font-extrabold text-blue-500">{{ props.voucherCode }}</div>
-            Scan the QR code below to authenticate (eKYC)
-            <div class="mt-4 p-2 inline-block bg-white center" v-html="qrCode" />
-            <div><button class="bg-gray-500 text-white"><a :href="url">Or click this ugly button to authenticate (eKYC)</a></button></div>
+            <div class="text-center py-6">
+                Take note of the reservation code:
+                <div class="font-extrabold text-blue-500">{{ props.voucherCode }}</div>
+                Scan the QR code below to authenticate (eKYC)
+                <div class="mt-4 mb-2 p-2 inline-block bg-white center" v-html="qrCode" />
+                <!-- <div><button class="bg-gray-500 text-white"><a :href="url">Or click this ugly button to authenticate (eKYC)</a></button></div> -->
+                <div>
+                    <button class="bg-gray-500 text-white">
+                        <a :href="url" class="border border-black text-white bg-black mt-4 py-2 px-6 rounded">Proceed to Authenticate</a>
+                    </button>
+                </div>
+            </div>
+            
         </template>
     </AuthenticationCard>
 </template>

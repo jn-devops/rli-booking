@@ -1,6 +1,7 @@
 <?php
 
 use RLI\Booking\Classes\State\{Abandoned, InternallyCreatedPendingUpdate, UpdatedPendingProcessing};
+use Carbon\Carbon;
 use RLI\Booking\Classes\State\{ProcessedPendingConfirmation, ConfirmedPendingInvoice};
 use RLI\Booking\Classes\State\{InvoicedPendingPayment, PaidPendingFulfillment};
 use Illuminate\Foundation\Testing\{RefreshDatabase, WithFaker};
@@ -157,3 +158,21 @@ test('order has data even when transaction_id is null', function (Order $order) 
     [ fn() => Order::factory()->create([ 'transaction_id' => null ]) ]
 ]);
 
+test('order has data schemaless payment attribute', function (Order $order) {
+    expect($order->code_url)->toBeEmpty();
+    expect($order->code_img_url)->toBeEmpty();
+    expect($order->expiration_date)->toBeEmpty();
+    $code_url = $this->faker->url();
+    $code_img_url = $this->faker->url();
+    $date = Carbon::now();
+    $date->addDays(config('rli-payment.expires_in'));
+    $expiration_date = $date->format('YmdHis');
+    $order->code_url = $code_url;
+    expect($order->meta->get('payment.code_url'))->toBe($code_url);
+    $order->code_img_url = $code_img_url;
+    expect($order->meta->get('payment.code_img_url'))->toBe($code_img_url);
+    $order->expiration_date = $expiration_date;
+    expect($order->meta->get('payment.expiration_date'))->toBe($expiration_date);
+})->with([
+    [ fn() => Order::factory()->create([ 'transaction_id' => null ]) ]
+]);

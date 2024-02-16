@@ -19,8 +19,9 @@ return new class extends Migration
             $table->integer('dp_percent')->nullable();
             $table->integer('dp_months')->nullable();
             $table->foreignId('buyer_id')->nullable()->constrained()->cascadeOnDelete();
-            $table->uuid('transaction_id')->nullable();
+            $table->string('transaction_id')->nullable();
             $table->string('state')->nullable();
+            $table->schemalessAttributes('meta');
             $table->timestamps();
             $table->foreign('seller_id')->references('id')->on('users')->cascadeOnDelete();
         });

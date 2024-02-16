@@ -2,6 +2,7 @@
 
 namespace RLI\Booking\Providers;
 
+use Lorisleiva\Actions\Facades\Actions;
 use Illuminate\Support\ServiceProvider;
 
 class BookingServiceProvider extends ServiceProvider
@@ -23,5 +24,8 @@ class BookingServiceProvider extends ServiceProvider
         $this->loadMigrationsFrom([
             'src/database/migrations'
         ]);
+        if ($this->app->runningInConsole()) {
+            Actions::registerCommands('src/app/Actions');
+        }
     }
 }
