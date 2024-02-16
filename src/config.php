@@ -10,6 +10,8 @@ return [
         ],
     ],
     'webhook' => [
-        'client_secret' => env('WEBHOOK_CLIENT_SECRET')
+        'client_secret' => env('WEBHOOK_CLIENT_SECRET'),
+        'customer_header' => env('WEBHOOK_CUSTOMER_HEADER'),
+        'entity_type' => env('WEBHOOK_ENTITY_TYPE'),
     ],
 ];

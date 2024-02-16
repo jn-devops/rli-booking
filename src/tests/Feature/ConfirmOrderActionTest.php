@@ -1,22 +1,22 @@
 <?php
 
-use RLI\Booking\Models\{Buyer, Order, Product, Seller, Voucher};
+use RLI\Booking\Actions\{ConfirmOrderAction, GenerateVoucherAction, ProcessBuyerAction, UpdateOrderAction};
+use RLI\Booking\Classes\State\{ConfirmedPendingInvoice, ProcessedPendingConfirmation};
 use Illuminate\Foundation\Testing\{RefreshDatabase, WithFaker};
-use RLI\Booking\Data\{OrderData, PayloadData, VoucherData};
-use RLI\Booking\Actions\GenerateVoucherAction;
-use RLI\Booking\Actions\ProcessBuyerAction;
-use RLI\Booking\Actions\UpdateOrderAction;
-use FrittenKeeZ\Vouchers\Facades\Vouchers;
+use RLI\Booking\Notifications\OrderConfirmedNotification;
+use RLI\Booking\Http\Resources\PayloadResource;
+use Illuminate\Support\Facades\Notification;
+use RLI\Booking\Models\{Product, Voucher};
 use RLI\Booking\Events\BuyerProcessed;
 use Illuminate\Support\Facades\Event;
 use RLI\Booking\Seeders\UserSeeder;
-use Carbon\CarbonInterval;
 
 uses(RefreshDatabase::class, WithFaker::class);
 
 beforeEach(function() {
-    Event::fake(BuyerProcessed::class);
     $this->seed(UserSeeder::class);
+    Event::fake(BuyerProcessed::class);
+    Notification::fake();
     $this->faker = $this->makeFaker('en_PH');
 });
 
@@ -46,62 +46,16 @@ dataset('voucher', [
     ]
 ]);
 
-test('voucher has a prefix, mask, owner, related entity, metadata and expiry', function () {
-    $prefix = 'jn';
-    $mask = '***-***-***';
-    $expiry = CarbonInterval::create('P30D');
-    $seller = Seller::factory()->create();
-    $order = Order::factory()->create();
-    $metadata = [
-        'discount' => 10
-    ];
-    $voucher = Vouchers::withPrefix($prefix)
-        ->withMask($mask)
-        ->withOwner($seller)
-        ->withEntities($order)
-        ->withMetadata($metadata)
-        ->withExpireDateIn($expiry)
-        ->create();
-
-    $code = $voucher->code;
-    $buyer = Buyer::factory()->create();
-    $success = false;
-    try {
-        $success = Vouchers::redeem($code, $buyer, ['foo' => 'bar']);
-    } catch (FrittenKeeZ\Vouchers\Exceptions\VoucherNotFoundException $e) {
-        // Code provided did not match any vouchers in the database.
-    } catch (FrittenKeeZ\Vouchers\Exceptions\VoucherAlreadyRedeemedException $e) {
-        // Voucher has already been redeemed.
-    }
-    expect($success)->toBeTrue();
-    expect($voucher->owner)->toBe($seller);
-    expect($voucher->voucherEntities->first()->entity)->toBeInstanceOf(Order::class);
-    expect($voucher->voucherEntities->first()->entity->id)->toBe($order->id);
-    expect($voucher->metadata)->toBe($metadata);
-
-    $success = false;
-    try {
-        $success = Vouchers::redeem($code, $buyer, ['foo' => 'bar']);
-    } catch (FrittenKeeZ\Vouchers\Exceptions\VoucherNotFoundException $e) {
-        // Code provided did not match any vouchers in the database.
-    } catch (FrittenKeeZ\Vouchers\Exceptions\VoucherAlreadyRedeemedException $e) {
-        // Voucher has already been redeemed.
-    }
-
-    expect($success)->toBeFalse();
-});
-
-test('voucher has data', function (Voucher $voucher) {
-    $voucher_data = VoucherData::fromModel($voucher);
-    expect($voucher_data->reference_code)->toBe($voucher->code);
-    expect($voucher_data->order)->toBeInstanceOf(OrderData::class);
-})->with('voucher');
-
-test('voucher is payload data', function (Voucher $voucher) {
-    $entity_type = $this->faker->word();
-    $payload_data_1 = PayloadData::fromVoucher($voucher, $entity_type);
-    expect($payload_data_1->entity_type)->toBe($entity_type);
-    expect($payload_data_1->payload)->toBeInstanceOf(VoucherData::class);
-    $payload_data_2 = PayloadData::fromVoucher($voucher);
-    expect($payload_data_2->entity_type)->toBe('checkout.property.kyc.authenticate.after');
+test('confirm order action', function (Voucher $voucher) {
+    $order = $voucher->getOrder();
+    expect($order->state)->toBeInstanceOf(ProcessedPendingConfirmation::class);
+    ConfirmOrderAction::run($voucher);
+    Notification::assertCount(1);
+    Notification::assertSentTo($order, function (OrderConfirmedNotification $notification) use ($voucher) {
+        return
+            $notification->getCustomHeader() === 'X-Krayin-Bagisto-Signature' and
+            $notification->getSignature() === '2b91413f1c973ca506c64f0894790aca4d08697d136c959fb485c0e5c11670ab' and
+            $notification->getPayload()->is(new PayloadResource($voucher));
+    });
+    expect($order->fresh()->state)->toBeInstanceOf(ConfirmedPendingInvoice::class);
 })->with('voucher');

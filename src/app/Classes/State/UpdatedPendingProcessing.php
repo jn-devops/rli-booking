@@ -2,10 +2,10 @@
 
 namespace RLI\Booking\Classes\State;
 
-class CreatedPendingUpdate extends OrderState
+class UpdatedPendingProcessing extends OrderState
 {
     public function color(): string
     {
-        return 'yellow';
+        return 'yellow-green';
     }
 }

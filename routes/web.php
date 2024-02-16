@@ -40,3 +40,4 @@ Route::get('references/{voucher}', [\RLI\Booking\Http\Controllers\VoucherControl
 Route::get('edit-order/{voucher}/{order}', [\RLI\Booking\Http\Controllers\OrderController::class, 'edit'])->name('edit-order');
 Route::get('auto-reserve/{sku}/{transaction_id}', \RLI\Booking\Actions\AutoReserveAction::class)->name('auto-reserve');
 Route::post('process-buyer', \RLI\Booking\Actions\ProcessBuyerAction::class)->name('process-buyer');
+Route::get('affiliate-reserve/{email}/{sku}/{property_code?}', \RLI\Booking\Actions\AffiliateReserveAction::class)->name('affiliate-reserve');

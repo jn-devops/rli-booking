@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Foundation\Testing\{RefreshDatabase, WithFaker};
+use RLI\Booking\Data\ProductData;
 use RLI\Booking\Models\Product;
 
 uses(RefreshDatabase::class, WithFaker::class);
@@ -23,8 +24,16 @@ test('product has schema and schemaless attributes', function () {
 
 test('product can be referenced', function (Product $product) {
     $reference = $product->sku;
-    $prod = Product::where('sku', $reference)->first();
+    $prod = app(Product::class)->where('sku', $reference)->first();
     expect($prod->id)->toBe($product->id);
 })->with([
     [ fn() => Product::factory()->create() ]
 ]);
+
+test('product has data', function () {
+    $product = Product::factory()->create();
+    $data = ProductData::fromModel($product);
+    expect($data->sku)->toBe($product->sku);
+    expect($data->name)->toBe($product->name);
+    expect($data->processing_fee)->toBe($product->processing_fee);
+});

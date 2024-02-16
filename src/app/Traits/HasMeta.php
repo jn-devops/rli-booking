@@ -15,6 +15,7 @@ trait HasMeta
         $this->mergeCasts([
             'meta' => SchemalessAttributes::class
         ]);
+        $this->setHidden(array_merge($this->getHidden(), ['meta']));
     }
 
     public function scopeWithMeta(): Builder

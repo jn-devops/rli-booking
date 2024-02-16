@@ -3,23 +3,20 @@
 namespace RLI\Booking\Notifications;
 
 use NotificationChannels\Webhook\{WebhookChannel, WebhookMessage};
+use RLI\Booking\Http\Resources\PayloadResource;
 use Illuminate\Notifications\Notification;
+use RLI\Booking\Models\Voucher;
 use Illuminate\Bus\Queueable;
 
-//TODO: use voucher instead of order
 class OrderConfirmedNotification extends Notification
 {
     use Queueable;
 
-    const CUSTOM_HEADER = 'X-Krayin-Bagisto-Signature';
-    const ENTITY_TYPE = 'checkout.property.kyc.authenticate.after';
+    protected Voucher $voucher;
 
-    /**
-     * Create a new notification instance.
-     */
-    public function __construct()
+    public function __construct(Voucher $voucher)
     {
-        //
+        $this->voucher = $voucher;
     }
 
     /**
@@ -34,19 +31,12 @@ class OrderConfirmedNotification extends Notification
 
     public function toWebhook($notifiable): WebhookMessage
     {
-        $data = 'X-Krayin-Bagisto-Signature';
-        $secret = config('booking.webhook.client_secret');
-        $signature = hash_hmac('sha256', $data, $secret);
         $application = config('app.name');
-        $payload = $notifiable->toArray();
 
         return WebhookMessage::create()
-            ->data([
-                'payload' => $payload,
-                'entity_type' => self::ENTITY_TYPE
-            ])
+            ->data($this->getPayload())
             ->userAgent($application)
-            ->header(self::CUSTOM_HEADER, $signature)
+            ->header($this->getCustomHeader(),  $this->getSignature())
             ->header('Accept', 'application/json')
             ;
     }
@@ -59,7 +49,25 @@ class OrderConfirmedNotification extends Notification
     public function toArray(object $notifiable): array
     {
         return [
-            'payload' => $notifiable->toArray()
+            'payload' => $this->getPayload()
         ];
+    }
+
+    public function getPayload(): PayloadResource
+    {
+        return new PayloadResource($this->voucher);
+    }
+
+    public function getCustomHeader(): string
+    {
+        return config('booking.webhook.customer_header');
+    }
+
+    public function getSignature(): string
+    {
+        $data = $this->getCustomHeader();
+        $secret = config('booking.webhook.client_secret');
+
+        return hash_hmac('sha256', $data, $secret);
     }
 }

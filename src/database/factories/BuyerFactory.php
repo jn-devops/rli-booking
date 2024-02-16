@@ -15,6 +15,7 @@ class BuyerFactory extends Factory
             'name' => $this->faker->name(),
             'address' => $this->faker->address(),
             'birthdate' => $this->faker->date(),
+            'email' => $this->faker->email(),
             'mobile' => $this->faker->phoneNumber(),
             'id_type' => $this->faker->word(),
             'id_number' => $this->faker->uuid(),

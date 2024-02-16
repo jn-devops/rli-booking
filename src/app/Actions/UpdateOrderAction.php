@@ -2,10 +2,12 @@
 
 namespace RLI\Booking\Actions;
 
+use RLI\Booking\Classes\State\UpdatedPendingProcessing;
 use Lorisleiva\Actions\Concerns\AsAction;
 use RLI\Booking\Models\{Order, Voucher};
 use Lorisleiva\Actions\ActionRequest;
 use Illuminate\Validation\Rule;
+
 class UpdateOrderAction
 {
     use AsAction;
@@ -27,6 +29,7 @@ class UpdateOrderAction
     {
         tap($voucher->getOrder(), function (Order $order) use ($orderUpdates) {
             $order->update($orderUpdates);
+            $order->state->transitionTo(UpdatedPendingProcessing::class);
             $order->save();
         });
     }

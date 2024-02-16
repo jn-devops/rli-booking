@@ -2,14 +2,15 @@
 
 namespace RLI\Booking\Models;
 
+use RLI\Booking\Data\{BuyerData, ProductData, SellerData};
 use RLI\Booking\Traits\HasPackageFactory as HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use RLI\Booking\Interfaces\AttributableData;
 use RLI\Booking\Classes\State\OrderState;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Model;
 use Spatie\ModelStates\HasStates;
 use RLI\Booking\Traits\HasMeta;
-use App\Models\User;
 
 /**
  * Class Order
@@ -19,15 +20,15 @@ use App\Models\User;
  * @property string     $property_code
  * @property int        $dp_percent
  * @property int        $dp_months
- * @property BelongsTo  $product
- * @property BelongsTo  $buyer
- * @property BelongsTo  $seller
+ * @property Product    $product
+ * @property Buyer      $buyer
+ * @property Seller     $seller
  * @property string     $transaction_id
  * @property OrderState $state
  *
- * @method   int    getKey()
+ * @method   int        getKey()
  */
-class Order extends Model
+class Order extends Model implements AttributableData
 {
     use HasFactory;
     use Notifiable;
@@ -52,11 +53,20 @@ class Order extends Model
 
     public function seller(): BelongsTo
     {
-        return $this->belongsTo(User::class, 'user_id');
+        return $this->belongsTo(Seller::class, 'seller_id', 'id', 'users');
     }
 
     public function routeNotificationForWebhook(): string
     {
         return config('booking.defaults.order.webhook');
+    }
+
+    public function toData(): array
+    {
+        return array_merge($this->only(array_diff($this->getFillable(), $this->getHidden())), [
+            'product' => ProductData::fromModel($this->product),
+            'seller' => SellerData::fromModel($this->seller),
+            'buyer' => BuyerData::fromModel($this->buyer)
+        ]);
     }
 }

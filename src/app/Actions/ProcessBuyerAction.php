@@ -2,6 +2,7 @@
 
 namespace RLI\Booking\Actions;
 
+use RLI\Booking\Classes\State\ProcessedPendingConfirmation;
 use Illuminate\Support\Facades\Validator;
 use Lorisleiva\Actions\Concerns\AsAction;
 use RLI\Booking\Models\{Buyer, Voucher};
@@ -20,11 +21,13 @@ class ProcessBuyerAction
         $voucher = $this->getVoucher($validated);
         $agent = $this->getSeller($validated);
         $fieldsExtracted = Arr::get($validated, 'body.data.fieldsExtracted');
+        $email = Arr::get($validated, 'body.inputs.email');
         $idType = Arr::get($validated, 'body.data.idType');
         $buyer = Buyer::create([
             'name' => Arr::get($fieldsExtracted, 'fullName'),
             'address' => Arr::get($fieldsExtracted, 'address'),
             'birthdate' => Arr::get($fieldsExtracted, 'dateOfBirth'),
+            'email' => $email,
 //            'mobile' => '09173011987',
             'id_type' => $idType,
             'id_number' => Arr::get($fieldsExtracted, 'idNumber'),
@@ -34,6 +37,7 @@ class ProcessBuyerAction
         ]);
         $order = $voucher->getOrder();
         $order->buyer()->associate($buyer);
+        $order->state->transitionTo(ProcessedPendingConfirmation::class);
         $order->save();
         $voucher->save();
 

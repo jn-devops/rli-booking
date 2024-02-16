@@ -22,5 +22,11 @@ class UserSeeder extends Seeder
             'password' => '#Password1',
             'password_confirmation' => '#Password1',
         ]);
+        app(CreateNewUser::class)->create([
+            'name' => 'John Doe',
+            'email' => 'john@doe.com',
+            'password' => '#Password1',
+            'password_confirmation' => '#Password1',
+        ]);
     }
 }
