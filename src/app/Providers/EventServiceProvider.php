@@ -3,9 +3,9 @@
 namespace RLI\Booking\Providers;
 
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
-use RLI\Booking\Actions\ConfirmOrderAction;
+use RLI\Booking\Actions\{ConfirmOrderAction, InvoiceBuyerAction};
+use RLI\Booking\Events\{BuyerProcessed, PaymentDetailsAcquired};
 use Illuminate\Support\Facades\Event;
-use RLI\Booking\Events\BuyerProcessed;
 
 class EventServiceProvider extends ServiceProvider
 {
@@ -18,5 +18,6 @@ class EventServiceProvider extends ServiceProvider
     {
         parent::boot();
         Event::listen(BuyerProcessed::class, ConfirmOrderAction::class);
+        Event::listen(PaymentDetailsAcquired::class, InvoiceBuyerAction::class);
     }
 }

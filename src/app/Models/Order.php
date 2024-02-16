@@ -25,6 +25,9 @@ use RLI\Booking\Traits\HasMeta;
  * @property Seller     $seller
  * @property string     $transaction_id
  * @property OrderState $state
+ * @property string     $code_url
+ * @property string     $code_img_url
+ * @property string     $expiration_date
  *
  * @method   int        getKey()
  */
@@ -68,5 +71,44 @@ class Order extends Model implements AttributableData
             'seller' => SellerData::fromModel($this->seller),
             'buyer' => BuyerData::fromModel($this->buyer)
         ]);
+    }
+
+    public function getCodeUrlAttribute(): ?string
+    {
+        return $this->getAttribute('meta')->get('payment.code_url');
+    }
+
+    public function setCodeUrlAttribute(string $value): self
+    {
+
+        $this->getAttribute('meta')->set('payment.code_url', $value);
+
+        return $this;
+    }
+
+    public function getCodeImgUrlAttribute(): ?string
+    {
+        return $this->getAttribute('meta')->get('payment.code_img_url');
+    }
+
+    public function setCodeImgUrlAttribute(string $value): self
+    {
+
+        $this->getAttribute('meta')->set('payment.code_img_url', $value);
+
+        return $this;
+    }
+
+    public function getExpirationDateAttribute(): ?string
+    {
+        return $this->getAttribute('meta')->get('payment.expiration_date');
+    }
+
+    public function setExpirationDateAttribute(string $value): self
+    {
+
+        $this->getAttribute('meta')->set('payment.expiration_date', $value);
+
+        return $this;
     }
 }

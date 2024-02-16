@@ -21,6 +21,7 @@ return new class extends Migration
             $table->foreignId('buyer_id')->nullable()->constrained()->cascadeOnDelete();
             $table->string('transaction_id')->nullable();
             $table->string('state')->nullable();
+            $table->schemalessAttributes('meta');
             $table->timestamps();
             $table->foreign('seller_id')->references('id')->on('users')->cascadeOnDelete();
         });
