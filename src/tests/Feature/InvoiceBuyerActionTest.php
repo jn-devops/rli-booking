@@ -77,3 +77,12 @@ test('payment details acquired event', function (Voucher $voucher) {
     expect($order->fresh()->state)->toBeInstanceOf(InvoicedPendingPayment::class);
     Event::assertDispatched(BuyerInvoiced::class);
 })->with('voucher');
+
+test('generate invoice webhook', function (Voucher $voucher) {
+    Notification::fake();
+    $order = $voucher->getOrder();
+    expect($order->state)->toBeInstanceOf(ConfirmedPendingInvoice::class);
+    $invoiceFilePath = InvoiceBuyerAction::run($voucher);
+    expect($invoiceFilePath)->toBe('Invoice file name here');
+    // dd($invoiceFilePath);
+})->with('voucher');
