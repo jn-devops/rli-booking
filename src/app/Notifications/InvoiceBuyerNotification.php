@@ -6,6 +6,7 @@ use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 use RLI\Booking\Models\Voucher;
 use Illuminate\Bus\Queueable;
+use RLI\Booking\Mail\Invoice;
 
 class InvoiceBuyerNotification extends Notification
 {
@@ -31,15 +32,9 @@ class InvoiceBuyerNotification extends Notification
         return ['mail'];
     }
 
-    /**
-     * Get the mail representation of the notification.
-     */
-    public function toMail(object $notifiable): MailMessage
+    public function toMail(object $notifiable): Invoice
     {
-        return (new MailMessage)
-            ->line('The introduction to the notification.')
-            ->action('Notification Action', url('/'))
-            ->line('Thank you for using our application!');
+        return new Invoice($notifiable);
     }
 
     /**

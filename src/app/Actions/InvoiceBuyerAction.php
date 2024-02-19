@@ -18,7 +18,7 @@ class InvoiceBuyerAction
     {
         $order = $voucher->getOrder();
         $invoiceFilePath = $this->generateInvoice($voucher);
-        $order->notify(new InvoiceBuyerNotification($voucher, $invoiceFilePath));
+        $order->buyer->notify(new InvoiceBuyerNotification($voucher, $invoiceFilePath));
         $order->state->transitionTo(InvoicedPendingPayment::class);
         BuyerInvoiced::dispatch($voucher);
 
@@ -39,7 +39,7 @@ class InvoiceBuyerAction
         $response = Http::post('https://eolhdxkbhybdspj.m.pipedream.net/', [
             'voucher' => $voucher->toData(),
         ]);
-        
+
         return $response->body();
     }
 
