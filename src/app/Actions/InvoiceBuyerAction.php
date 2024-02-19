@@ -7,6 +7,7 @@ use RLI\Booking\Classes\State\InvoicedPendingPayment;
 use RLI\Booking\Events\PaymentDetailsAcquired;
 use Lorisleiva\Actions\Concerns\AsAction;
 use RLI\Booking\Events\BuyerInvoiced;
+use Illuminate\Support\Facades\Http;
 use RLI\Booking\Models\Voucher;
 
 class InvoiceBuyerAction
@@ -35,10 +36,11 @@ class InvoiceBuyerAction
 
     protected function generateInvoice(Voucher $voucher): string
     {
-        //TODO: generate document here
-
-        $invoiceFilePath = 'then put the url or path here...';
-
-        return $invoiceFilePath;
+        $response = Http::post('https://eolhdxkbhybdspj.m.pipedream.net/', [
+            'voucher' => $voucher->toData(),
+        ]);
+        
+        return $response->body();
     }
+
 }
