@@ -1,13 +1,11 @@
 <?php
 
-use RLI\Booking\Actions\{GenerateVoucherAction, ProcessBuyerAction, UpdateOrderAction};
-use RLI\Booking\Classes\State\{ConfirmedPendingInvoice,InvoicedPendingPayment};
-use RLI\Booking\Events\{BuyerInvoiced, PaymentDetailsAcquired};
+use RLI\Booking\Actions\{AcknowledgePaymentAction, GenerateVoucherAction, ProcessBuyerAction, UpdateOrderAction, InvoiceBuyerAction};
+use RLI\Booking\Events\{BuyerInvoiced, PaymentDetailsAcquired, PaymentAcknowledged};
+use RLI\Booking\Classes\State\{InvoicedPendingPayment, PaidPendingFulfillment};
 use Illuminate\Foundation\Testing\{RefreshDatabase, WithFaker};
-use RLI\Booking\Notifications\InvoiceBuyerNotification;
 use RLI\Booking\Actions\AcquirePaymentDetailsAction;
 use Illuminate\Support\Facades\Notification;
-use RLI\Booking\Actions\InvoiceBuyerAction;
 use RLI\Booking\Models\{Product, Voucher};
 use Illuminate\Support\Facades\Event;
 use RLI\Booking\Seeders\UserSeeder;
@@ -17,7 +15,7 @@ uses(RefreshDatabase::class, WithFaker::class);
 
 beforeEach(function() {
     $this->seed(UserSeeder::class);
-    Event::fake([PaymentDetailsAcquired::class, BuyerInvoiced::class]);
+    Event::fake([PaymentDetailsAcquired::class, BuyerInvoiced::class, PaymentAcknowledged::class]);
     $this->faker = $this->makeFaker('en_PH');
 });
 
@@ -62,26 +60,31 @@ dataset('voucher', [
                 'code_img_url' => $code_img_url,
                 'expiration_date' => $expiration_date,
             ]);
+            InvoiceBuyerAction::run($voucher);
         })
     ]
 ]);
 
-test('payment details acquired event', function (Voucher $voucher) {
-    Notification::fake();
+test('acknowledge payment action runs', function (Voucher $voucher) {
+//    Notification::fake();
     $order = $voucher->getOrder();
-    expect($order->state)->toBeInstanceOf(ConfirmedPendingInvoice::class);
-    $invoiceFilePath = InvoiceBuyerAction::run($voucher);
-    Notification::assertSentTo($order->buyer, InvoiceBuyerNotification::class, function (InvoiceBuyerNotification $notification) use ($voucher, $invoiceFilePath) {
-        return $notification->voucher->is($voucher) && $notification->invoiceFilePath == $invoiceFilePath;
-    });
-    expect($order->fresh()->state)->toBeInstanceOf(InvoicedPendingPayment::class);
-    Event::assertDispatched(BuyerInvoiced::class);
+    expect($order->state)->toBeInstanceOf(InvoicedPendingPayment::class);
+    AcknowledgePaymentAction::run(['reference_code' => $voucher->code]);
+//    Notification::assertSentTo($order, InvoiceBuyerNotification::class, function (InvoiceBuyerNotification $notification) use ($voucher, $invoiceFilePath) {
+//        return $notification->voucher->is($voucher) && $notification->invoiceFilePath == $invoiceFilePath;
+//    });
+    expect($order->fresh()->state)->toBeInstanceOf(PaidPendingFulfillment::class);
+    Event::assertDispatched(PaymentAcknowledged::class);
 })->with('voucher');
 
-test('generate invoice webhook', function (Voucher $voucher) {
-    Notification::fake();
+test('acknowledge payment action has end points', function (Voucher $voucher) {
     $order = $voucher->getOrder();
-    expect($order->state)->toBeInstanceOf(ConfirmedPendingInvoice::class);
-    $invoiceFilePath = InvoiceBuyerAction::run($voucher);
-    expect($invoiceFilePath)->toBe($invoiceFilePath);
+    $code_url = $order->code_url;
+    $code_img_url = $order->code_img_url;
+    $expiration_date = $order->expiration_date;
+    $response = $this->postJson(route('acknowledge-payment'), [
+        'reference_code' => $voucher->code,
+    ]);
+    $response->assertStatus(302);
+    $response->assertJsonFragment(['paid-using' => compact('code_url', 'code_img_url', 'expiration_date')]);
 })->with('voucher');
