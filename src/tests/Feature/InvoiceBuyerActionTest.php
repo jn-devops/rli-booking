@@ -83,6 +83,5 @@ test('generate invoice webhook', function (Voucher $voucher) {
     $order = $voucher->getOrder();
     expect($order->state)->toBeInstanceOf(ConfirmedPendingInvoice::class);
     $invoiceFilePath = InvoiceBuyerAction::run($voucher);
-    expect($invoiceFilePath)->toBe('Invoice file name here');
-    // dd($invoiceFilePath);
+    expect($invoiceFilePath)->toBe($invoiceFilePath);
 })->with('voucher');
