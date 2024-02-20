@@ -2,18 +2,18 @@
 
 namespace RLI\Booking\Actions;
 
-use Illuminate\Support\Arr;
-use Lorisleiva\Actions\ActionRequest;
-use Lorisleiva\Actions\Concerns\AsAction;
 use RLI\Booking\Classes\State\PaidPendingFulfillment;
-use RLI\Booking\Events\PaymentAcknowledged;
 use RLI\Booking\Http\Resources\PayloadResource;
+use RLI\Booking\Events\PaymentAcknowledged;
+use Lorisleiva\Actions\Concerns\AsAction;
+use RLI\Booking\Traits\ValidateHandle;
+use Lorisleiva\Actions\ActionRequest;
 use RLI\Booking\Models\Voucher;
-//use RLI\Booking\Traits\ValidateHandle;
+use Illuminate\Support\Arr;
 
 class AcknowledgePaymentAction
 {
-//    use ValidateHandle;
+    use ValidateHandle;
     use AsAction;
 
     protected function acknowledge(Voucher $voucher): Voucher
@@ -35,7 +35,7 @@ class AcknowledgePaymentAction
     public function rules(): array
     {
         return [
-            'reference_code' => ['required', 'string', 'min:2'],
+            'reference_code' => ['required', 'string', 'min:2', 'exists:vouchers,code'],
         ];
     }
 
@@ -55,6 +55,4 @@ class AcknowledgePaymentAction
 
         return Voucher::where('code', $code)->firstOrFail();
     }
-
-
 }

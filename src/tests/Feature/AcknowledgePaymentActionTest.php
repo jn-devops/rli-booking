@@ -14,6 +14,7 @@ use Carbon\Carbon;
 uses(RefreshDatabase::class, WithFaker::class);
 
 beforeEach(function() {
+    Notification::fake();
     $this->seed(UserSeeder::class);
     Event::fake([PaymentDetailsAcquired::class, BuyerInvoiced::class, PaymentAcknowledged::class]);
     $this->faker = $this->makeFaker('en_PH');
@@ -66,10 +67,9 @@ dataset('voucher', [
 ]);
 
 test('acknowledge payment action runs', function (Voucher $voucher) {
-//    Notification::fake();
     $order = $voucher->getOrder();
     expect($order->state)->toBeInstanceOf(InvoicedPendingPayment::class);
-    AcknowledgePaymentAction::run(['reference_code' => $voucher->code]);
+    AcknowledgePaymentAction::execute(['reference_code' => $voucher->code]);
 //    Notification::assertSentTo($order, InvoiceBuyerNotification::class, function (InvoiceBuyerNotification $notification) use ($voucher, $invoiceFilePath) {
 //        return $notification->voucher->is($voucher) && $notification->invoiceFilePath == $invoiceFilePath;
 //    });
