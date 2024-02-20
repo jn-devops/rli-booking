@@ -7,7 +7,7 @@ import { Head, Link, useForm } from '@inertiajs/vue3';
 import InputError from '@/Components/InputError.vue';
 import InputLabel from '@/Components/InputLabel.vue';
 import TextInput from '@/Components/TextInput.vue';
-import { onMounted, ref, watch, computed } from 'vue'
+import { onMounted, ref, watch, computed } from 'vue';
 
 const props = defineProps({
     voucherCode: String,
@@ -18,19 +18,46 @@ const selectedDownpayment = ref(null);
 const selectedMonths = ref(null);
 const selectedValues = ref({});
 const tcp = ref(2700000);
-const rFee = ref(27000);
+const rFee = ref(20000);
 
 const onChange = (event) =>{
     selectedTerm.value = event.target.value;
     form.terms = event.target.value;
+    // console.log("Terms: ", event.target.value);
+
+ 
     selectedDownpayment.value = null;
     selectedMonths.value = null;
+
+    if(event.target.value === 'Downpayment - 0.10'){
+        // selectedDownpayment.value = null;
+        // selectedMonths.value = null;
+        let dp10 = 0.10;
+       selectedDownpayment.value = dp10;
+       form.dp_percent = selectedDownpayment.value * 100;
+    //    console.log('Downpayment - 10%', selectedDownpayment.value);
+    } else if(event.target.value === 'Downpayment - 0.30'){
+        // selectedDownpayment.value = null;
+        // selectedMonths.value = null;
+        let dp30 = 0.30;
+        selectedDownpayment.value = dp30;
+        form.dp_percent = selectedDownpayment.value * 100;
+    } else if (event.target.value === 'Spotcash'){
+        // selectedDownpayment.value = null;
+        // selectedMonths.value = null;
+        let spot100 = 100;
+        selectedDownpayment.value = spot100;
+        selectedMonths.value = 1
+
+        form.dp_percent = selectedDownpayment.value;
+        form.dp_months = selectedMonths.value;
+       
+    }
+
 }
 // Function to handle downpayment change
 const handleDownpaymentChange = () => {
     let selectDPVal =  (selectedDownpayment.value / 100).toFixed(2);
-    //   console.log('Selected Downpayment:', selectDPVal);
-    //   console.log('Selected Downpayment:', selectedDownpayment.value);
   form.dp_percent = selectedDownpayment.value;
 //   downPayment(selectDPVal);
 //   totalDP(selectDPVal);
@@ -38,14 +65,41 @@ const handleDownpaymentChange = () => {
 //   console.log('percent: ',form);
 };
 
+  const today = new Date();
+  const month = today.toLocaleString('default', {month : 'long'}); //Momth
+  const month1 = today.getMonth(); // Month
+  const day = today.getDate(); // Day
+  const year = today.getFullYear(); //Year
+  const dateToday = (month1 + 1) + '/' + day + '/' + year; 
+  const spotDate = (month1 + 2 ) + '/' + day + '/' + year;
+ const fDate = ref(null);
+ const rDueDate = (month1 + 1) + '/' + (day + 9) + '/' + year;
+//  const option = {month: 'long', day: '2-digit', year: 'numeric'};
+//  const rDueDate = rNewDueDate.toLocaleString('en-US', option);
+
 // Function to handle months change
 const handleMonthsChange = () => {
 //   console.log('Selected Months:', selectedMonths.value);
   form.dp_months = selectedMonths.value;
-//   monthsToPay(selectedMonths.value);
+  monthsToPay(selectedMonths.value);
+  downPayment(selectedDownpayment.value);
+  totalDP(selectedDownpayment.value);
+  DPComputation(selectedDownpayment.value);
+  fDate.value = null;
+  const futureMonth = (today.getMonth() + Number(selectedMonths.value)) % 12; // Get the future month, ensuring it wraps around
+  const futureYear = today.getFullYear() + Math.floor((today.getMonth() + Number(selectedMonths.value)) / 12); // Calculate the future year if needed
+
+   const futureDate = (futureMonth + 1) + '/' + today.getDate() + '/' + futureYear; // Add 1 to month because it is zero-indexed
+
+//    console.log(futureDate);
+//   const option = {month: 'long', day: '2-digit', year: 'numeric'};
+//   const formatDate = futureDate.toLocaleString('en-US', option);
+    fDate.value = futureDate;
+
 //   return selectedMonths.value;
 //   console.log('months: ',form);
 };
+
 
 const form = useForm({
     // property_code: props.order?.property_code,
@@ -56,7 +110,6 @@ const form = useForm({
     dp_months: selectedMonths.value
 });
 
-
 const viewAmortizationModal = ref(null);
 const openViewAmortization = () =>{
     viewAmortizationModal.value = !viewAmortizationModal.value;
@@ -64,33 +117,46 @@ const openViewAmortization = () =>{
 
 
 const downPayment = (percentage) =>{
-    // console.log('downPayment Function: ',  percentage);
-    // console.log('downPayment Function: ',  tcp.value * percentage);
-    return Number(tcp.value * percentage - 27000);
+    // console.log('downPayment Function: ', tcp.value * percentage - rFee.value);
+    // console.log('downPayment Function!: ',  tcp.value * percentage - rFee.value);
+    return Number(tcp.value * percentage - rFee.value);
 }
 
 
 const resultDP = computed(() => {
-    return downPayment((selectedDownpayment.value / 100).toFixed(2));
+    // console.log('resultDP:', downPayment((selectedDownpayment.value / 100).toFixed(2)));
+    // console.log('resultDp: ', selectedDownpayment.value);
+    return downPayment(selectedDownpayment.value);
   });
-
 
 //   const resultToPay = new Array();
   const monthsToPay = (months) =>{
     // console.log(`DP Staggered / ${months} months: `, resultDP.value / months);
     // return resultDP.value / months;
+
+    // for Months
+    const monthNames = [
+    'January', 'February', 'March', 'April',
+    'May', 'June', 'July', 'August',
+    'September', 'October', 'November', 'December'
+    ];
+
+
     const resultToPay = [];
     let resultVal = resultDP.value / months;
+    //resultVal = Math.round(resultVal); // Round to two decimal places
+    // resultVal = parseFloat(resultVal.toFixed(2));
+    // console.log('resultVal:', resultVal);
     // let resultVal1 = resultDP.value - resultVal ;
     for(let i = 0; i <= months; i++){
-        // resultToPay[i] = i;
-        // resultToPay[i] =  resultVal;
         let additionalData = resultDP.value - resultVal * i;
-        resultToPay[i] = { value: resultVal, additionalData: additionalData };
+        const newMonthIndex  = (today.getMonth() + i) % 12 + 1; // Get the new month with proper wrapping
+        const newYear = today.getFullYear() + Math.floor((today.getMonth() + i) / 12); // Calculate the new year if it exceeds 12
+        // const newMonth = monthNames[newMonthIndex];
+        resultToPay[i] = { value: resultVal, Month: newMonthIndex, Day: day, Year: newYear, additionalData: additionalData };
     }
     // console.log(resultToPay);
     return resultToPay.slice(1);
-
 
     // return parseInt(resultDP / months);
   }
@@ -112,7 +178,7 @@ const totalDP = (dpParam) =>{
     return overTotDp;
 }
 const overAllTot = computed(() =>{
-    return totalDP((selectedDownpayment.value / 100).toFixed(2));
+    return totalDP(selectedDownpayment.value);
 })
 
 const DPComputation = (downpayment) =>{
@@ -122,7 +188,7 @@ const DPComputation = (downpayment) =>{
 }
 
 const DPComputationTotal = computed(() =>{
-    return DPComputation((selectedDownpayment.value / 100).toFixed(2));
+    return DPComputation(selectedDownpayment.value);
 });
 
 
@@ -248,16 +314,17 @@ const submit = () => {
                 <InputLabel for="terms" value="Terms" />
                 <select @change="onChange" id="terms" name="terms" class="mt-2 block w-full rounded-md border-0 py-1.5 pl-3 pr-10 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6" v-model="selectedTerm">
                     <option selected disabled value="Selected">Selected</option>
-                    <option value="Downpayment">Downpayment</option>
-                    <option value="Spotcash">Spotcash</option>
+                    <option value="Downpayment - 0.10">Downpayment - 10%</option>
+                    <option value="Downpayment - 0.30">Downpayment - 30%</option>
+                    <option value="Spotcash">Spotcash - 100%</option>
                 </select>
 
-                <div v-if="selectedTerm === 'Downpayment'" class="block mt-4">
-                    <InputLabel for="downpayment" value="Downpayment" />
+                <div v-if="selectedTerm === 'Downpayment - 0.10'" class="block mt-4">
+                    <!-- <InputLabel for="downpayment" value="Downpayment" />
                     <select id="downpayment" name="downpayment" class="mt-2 block w-full rounded-md border-0 py-1.5 pl-3 pr-10 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6" v-model="selectedDownpayment" @change="handleDownpaymentChange">
                         <option value="10" selected>10%</option>
                         <option value="30">30%</option>
-                    </select>
+                    </select> -->
 
                     <div class="mt-3">
                         <InputLabel for="months" value="Months" />
@@ -268,20 +335,36 @@ const submit = () => {
                         </select>
                     </div>
                 </div>
-                <div v-else class="block mt-4">
-                    <InputLabel for="spotcash"  value="Spotcash" />
-                    <select id="spotcash" name="spotcash" class="mt-2 block w-full rounded-md border-0 py-1.5 pl-3 pr-10 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6" v-model="selectedDownpayment" @change="handleDownpaymentChange">
-                        <option value="100">100%</option>
-                    </select>
+                <div v-if="selectedTerm === 'Downpayment - 0.30'" class="block mt-4">
+                    <!-- <InputLabel for="downpayment" value="Downpayment" />
+                    <select id="downpayment" name="downpayment" class="mt-2 block w-full rounded-md border-0 py-1.5 pl-3 pr-10 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6" v-model="selectedDownpayment" @change="handleDownpaymentChange">
+                        <option value="10" selected>10%</option>
+                        <option value="30">30%</option>
+                    </select> -->
 
                     <div class="mt-3">
                         <InputLabel for="months" value="Months" />
-                        <select id="months" name="months" class="mt-2 block w-full rounded-md border-0 py-1.5 pl-3 pr-10 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6" v-model="selectedMonths">
-                            <option value="1">1 Month</option>
+                        <select id="months" name="months" class="mt-2 block w-full rounded-md border-0 py-1.5 pl-3 pr-10 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6" v-model="selectedMonths" @change="handleMonthsChange">
+                            <option value="36">36 Months</option>
+                            <option value="48">48 Months</option>
+                            <option value="60">60 Months</option>
                         </select>
                     </div>
                 </div>
-                <div class="mt-4" v-if="selectedTerm === 'Downpayment' && selectedDownpayment && selectedMonths">
+                <div v-else class="hidden mt-4">
+                    <InputLabel for="spotcash"  value="Spotcash" />
+                    <select id="spotcash" name="spotcash" class="mt-2 block w-full rounded-md border-0 py-1.5 pl-3 pr-10 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6" v-model="selectedDownpayment" @change="handleDownpaymentChange">
+                        <option value="100" :value="100" selected>100%</option>
+                    </select>
+
+                    <div class="hidden mt-3">
+                        <InputLabel for="months" value="Months" />
+                        <select id="months" name="months" class="mt-2 block w-full rounded-md border-0 py-1.5 pl-3 pr-10 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6" v-model="selectedMonths">
+                            <option value="1" :value="1" selected>1 Month</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="mt-4" v-if="selectedTerm === 'Downpayment - 0.10' && selectedMonths || selectedTerm === 'Downpayment - 0.30' && selectedMonths">
                     <div class="mt-4">
                         <InputLabel for="rDate" value="Reservation Date" />
                         <input 
@@ -289,6 +372,7 @@ const submit = () => {
                         type="text"
                         class="block w-full rounded-none rounded-l-md border-0 py-1.5 text-black ring-1 ring-inset ring-gray-300 placeholder:text-black focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 bg-gray-100" 
                         placeholder="January 1, 2024"
+                        :value="`${dateToday.toLocaleString()}`"
                         disabled>
                     </div>
                     <div class="mt-4">
@@ -298,6 +382,7 @@ const submit = () => {
                         type="text"
                         class="block w-full rounded-none rounded-l-md border-0 py-1.5 text-black ring-1 ring-inset ring-gray-300 placeholder:text-black focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 bg-gray-100" 
                         placeholder="January 10, 2024"
+                        :value="`${rDueDate.toLocaleString()}`"
                         disabled>
                     </div>
                     <div class="mt-4">
@@ -306,7 +391,7 @@ const submit = () => {
                         id="rFee"
                         type="text"
                         class="block w-full rounded-none rounded-l-md border-0 py-1.5 text-black ring-1 ring-inset ring-gray-300 placeholder:text-black focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 bg-gray-100" 
-                        placeholder="₱27,000.00"
+                        placeholder="₱20,000.00"
                         disabled>
                     </div>
                     <div class="mt-4">
@@ -316,7 +401,7 @@ const submit = () => {
                         type="text"
                         class="block w-full rounded-none rounded-l-md border-0 py-1.5 text-black ring-1 ring-inset ring-gray-300 placeholder:text-black focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 bg-gray-100" 
                         disabled
-                        :value="`₱${resultMonthstoPay[0].value.toLocaleString()}.00`">
+                        :value="`₱${resultMonthstoPay[0].value.toFixed(2).toLocaleString()}`">
                     </div>
                     <div class="mt-4">
                         <InputLabel for="bal" value="Balance" />
@@ -328,14 +413,14 @@ const submit = () => {
                         :value="`₱${overAllTot.toLocaleString()}.00`">
                     </div>
                 </div>
-                <div class="mt-4" v-else-if="selectedTerm === 'Spotcash' && selectedDownpayment && selectedMonths">
+                <div class="mt-4" v-else-if="selectedTerm === 'Spotcash'">
                     <div class="mt-4">
                         <InputLabel for="rDate" value="Reservation Date" />
                         <input 
                         id="rDate"
                         type="text"
                         class="block w-full rounded-none rounded-l-md border-0 py-1.5 text-black ring-1 ring-inset ring-gray-300 placeholder:text-black focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 bg-gray-100" 
-                        placeholder="January 1, 2024"
+                        :value="`${dateToday}`"
                         disabled>
                     </div>
                     <div class="mt-4">
@@ -345,6 +430,7 @@ const submit = () => {
                         type="text"
                         class="block w-full rounded-none rounded-l-md border-0 py-1.5 text-black ring-1 ring-inset ring-gray-300 placeholder:text-black focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 bg-gray-100" 
                         placeholder="January 10, 2024"
+                        :value="`${rDueDate.toLocaleString()}`"
                         disabled>
                     </div>
                     <div class="mt-4">
@@ -353,7 +439,7 @@ const submit = () => {
                         
                         type="text"
                         class="block w-full rounded-none rounded-l-md border-0 py-1.5 text-black ring-1 ring-inset ring-gray-300 placeholder:text-black focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 bg-gray-100" 
-                        placeholder="₱27,000.00"
+                        placeholder="₱20,000.00"
                         disabled>
                     </div>
                     <div class="mt-4">
@@ -380,11 +466,17 @@ const submit = () => {
                 <PrimaryButton class="ms-4" :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
                     Reserve
                 </PrimaryButton> -->
-                <button :disabled="!(selectedTerm && selectedDownpayment && selectedMonths)"
+                <!-- <button :disabled="!(selectedTerm && selectedDownpayment && selectedMonths)" -->
+                <button v-if="selectedTerm === 'Downpayment - 0.10' || selectedTerm === 'Downpayment - 0.30'" 
+                :disabled="!(selectedTerm && selectedDownpayment && selectedMonths)"
                 @click="openViewAmortization"
                 :class="{'hover:text-blue-400' : (selectedTerm && selectedDownpayment && selectedMonths)}"
                 class="bg-gray-200 px-6 py-2 rounded">View Amortization</button>
-                
+                <button v-else-if="selectedTerm === 'Spotcash'" 
+                :disabled="!(selectedTerm)"
+                @click="openViewAmortization"
+                :class="{'hover:text-blue-400' : (selectedTerm)}"
+                class="bg-gray-200 px-6 py-2 rounded">View Amortization</button>
                 <PrimaryButton class="ms-4" :class="{ 'opacity-25': form.processing }" :disabled="form.processing" @click="submit()">
                 Reserve
                 </PrimaryButton>
@@ -407,14 +499,14 @@ const submit = () => {
                 <img src="../../../img/Elnvital_Logo.png" alt="Logo" class="mx-auto">
             </div>
 
-            <div v-if="selectedTerm === 'Downpayment'">
+            <div v-if="selectedTerm === 'Downpayment - 0.10' || selectedTerm === 'Downpayment - 0.30'">
                 <!-- <p>Downpayment</p> -->
                 <div class="mt-4">
                     <div class="bg_rli-primary p-3 rounded-t-lg text-white font-bold text-1xl">
                         <p>Reservation Details</p>
                     </div>
                     <div class="border-b-2 border-l-2 border-r-2 rounded p-4">
-                        <div class="grid lg:grid-cols-2 md:grid-cols-2">
+                        <div class="grid lg:grid-cols-2 md:grid-cols-2 gap-3">
                             <div class="">
                                 <div>
                                     <div class="flex">
@@ -422,7 +514,7 @@ const submit = () => {
                                         <!-- <p class="ml-2">details.property_name</p> -->
                                         <p class="ml-2">ZAYA-1A-BO1-1FB</p>
                                     </div>
-                                    <div class="flex">
+                                    <div class="flex flex-wrap">
                                         <p class="font-bold">Location: </p>
                                         <!-- <p class="ml-2">details.location</p> -->
                                         <p class="ml-2">Brgy. Balibago, Sta. Rosa City, Laguna</p>
@@ -490,7 +582,7 @@ const submit = () => {
                                 <div class="py-4 border border-r-gray border-t-0 rounded-bl-lg ">
                                     <!-- <p class="text-xs sm:text-sm lg:text-base">details.dp_category</p> -->
                                     <!-- <p class="text-xs sm:text-sm lg:text-sm">Downpayment - {{ selectedDownpayment.slice(2,4)  }}%</p> -->
-                                    <p class="text-xs sm:text-sm lg:text-sm">Downpayment - {{ selectedDownpayment  }}%</p>
+                                    <p class="text-xs sm:text-sm lg:text-sm">Downpayment - {{ selectedDownpayment * 100  }}%</p>
                                     
                                 </div>
                                 <div class="py-4 border border-r-gray border-t-0  ">
@@ -499,16 +591,16 @@ const submit = () => {
                                 </div>
                                 <div class="py-4 border border-r-gray border-t-0  ">
                                     <!-- <p class="text-xs sm:text-sm lg:text-base">details.start_date</p> -->
-                                    <p class="text-xs sm:text-sm lg:text-sm">January 1, 2023</p>
+                                    <p class="text-xs sm:text-sm lg:text-sm"> {{ dateToday }}</p>
                                 </div>
                                 <div class="py-4 border border-r-gray border-t-0  ">
                                     <!-- <p class="text-xs sm:text-sm lg:text-base">details.end_date</p> -->
-                                    <p class="text-xs sm:text-sm lg:text-sm">February 1, 2023</p>
+                                    <p class="text-xs sm:text-sm lg:text-sm">{{ fDate.toLocaleString() }}</p>
                                 </div>
                                 <div class="py-4 border border-r-gray border-t-0 ">
                                     <!-- <p class="text-xs sm:text-sm lg:text-base">details.downpayment</p> -->
                                     <!-- <p class="text-xs sm:text-sm lg:text-sm">₱21,750.00</p> -->
-                                    <p class="text-xs sm:text-sm lg:text-sm">₱{{ resultMonthstoPay[0].value.toLocaleString() }}.00</p>
+                                    <p class="text-xs sm:text-sm lg:text-sm">₱{{ resultMonthstoPay[0].value.toFixed(2).toLocaleString() }}</p>
                                 </div>
                                 <div class="py-4 border border-t-0 rounded-br-lg ">
                                     <p class="text-xs sm:text-sm lg:text-sm">₱{{ overAllTot.toLocaleString() }}.00</p>
@@ -551,7 +643,7 @@ const submit = () => {
                                     </div>
                                     <div class="py-4 border border-r-gray border-t-0">
                                         <!-- <p class="text-xs sm:text-sm lg:text-base font-bold">details.reservation_fee</p> -->
-                                        <p class="text-xs sm:text-sm lg:text-sm font-bold">Downpayment - {{ selectedDownpayment }}%</p>
+                                        <p class="text-xs sm:text-sm lg:text-sm font-bold">Downpayment - {{ selectedDownpayment * 100 }}%</p>
                                     </div>
                                     <div class="py-4 border border-r-gray border-t-0 ">
                                         <!-- <p class="text-xs sm:text-sm lg:text-base font-bold">details.due_date</p> -->
@@ -580,11 +672,11 @@ const submit = () => {
                                     </div>
                                     <div class="py-4 border border-r-gray border-t-0 ">
                                         <!-- <p class="text-xs sm:text-sm lg:text-base font-bold">details.due_date</p> -->
-                                        <p class="text-xs sm:text-sm lg:text-sm font-bold">January 1, 2023</p>
+                                        <p class="text-xs sm:text-sm lg:text-sm font-bold">{{ dateToday }}</p>
                                     </div>
                                     <div class="py-4 border border-r-gray border-t-0 ">
                                         <!-- <p class="text-xs sm:text-sm lg:text-base font-bold">details.total_payment</p> -->
-                                        <p class="text-xs sm:text-sm lg:text-sm font-bold">₱27,000.00</p>
+                                        <p class="text-xs sm:text-sm lg:text-sm font-bold">₱{{ rFee.toLocaleString() }}.00</p>
                                     </div>
                                     <div class="py-4 border border-t-0">
                                         <!-- <p class="text-xs sm:text-sm lg:text-sm font-bold">₱ 2,700,000.00</p> -->
@@ -603,13 +695,13 @@ const submit = () => {
                                         <p class="text-xs sm:text-sm lg:text-sm font-bold">Downpayment({{  index + 1 }}/{{ selectedMonths }})</p>
                                     </div>
                                     <div class="py-4 border border-r-gray border-t-0 ">
-                                        <p class="text-xs sm:text-sm lg:text-sm font-bold">February  1, 2023</p>
+                                        <p class="text-xs sm:text-sm lg:text-sm font-bold">{{ item.Month + '/' + item.Day + '/' + item.Year  }}</p>
                                     </div>
                                     <div class="py-4 border border-r-gray border-t-0 ">
-                                        <p class="text-xs sm:text-sm lg:text-sm font-bold">₱{{item.value.toLocaleString()}}.00</p>
+                                        <p class="text-xs sm:text-sm lg:text-sm font-bold">₱{{Number(item.value).toFixed(2) }}</p>
                                     </div>
                                     <div class="py-4 border border-r-gray border-t-0">
-                                        <p class="text-xs sm:text-sm lg:text-sm font-bold">₱ {{item.additionalData.toLocaleString()}}.00</p>
+                                        <p class="text-xs sm:text-sm lg:text-sm font-bold">₱{{item.additionalData.toLocaleString()}}</p>
                                     </div>
                                 </div>
                             </div> 
@@ -643,7 +735,7 @@ const submit = () => {
                         <p>Reservation Details</p>
                     </div>
                     <div class="border-b-2 border-l-2 border-r-2 rounded p-4">
-                        <div class="grid lg:grid-cols-2 md:grid-cols-2">
+                        <div class="grid lg:grid-cols-2 md:grid-cols-2 gap-3">
                             <div class="">
                                 <div>
                                     <div class="flex">
@@ -651,7 +743,7 @@ const submit = () => {
                                         <!-- <p class="ml-2">details.property_name</p> -->
                                         <p class="ml-2">ZAYA-1A-BO1-1FB</p>
                                     </div>
-                                    <div class="flex">
+                                    <div class="flex flex-wrap">
                                         <p class="font-bold">Location: </p>
                                         <!-- <p class="ml-2">details.location</p> -->
                                         <p class="ml-2">Brgy. Balibago, Sta. Rosa City, Laguna</p>
@@ -719,7 +811,7 @@ const submit = () => {
                             <div class="grid grid-cols-6 text-center">
                                 <div class="py-4 border border-r-gray border-t-0 rounded-bl-lg ">
                                     <!-- <p class="text-xs sm:text-sm lg:text-base">details.spot_cash</p> -->
-                                    <p class="text-xs sm:text-sm lg:text-sm">Spotcash - {{ selectedMonths }}00%</p>
+                                    <p class="text-xs sm:text-sm lg:text-sm">Spotcash - {{ selectedDownpayment }}%</p>
                                 </div>
                                 <div class="py-4 border border-r-gray border-t-0  ">
                                     <!-- <p class="text-xs sm:text-sm lg:text-base">details.term</p> -->
@@ -727,11 +819,11 @@ const submit = () => {
                                 </div>
                                 <div class="py-4 border border-r-gray border-t-0  ">
                                     <!-- <p class="text-xs sm:text-sm lg:text-base">details.start_date</p> -->
-                                    <p class="text-xs sm:text-sm lg:text-sm">Reservation Fee</p>
+                                    <p class="text-xs sm:text-sm lg:text-sm">{{ dateToday }}</p>
                                 </div>
                                 <div class="py-4 border border-r-gray border-t-0  ">
                                     <!-- <p class="text-xs sm:text-sm lg:text-base">details.end_date</p> -->
-                                    <p class="text-xs sm:text-sm lg:text-sm">January 1, 2023</p>
+                                    <p class="text-xs sm:text-sm lg:text-sm">{{ rDueDate.toLocaleString() }}</p>
                                 </div>
                                 <div class="py-4 border border-r-gray border-t-0">
                                     <!-- <p class="text-xs sm:text-sm lg:text-base">details.amortization</p> -->
@@ -801,7 +893,7 @@ const submit = () => {
                                     <p class="text-xs sm:text-sm lg:text-sm font-bold">Reservation Fee</p>
                                 </div>
                                 <div class="py-4 border border-r-gray border-t-0 ">
-                                    <p class="text-xs sm:text-sm lg:text-sm font-bold">January 1, 2023</p>
+                                    <p class="text-xs sm:text-sm lg:text-sm font-bold">{{ dateToday }}</p>
                                 </div>
                                 <div class="py-4 border border-r-gray border-t-0 ">
                                     <p class="text-xs sm:text-sm lg:text-sm font-bold">₱ {{ rFee.toLocaleString() }}.00</p>
@@ -820,7 +912,7 @@ const submit = () => {
                                     <p class="text-xs sm:text-sm lg:text-sm font-bold">Downpayment</p>
                                 </div>
                                 <div class="py-4 border border-r-gray border-t-0 ">
-                                    <p class="text-xs sm:text-sm lg:text-sm font-bold">February 1, 2023</p>
+                                    <p class="text-xs sm:text-sm lg:text-sm font-bold">{{ spotDate.toLocaleString() }}</p>
                                 </div>
                                 <div class="py-4 border border-r-gray border-t-0 ">
                                     <p class="text-xs sm:text-sm lg:text-sm font-bold">₱ {{ totalSpotCash.toLocaleString() }}.00</p>
