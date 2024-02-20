@@ -3,10 +3,12 @@
 namespace RLI\Booking\Mail;
 
 use Illuminate\Mail\Mailables\{Attachment, Content, Envelope};
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Queue\SerializesModels;
 Use RLI\Booking\Models\Voucher;
 use Illuminate\Mail\Mailable;
 use Illuminate\Bus\Queueable;
+
 
 class Invoice extends Mailable
 {
@@ -14,14 +16,14 @@ class Invoice extends Mailable
     public Voucher $voucher;
     protected $buyer;
     public $invoiceFilePath;
-   
+
     /**
      * Create a new message instance.
      */
     public function __construct($notifiable, Voucher $voucher, $invoiceFilePath)
     {
-        
-        
+
+
         $this->to($notifiable->email);
         // $this->name = $notifiable->getAttribute('name');
         $this->buyer = $notifiable;
@@ -44,16 +46,16 @@ class Invoice extends Mailable
      * Get the message content definition.
      */
     public function content(): Content
-    {                
+    {
         $order = $this->voucher->getOrder();
         $product = $order->product;
         // dd($product->brand);
         return new Content(
-            markdown: 'mail.invoice', 
+            markdown: 'mail.invoice',
             with: [
                 'buyer' => $this->buyer,
-                'voucher' => $this->voucher, 
-                'order'=> $order,           
+                'voucher' => $this->voucher,
+                'order'=> $order,
                 'product'=> $product,
             ],);
     }
@@ -65,8 +67,12 @@ class Invoice extends Mailable
      */
     public function attachments(): array
     {
+        if (! Storage::put('invoice.pdf', base64_decode($this->invoiceFilePath))) {
+           logger('Invoice cannot be saved.');
+        }
+
         return [
-            Attachment::fromData(fn () => base64_decode($this->invoiceFilePath), 'Billing Statement.pdf')
+            Attachment::fromData(fn () => Storage::get('invoice.pdf'), 'Billing Statement.pdf')
                 ->withMime('application/pdf'),
         ];
     }
