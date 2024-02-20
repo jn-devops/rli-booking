@@ -28,6 +28,7 @@ use RLI\Booking\Traits\HasMeta;
  * @property string     $code_url
  * @property string     $code_img_url
  * @property string     $expiration_date
+ * @property string     $payment_id
  *
  * @method   int        getKey()
  */
@@ -38,7 +39,7 @@ class Order extends Model implements AttributableData
     use HasStates;
     use HasMeta;
 
-    protected $fillable = ['property_code', 'dp_percent', 'dp_months', 'transaction_id', 'code_url', 'code_img_url', 'expiration_date'];
+    protected $fillable = ['property_code', 'dp_percent', 'dp_months', 'transaction_id', 'code_url', 'code_img_url', 'expiration_date', 'payment_id'];
 
     protected $casts = [
         'state' => OrderState::class
@@ -108,6 +109,19 @@ class Order extends Model implements AttributableData
     {
 
         $this->getAttribute('meta')->set('payment.expiration_date', $value);
+
+        return $this;
+    }
+
+    public function getPaymentIdAttribute(): ?string
+    {
+        return $this->getAttribute('meta')->get('receipt.payment_id');
+    }
+
+    public function setPaymentIdAttribute(string $value): self
+    {
+
+        $this->getAttribute('meta')->set('receipt.payment_id', $value);
 
         return $this;
     }

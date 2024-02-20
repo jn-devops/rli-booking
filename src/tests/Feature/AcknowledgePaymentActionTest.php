@@ -69,7 +69,8 @@ dataset('voucher', [
 test('acknowledge payment action runs', function (Voucher $voucher) {
     $order = $voucher->getOrder();
     expect($order->state)->toBeInstanceOf(InvoicedPendingPayment::class);
-    AcknowledgePaymentAction::execute(['reference_code' => $voucher->code]);
+    $payment_id = $this->faker->word();
+    AcknowledgePaymentAction::execute(['reference_code' => $voucher->code, 'payment_id' => $payment_id]);
 //    Notification::assertSentTo($order, InvoiceBuyerNotification::class, function (InvoiceBuyerNotification $notification) use ($voucher, $invoiceFilePath) {
 //        return $notification->voucher->is($voucher) && $notification->invoiceFilePath == $invoiceFilePath;
 //    });
@@ -82,9 +83,12 @@ test('acknowledge payment action has end points', function (Voucher $voucher) {
     $code_url = $order->code_url;
     $code_img_url = $order->code_img_url;
     $expiration_date = $order->expiration_date;
+    $payment_id = $this->faker->word();
     $response = $this->postJson(route('acknowledge-payment'), [
         'reference_code' => $voucher->code,
+        'payment_id' => $payment_id
     ]);
-    $response->assertStatus(302);
-    $response->assertJsonFragment(['paid-using' => compact('code_url', 'code_img_url', 'expiration_date')]);
+    $response->assertStatus(200);
+    expect($order->fresh()->payment_id)->toBe($payment_id);
+    $response->assertJsonFragment(['paid-using' => compact( 'payment_id')]);
 })->with('voucher');

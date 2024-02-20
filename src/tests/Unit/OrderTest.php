@@ -157,6 +157,7 @@ test('order has data even when transaction_id is null', function (Order $order) 
     expect($order_data->code_url)->toBe($order->code_url);
     expect($order_data->code_img_url)->toBe($order->code_img_url);
     expect($order_data->expiration_date)->toBe($order->expiration_date);
+    expect($order_data->payment_id)->toBe($order->payment_id);
 })->with([
     [ fn() => Order::factory()->create([ 'transaction_id' => null ]) ]
 ]);
@@ -171,11 +172,14 @@ test('order has data schemaless payment attribute', function (Order $order) {
     $date->addDays(config('rli-payment.expires_in'));
     $expiration_date = $date->format('YmdHis');
     $order->code_url = $code_url;
+    $payment_id = $this->faker->word();
     expect($order->meta->get('payment.code_url'))->toBe($code_url);
     $order->code_img_url = $code_img_url;
     expect($order->meta->get('payment.code_img_url'))->toBe($code_img_url);
     $order->expiration_date = $expiration_date;
     expect($order->meta->get('payment.expiration_date'))->toBe($expiration_date);
+    $order->payment_id = $payment_id;
+    expect($order->meta->get('receipt.payment_id'))->toBe($payment_id);
 })->with([
     [ fn() => Order::factory()->create([ 'transaction_id' => null ]) ]
 ]);
