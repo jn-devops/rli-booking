@@ -154,6 +154,9 @@ test('order has data even when transaction_id is null', function (Order $order) 
     expect($order_data->buyer->id_image_url)->toBe($order->buyer->id_image_url);
     expect($order_data->buyer->selfie_image_url)->toBe($order->buyer->selfie_image_url);
     expect($order_data->buyer->id_mark_url)->toBe($order->buyer->id_mark_url);
+    expect($order_data->code_url)->toBe($order->code_url);
+    expect($order_data->code_img_url)->toBe($order->code_img_url);
+    expect($order_data->expiration_date)->toBe($order->expiration_date);
 })->with([
     [ fn() => Order::factory()->create([ 'transaction_id' => null ]) ]
 ]);

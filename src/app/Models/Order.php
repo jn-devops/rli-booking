@@ -38,7 +38,7 @@ class Order extends Model implements AttributableData
     use HasStates;
     use HasMeta;
 
-    protected $fillable = ['property_code', 'dp_percent', 'dp_months', 'transaction_id'];
+    protected $fillable = ['property_code', 'dp_percent', 'dp_months', 'transaction_id', 'code_url', 'code_img_url', 'expiration_date'];
 
     protected $casts = [
         'state' => OrderState::class

@@ -87,6 +87,6 @@ test('acquire payment details action has end points', function (Voucher $voucher
         'code_img_url' => $code_img_url,
         'expiration_date' => $expiration_date,
     ]);
-    $response->assertStatus(302);
+    $response->assertStatus(200);
     $response->assertJsonFragment(['pay-using' => compact('code_url', 'code_img_url', 'expiration_date')]);
 })->with('voucher');
