@@ -34,7 +34,7 @@ class InvoiceBuyerNotification extends Notification
 
     public function toMail(object $notifiable): Invoice
     {
-        return new Invoice($notifiable);
+        return new Invoice($notifiable, $this->voucher, $this->invoiceFilePath);
     }
 
     /**
