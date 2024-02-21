@@ -13,9 +13,9 @@ const props = defineProps({
     voucherCode: String,
     order: Object
 });
-const selectedTerm = ref('Selected');
-const selectedDownpayment = ref(null);
-const selectedMonths = ref(null);
+const selectedTerm = ref('Downpayment - 0.10');
+const selectedDownpayment = ref(0.10);
+const selectedMonths = ref(36);
 const selectedValues = ref({});
 const tcp = ref(2700000);
 const rFee = ref(20000);
@@ -106,7 +106,7 @@ const form = useForm({
     // dp_percent: '10',
     // dp_months: '24',
      property_code: props.order?.property_code,
-    dp_percent: selectedDownpayment.value,
+    dp_percent: selectedDownpayment.value * 100,
     dp_months: selectedMonths.value
 });
 
