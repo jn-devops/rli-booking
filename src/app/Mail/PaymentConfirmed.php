@@ -46,7 +46,7 @@ class PaymentConfirmed extends Mailable
         $buyer = $order->buyer;
 
         return new Content(
-            markdown: 'mail.PaymentConfirmed',
+            markdown: 'mail.paymentconfirmed',
             with: [
                 'seller' => $this->seller,
                 'voucher' => $this->voucher,
