@@ -37,7 +37,9 @@ Route::middleware([
 });
 Route::post('update-order/{voucher}', \RLI\Booking\Actions\UpdateOrderAction::class)->name('update-order');
 Route::get('references/{voucher}', [\RLI\Booking\Http\Controllers\VoucherController::class, 'show'])->name('references.show');
-Route::get('edit-order/{voucher}/{order}', [\RLI\Booking\Http\Controllers\OrderController::class, 'edit'])->name('edit-order');
+Route::get('edit-order/{voucher}/{order}/{property_code?}', [\RLI\Booking\Http\Controllers\OrderController::class, 'edit'])->name('edit-order');
 Route::get('auto-reserve/{sku}/{transaction_id}', \RLI\Booking\Actions\AutoReserveAction::class)->name('auto-reserve');
 Route::post('process-buyer', \RLI\Booking\Actions\ProcessBuyerAction::class)->name('process-buyer');
 Route::get('affiliate-reserve/{email}/{sku}/{property_code?}', \RLI\Booking\Actions\AffiliateReserveAction::class)->name('affiliate-reserve');
+
+Route::get('view-map/{sku?}/{voucher_number?}/{order_number?}', \RLI\Booking\Http\Controllers\MapController::class)->name('view-map');

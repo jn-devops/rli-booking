@@ -11,7 +11,8 @@ import { onMounted, ref, watch, computed } from 'vue';
 
 const props = defineProps({
     voucherCode: String,
-    order: Object
+    order: Object,
+    property_code: String
 });
 const selectedTerm = ref('Selected');
 const selectedDownpayment = ref(null);
@@ -105,7 +106,7 @@ const form = useForm({
     // property_code: props.order?.property_code,
     // dp_percent: '10',
     // dp_months: '24',
-     property_code: props.order?.property_code,
+     property_code: props.property_code,
     dp_percent: selectedDownpayment.value,
     dp_months: selectedMonths.value
 });
@@ -208,6 +209,21 @@ const submit = () => {
         onFinish: () => form.reset('property_code'),
     });
 };
+
+const navigateToMapLink = () => {
+  
+
+    const currentPath = window.location.pathname; // Get the current path
+    const newPath = `/view-map/${props.order.sku}/${props.voucherCode}/${props.order.id}`;
+
+    const newUrl = `${window.location.origin}${newPath}`;
+
+    // Use replaceState to change the URL without adding a new entry to the browser history
+    window.location.replace(newUrl);
+
+};
+
+
 </script>
 
 <template>
@@ -269,7 +285,8 @@ const submit = () => {
                     Choose Unit
                     </button> -->
                     <button
-                    @click="openModal"
+                    target="_blank"
+                    @click="navigateToMapLink"
                     class="bg-gray-800 text-white px-6 py-2 rounded"
                     >
                         Choose Unit

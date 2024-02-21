@@ -9,25 +9,20 @@ Use RLI\Booking\Models\Voucher;
 use Illuminate\Mail\Mailable;
 use Illuminate\Bus\Queueable;
 
-
-class Invoice extends Mailable
+class PaymentConfirmed extends Mailable
 {
     use Queueable, SerializesModels;
 
     public Voucher $voucher;
-    public $invoiceFilePath;
-    protected $buyer;
-
+    protected $seller;
     /**
      * Create a new message instance.
      */
-    public function __construct($notifiable, Voucher $voucher, $invoiceFilePath)
+    public function __construct($notifiable, Voucher $voucher)
     {
         $this->to($notifiable->email);
-        // $this->name = $notifiable->getAttribute('name');
-        $this->buyer = $notifiable;
+        $this->seller = $notifiable;
         $this->voucher = $voucher;
-        $this->invoiceFilePath = $invoiceFilePath;
         // dd($this->invoiceFilePath);
     }
 
@@ -37,7 +32,7 @@ class Invoice extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Raemulan Reservation Acknowledgement',
+            subject: 'Raemulan Payment Confirmation',
         );
     }
 
@@ -48,15 +43,18 @@ class Invoice extends Mailable
     {
         $order = $this->voucher->getOrder();
         $product = $order->product;
-        // dd($product->brand);
+        $buyer = $order->buyer;
+
         return new Content(
-            markdown: 'mail.invoice',
+            markdown: 'mail.paymentconfirmed',
             with: [
-                'buyer' => $this->buyer,
+                'seller' => $this->seller,
                 'voucher' => $this->voucher,
                 'order'=> $order,
                 'product'=> $product,
-            ],);
+                'buyer' => $buyer,
+            ],
+        );
     }
 
     /**
@@ -66,13 +64,6 @@ class Invoice extends Mailable
      */
     public function attachments(): array
     {
-        if (! Storage::put('invoice.pdf', base64_decode($this->invoiceFilePath))) {
-           logger('Invoice cannot be saved.');
-        }
-
-        return [
-            Attachment::fromData(fn () => Storage::get('invoice.pdf'), 'Billing Statement.pdf')
-                ->withMime('application/pdf'),
-        ];
+        return [];
     }
 }
