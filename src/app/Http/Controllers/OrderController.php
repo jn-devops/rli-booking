@@ -13,13 +13,14 @@ class OrderController extends Controller
      * @param Order $order
      * @return \Inertia\Response
      */
-    public function edit(Voucher $voucher, Order $order): \Inertia\Response
+    public function edit(Voucher $voucher, Order $order, string $property_code = null): \Inertia\Response
     {
         $order->load(['product', 'seller']);
 
         return Inertia::render('Order/Edit', [
             'voucherCode' => $voucher->code,
-            'order' => $order
+            'order' => $order,
+            'property_code' => $property_code
         ]);
     }
 }
