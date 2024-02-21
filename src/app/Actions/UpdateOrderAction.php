@@ -6,24 +6,16 @@ use RLI\Booking\Classes\State\UpdatedPendingProcessing;
 use Lorisleiva\Actions\Concerns\AsAction;
 use RLI\Booking\Models\{Order, Voucher};
 use Lorisleiva\Actions\ActionRequest;
-use Illuminate\Validation\Rule;
 
 class UpdateOrderAction
 {
     use AsAction;
 
-    protected array $propertyCodes = [
-        'PC-001',
-        'PC-002',
-        'PC-003',
-        'PC-004',
-        'PC-005',
-    ];
-
     /**
      * @param Voucher $voucher
      * @param array $orderUpdates
      * @return void
+     * @throws \Spatie\ModelStates\Exceptions\CouldNotPerformTransition
      */
     public function handle(Voucher $voucher, array $orderUpdates): void
     {
@@ -40,7 +32,7 @@ class UpdateOrderAction
     public function rules(): array
     {
         return [
-            'property_code' => ['required', 'string'],
+            'property_code' => ['required', 'string', 'min:5'],
             'dp_percent' => ['required', 'integer'],
             'dp_months' => ['required', 'integer'],
         ];
@@ -50,6 +42,7 @@ class UpdateOrderAction
      * @param Voucher $voucher
      * @param ActionRequest $request
      * @return \Illuminate\Http\RedirectResponse
+     * @throws \Spatie\ModelStates\Exceptions\CouldNotPerformTransition
      */
     public function asController(Voucher $voucher, ActionRequest $request): \Illuminate\Http\RedirectResponse
     {
