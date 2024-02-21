@@ -73,7 +73,11 @@ const handleDownpaymentChange = () => {
   const year = today.getFullYear(); //Year
   const dateToday = (month1 + 1) + '/' + day + '/' + year; 
   const spotDate = (month1 + 2 ) + '/' + day + '/' + year;
- const fDate = ref(null);
+  const futureMonth = (today.getMonth() + Number(selectedMonths.value)) % 12;
+  const futureYear = today.getFullYear() + Math.floor((today.getMonth() + Number(selectedMonths.value)) / 12); // 
+  const futureDate = (futureMonth + 1) + '/' + today.getDate() + '/' + futureYear;
+ const fDate = ref(futureDate);
+
  const rDueDate = (month1 + 1) + '/' + (day + 9) + '/' + year;
 //  const option = {month: 'long', day: '2-digit', year: 'numeric'};
 //  const rDueDate = rNewDueDate.toLocaleString('en-US', option);
