@@ -111,7 +111,8 @@ const form = useForm({
 });
 
 const viewAmortizationModal = ref(null);
-const openViewAmortization = () =>{
+const openViewAmortization = (event) =>{
+    event.preventDefault();
     viewAmortizationModal.value = !viewAmortizationModal.value;
 }
 
