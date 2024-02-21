@@ -231,7 +231,7 @@
 
           const popupTemplate = {
             "title": "{PROPERTY_C}",
-            "content": "<b>Project Code:</b> {N___PROJEC}<br><b>Block:</b> {BLOCK}<br><b>Lot:</b> {Lot}<br><b>Lot Area:</b> {LOT_AREA} SQM<br><b>Floor Area:</b> {FLOOR_AREA} SQM<br><b>Status:</b> {STATUS}<br><b>SKU:</b> {SKU}<br><b><a href='edit-order/"+voucherNumParam+"/"+orderNumParam+"/{PROPERTY_C}'>SELECT THIS PROPERTY</a></b>"
+            "content": "<b>Project Code:</b> {N___PROJEC}<br><b>Block:</b> {BLOCK}<br><b>Lot:</b> {Lot}<br><b>Lot Area:</b> {LOT_AREA} SQM<br><b>Floor Area:</b> {FLOOR_AREA} SQM<br><b>Status:</b> {STATUS}<br><b>SKU:</b> {SKU}<br><b><a href='https://book-dev.enclaves.ph/view-map/"+voucherNumParam+"/"+orderNumParam+"/{PROPERTY_C}'>SELECT THIS PROPERTY</a></b>"
           };
 
           // voucherNumParam
