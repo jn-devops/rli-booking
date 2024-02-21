@@ -18,6 +18,7 @@ class ProductFactory extends Factory
             'meta' => [
                 'category' => $this->faker->word(),
                 'status' => (int) $this->faker->boolean(),
+                'unit_type' => $this->faker->word(),
                 'brand' => $this->faker->word(),
                 'price' => (int) $this->faker->numberBetween(100000000,1000000000),
                 'location' => $this->faker->address(),

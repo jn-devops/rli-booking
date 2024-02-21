@@ -17,6 +17,7 @@ use RLI\Booking\Traits\HasMeta;
  * @property string  $description
  * @property string  $category
  * @property int     $status
+ * @property int     $unit_type
  * @property string  $brand
  * @property int     $price
  * @property string  $location
@@ -57,6 +58,18 @@ class Product extends Model implements AttributableData
     public function setStatusAttribute(int $value): static
     {
         $this->getAttribute('meta')->set('status', $value);
+
+        return $this;
+    }
+
+    public function getUnitTypeAttribute(): string
+    {
+        return $this->getAttribute('meta')->get('unit_type');
+    }
+
+    public function setUnitTypeAttribute(string $value): static
+    {
+        $this->getAttribute('meta')->set('unit_type', $value);
 
         return $this;
     }

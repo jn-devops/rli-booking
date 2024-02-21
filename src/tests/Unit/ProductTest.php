@@ -18,6 +18,7 @@ test('product has schema and schemaless attributes', function () {
     expect($product->processing_fee)->toBeInt();
     expect($product->category)->toBeString();
     expect($product->status)->toBeBool();
+    expect($product->unit_type)->toBeString();
     expect($product->brand)->toBeString();
     expect($product->price)->toBeInt();
     expect($product->location)->toBeString();
