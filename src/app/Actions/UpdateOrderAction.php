@@ -40,7 +40,7 @@ class UpdateOrderAction
     public function rules(): array
     {
         return [
-            'property_code' => ['required', 'string', Rule::in($this->propertyCodes)],
+            'property_code' => ['required', 'string'],
             'dp_percent' => ['required', 'integer'],
             'dp_months' => ['required', 'integer'],
         ];
