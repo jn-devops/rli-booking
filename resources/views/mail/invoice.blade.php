@@ -7,6 +7,7 @@ Kindly see transaction details below.
 
 Reference Code: <b>{{$voucher->code}}</b><br>
 Name: <b>{{$buyer->name}}</b><br>
+Address: <b>{{$buyer->address}}</b><br>
 Contact Number: <b>{{$buyer->mobile}}</b><br>
 Project Name: <b>{{$product->brand}}</b><br>
 Unit Type: <b>{{$product->name}}</b><br>
