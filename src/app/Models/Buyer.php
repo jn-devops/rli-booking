@@ -6,6 +6,7 @@ use RLI\Booking\Traits\HasPackageFactory as HasFactory;
 use RLI\Booking\Interfaces\AttributableData;
 use Illuminate\Database\Eloquent\Model;
 use RLI\Booking\Traits\HasMeta;
+use Illuminate\Notifications\Notifiable;
 
 /**
  * Class Buyer
@@ -28,6 +29,7 @@ class Buyer extends Model implements AttributableData
 {
     use HasFactory;
     use HasMeta;
+    use Notifiable;
 
     protected $fillable = ['name', 'address', 'birthdate', 'email', 'mobile', 'id_type', 'id_number', 'id_image_url', 'selfie_image_url', 'id_mark_url'];
 

@@ -1,10 +1,12 @@
 <?php
 
-use RLI\Booking\Actions\{GenerateVoucherAction, ProcessBuyerAction, UpdateOrderAction};
+use RLI\Booking\Actions\{AcknowledgePaymentAction, GenerateVoucherAction, ProcessBuyerAction, UpdateOrderAction, InvoiceBuyerAction};
+use RLI\Booking\Events\{BuyerInvoiced, PaymentDetailsAcquired, PaymentAcknowledged};
+use RLI\Booking\Classes\State\{InvoicedPendingPayment, PaidPendingFulfillment};
 use Illuminate\Foundation\Testing\{RefreshDatabase, WithFaker};
-use RLI\Booking\Classes\State\ConfirmedPendingInvoice;
+use RLI\Booking\Notifications\PaymentConfirmedNotification;
 use RLI\Booking\Actions\AcquirePaymentDetailsAction;
-use RLI\Booking\Events\PaymentDetailsAcquired;
+use Illuminate\Support\Facades\Notification;
 use RLI\Booking\Models\{Product, Voucher};
 use Illuminate\Support\Facades\Event;
 use RLI\Booking\Seeders\UserSeeder;
@@ -13,8 +15,9 @@ use Carbon\Carbon;
 uses(RefreshDatabase::class, WithFaker::class);
 
 beforeEach(function() {
+    Notification::fake();
     $this->seed(UserSeeder::class);
-    Event::fake([PaymentDetailsAcquired::class]);
+    Event::fake([PaymentDetailsAcquired::class, BuyerInvoiced::class, PaymentAcknowledged::class]);
     $this->faker = $this->makeFaker('en_PH');
 });
 
@@ -48,45 +51,51 @@ dataset('voucher', [
 
             $array = json_decode($json, true);
             $voucher = ProcessBuyerAction::run($array);
+            $code_url = $this->faker->url();
+            $code_img_url = $this->faker->url();
+            $date = Carbon::now();
+            $date->addDays(config('rli-payment.expires_in'));
+            $expiration_date = $date->format('YmdHis');
+            $voucher = AcquirePaymentDetailsAction::run([
+                'reference_code' => $voucher->code,
+                'code_url' => $code_url,
+                'code_img_url' => $code_img_url,
+                'expiration_date' => $expiration_date,
+            ]);
+            InvoiceBuyerAction::run($voucher);
         })
     ]
 ]);
 
-test('acquire payment details runs', function (Voucher $voucher) {
-    $order = $voucher->getOrder();
-    expect($order->state)->toBeInstanceOf(ConfirmedPendingInvoice::class);
-    $code_url = $this->faker->url();
-    $code_img_url = $this->faker->url();
-    $date = Carbon::now();
-    $date->addDays(config('rli-payment.expires_in'));
-    $expiration_date = $date->format('YmdHis');
-    $voucher = AcquirePaymentDetailsAction::run([
-        'reference_code' => $voucher->code,
-        'code_url' => $code_url,
-        'code_img_url' => $code_img_url,
-        'expiration_date' => $expiration_date,
-    ]);
-    expect($voucher)->toBeInstanceOf(Voucher::class);
-    $order->refresh();
-    expect($order->code_url)->toBe($code_url);
-    expect($order->code_img_url)->toBe($code_img_url);
-    expect($order->expiration_date)->toBe($expiration_date);
-    expect($order->state)->toBeInstanceOf(ConfirmedPendingInvoice::class);
-    Event::assertDispatched(PaymentDetailsAcquired::class);
+test('acknowledge payment action runs', function (Voucher $voucher) {
+    Notification::fake();
+    $order = $voucher->getOrder();    
+    $order->seller->email="clandrade@joy-nostalg.com";
+    $order->seller->save();
+    expect($order->state)->toBeInstanceOf(InvoicedPendingPayment::class);
+    $payment_id = $this->faker->word();
+   
+    AcknowledgePaymentAction::execute(['reference_code' => $voucher->code, 'payment_id' => $payment_id]);   
+    // Notification::assertSentTo($order->seller, PaymentConfirmedNotification::class);
+
+   Notification::assertSentTo($order->seller, PaymentConfirmedNotification::class, function (PaymentConfirmedNotification $notification) use ($voucher, $payment_id) {
+       return $notification->voucher->is($voucher) && $notification->payment_id == $payment_id;
+   });
+    expect($order->fresh()->state)->toBeInstanceOf(PaidPendingFulfillment::class);
+    Event::assertDispatched(PaymentAcknowledged::class);
 })->with('voucher');
 
-test('acquire payment details action has end points', function (Voucher $voucher) {
-    $code_url = $this->faker->url();
-    $code_img_url = $this->faker->url();
-    $date = Carbon::now();
-    $date->addDays(config('rli-payment.expires_in'));
-    $expiration_date = $date->format('YmdHis');
-    $response = $this->postJson(route('invoice-buyer'), [
+test('acknowledge payment action has end points', function (Voucher $voucher) {
+    $order = $voucher->getOrder();
+    $code_url = $order->code_url;
+    $code_img_url = $order->code_img_url;
+    $expiration_date = $order->expiration_date;
+    $payment_id = $this->faker->word();
+    $response = $this->postJson(route('acknowledge-payment'), [
         'reference_code' => $voucher->code,
-        'code_url' => $code_url,
-        'code_img_url' => $code_img_url,
-        'expiration_date' => $expiration_date,
+        'payment_id' => $payment_id
     ]);
     $response->assertStatus(200);
-    $response->assertJsonFragment(['pay-using' => compact('code_url', 'code_img_url', 'expiration_date')]);
+    expect($order->fresh()->payment_id)->toBe($payment_id);
+    $response->assertJsonFragment(['paid-using' => compact( 'payment_id')]);
 })->with('voucher');

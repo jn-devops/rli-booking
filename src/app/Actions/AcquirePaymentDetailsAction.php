@@ -65,7 +65,7 @@ class AcquirePaymentDetailsAction
 
         return (new PayloadResource($voucher))
             ->additional(['pay-using' => $order->meta->get('payment')])
-            ->response()->setStatusCode(302);
+            ->response()->setStatusCode(200);
     }
 
     /**

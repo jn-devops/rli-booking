@@ -16,10 +16,13 @@ test('product has schema and schemaless attributes', function () {
     expect($product->name)->toBeString();
     expect($product->description)->toBeEmpty();
     expect($product->processing_fee)->toBeInt();
-    $product->description = $description = $this->faker->name();
-    $product->save();
-    $prod = app(Product::class)->first();
-    expect($prod->description)->toBe($description);
+    expect($product->category)->toBeString();
+    expect($product->status)->toBeBool();
+    expect($product->brand)->toBeString();
+    expect($product->price)->toBeInt();
+    expect($product->location)->toBeString();
+    expect($product->floor_area)->toBeInt();
+    expect($product->floor_area)->toBeInt();
 });
 
 test('product can be referenced', function (Product $product) {

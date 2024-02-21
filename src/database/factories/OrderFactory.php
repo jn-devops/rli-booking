@@ -21,6 +21,12 @@ class OrderFactory extends Factory
             'dp_percent' => $this->faker->numberBetween(0,20),
             'dp_months' => $this->faker->numberBetween(0,24),
             'transaction_id' => $this->faker->word(),
+            'meta' => [
+                'code_url' => $this->faker->url(),
+                'code_img_url' => $this->faker->url(),
+                'expiration_date' => $this->faker->dateTime,
+                'payment_id' => $this->faker->word(),
+            ],
         ];
     }
 }

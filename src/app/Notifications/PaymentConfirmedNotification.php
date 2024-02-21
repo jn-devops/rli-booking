@@ -4,22 +4,24 @@ namespace RLI\Booking\Notifications;
 
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
+use RLI\Booking\Mail\PaymentConfirmed;
 use RLI\Booking\Models\Voucher;
 use Illuminate\Bus\Queueable;
-use RLI\Booking\Mail\Invoice;
 
-class InvoiceBuyerNotification extends Notification
+class PaymentConfirmedNotification extends Notification
 {
     use Queueable;
 
-    public string $invoiceFilePath;
-
+    public string $payment_id;
     public Voucher $voucher;
 
-    public function __construct(Voucher $voucher, string $invoiceFilePath)
+    /**
+     * Create a new notification instance.
+     */
+    public function __construct(Voucher $voucher, $payment_id)
     {
         $this->voucher = $voucher;
-        $this->invoiceFilePath = $invoiceFilePath;
+        $this->payment_id = $payment_id;
     }
 
     /**
@@ -32,9 +34,12 @@ class InvoiceBuyerNotification extends Notification
         return ['mail'];
     }
 
-    public function toMail(object $notifiable): Invoice
+    /**
+     * Get the mail representation of the notification.
+     */
+    public function toMail(object $notifiable): PaymentConfirmed
     {
-        return new Invoice($notifiable, $this->voucher, $this->invoiceFilePath);
+        return new PaymentConfirmed($notifiable, $this->voucher);
     }
 
     /**

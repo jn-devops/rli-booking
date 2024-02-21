@@ -17,6 +17,10 @@ class OrderData extends Data implements CanHydrateFromModel
         public ProductData $product,
         public SellerData $seller,
         public BuyerData $buyer,
-        public ?string $transaction_id
+        public ?string $transaction_id,
+        public ?string $code_url,
+        public ?string $code_img_url,
+        public ?string $expiration_date,
+        public ?string $payment_id
     ) {}
 }
