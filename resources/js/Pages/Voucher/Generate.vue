@@ -57,7 +57,7 @@ const generateVoucher = () => {
             </div>
 
             <!-- Percent Discount -->
-            <div class="col-span-6 sm:col-span-4">
+            <div class="col-span-6 sm:col-span-4 hidden">
                 <InputLabel for="discount" value="Percent Discount" />
                 <TextInput
                     id="name"
@@ -83,7 +83,7 @@ const generateVoucher = () => {
                 </SecondaryButton>
 
                 <PrimaryButton :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
-                    Customize
+                    Generate
                 </PrimaryButton>
             </div>
         </template>
