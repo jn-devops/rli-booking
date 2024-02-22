@@ -23,3 +23,6 @@ Route::post('/invoice-buyer', \RLI\Booking\Actions\AcquirePaymentDetailsAction::
 
 Route::post('/acknowledge-payment', \RLI\Booking\Actions\AcknowledgePaymentAction::class)
     ->name('acknowledge-payment');
+
+Route::post('/register-seller', \RLI\Booking\Actions\RegisterSellerAction::class)
+    ->name('register-seller');
