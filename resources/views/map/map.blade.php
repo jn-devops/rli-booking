@@ -275,7 +275,7 @@
         } else {
 
           const trailheadsLayer = new FeatureLayer({
-            url: "https://services8.arcgis.com/otYxeEfDBekePP4u/arcgis/rest/services/Agapeya_Polygon_Layer/FeatureServer",
+            url: "https://services8.arcgis.com/otYxeEfDBekePP4u/arcgis/rest/services/Agapeya_Pol_ExportFeatures/FeatureServer",
             outFields: ["*"],
             popupTemplate: popupTrailheads,
             renderer: openSpacesRenderer,
