@@ -40,4 +40,12 @@ test('product has data', function () {
     expect($data->sku)->toBe($product->sku);
     expect($data->name)->toBe($product->name);
     expect($data->processing_fee)->toBe($product->processing_fee);
+    expect($data->category)->toBe($product->category);
+    expect($data->status)->toBe($product->status);
+    expect($data->unit_type)->toBe($product->unit_type);
+    expect($data->brand)->toBe($product->brand);
+    expect($data->price)->toBe($product->price);
+    expect($data->location)->toBe($product->location);
+    expect($data->floor_area)->toBe($product->floor_area);
+    expect($data->lot_area)->toBe($product->lot_area);
 });

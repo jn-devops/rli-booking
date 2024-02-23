@@ -15,6 +15,7 @@ class ProductData extends Data implements CanHydrateFromModel
         public int    $processing_fee,
         public string $category,
         public bool   $status,
+        public string $unit_type,
         public string $brand,
         public int    $price,
         public string $location,

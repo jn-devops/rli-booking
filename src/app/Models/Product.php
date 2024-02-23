@@ -31,7 +31,7 @@ class Product extends Model implements AttributableData
     use HasFactory;
     use HasMeta;
 
-    protected $fillable = ['sku', 'name', 'processing_fee', 'category', 'status', 'brand', 'price', 'location', 'floor_area', 'lot_area'];
+    protected $fillable = ['sku', 'name', 'processing_fee', 'category', 'status', 'unit_type', 'brand', 'price', 'location', 'floor_area', 'lot_area'];
 
     public function toData(): array
     {
