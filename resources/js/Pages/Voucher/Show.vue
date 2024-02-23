@@ -6,6 +6,7 @@ import { Head, Link, useForm } from '@inertiajs/vue3';
 import { router } from "@inertiajs/vue3";
 
 const props = defineProps({
+    booking: Object,
     voucherCode: String,
     product: Object,
     qrCode: String,
@@ -46,7 +47,7 @@ Echo.channel(`voucher.${props.voucherCode}`)
         <template v-else>
             <div class="text-center py-6">
                 Take note of the reservation code:
-                <div class="font-extrabold text-blue-500">{{ props.voucherCode }}</div>
+                <div class="font-extrabold text-blue-500">{{ booking.reference_code }}</div>
                 Scan the QR code below to authenticate (eKYC)
                 <div class="mt-4 mb-2 p-2 inline-block bg-white center" v-html="qrCode" />
                 <!-- <div><button class="bg-gray-500 text-white"><a :href="url">Or click this ugly button to authenticate (eKYC)</a></button></div> -->
@@ -56,7 +57,8 @@ Echo.channel(`voucher.${props.voucherCode}`)
                     </button>
                 </div>
             </div>
-            
+            <div> {{ booking }} </div>
+
         </template>
     </AuthenticationCard>
 </template>

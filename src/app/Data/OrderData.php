@@ -4,7 +4,7 @@ namespace RLI\Booking\Data;
 
 use RLI\Booking\Interfaces\CanHydrateFromModel;
 use RLI\Booking\Traits\HydrateFromModel;
-use Spatie\LaravelData\Data;
+use Spatie\LaravelData\{Data, Optional};
 
 class OrderData extends Data implements CanHydrateFromModel
 {
@@ -16,7 +16,7 @@ class OrderData extends Data implements CanHydrateFromModel
         public int $dp_months,
         public ProductData $product,
         public SellerData $seller,
-        public BuyerData $buyer,
+        public BuyerData|Optional $buyer,
         public ?string $transaction_id,
         public ?string $code_url,
         public ?string $code_img_url,

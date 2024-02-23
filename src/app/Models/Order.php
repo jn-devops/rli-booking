@@ -9,6 +9,7 @@ use RLI\Booking\Interfaces\AttributableData;
 use RLI\Booking\Classes\State\OrderState;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Model;
+use Spatie\LaravelData\Optional;
 use Spatie\ModelStates\HasStates;
 use RLI\Booking\Traits\HasMeta;
 
@@ -70,7 +71,8 @@ class Order extends Model implements AttributableData
         return array_merge($this->only(array_diff($this->getFillable(), $this->getHidden())), [
             'product' => ProductData::fromModel($this->product),
             'seller' => SellerData::fromModel($this->seller),
-            'buyer' => BuyerData::fromModel($this->buyer)
+            'buyer' => $this->buyer ? BuyerData::fromModel($this->buyer) : app(Optional::class)
+//            'buyer' => BuyerData::fromModel($this->buyer)
         ]);
     }
 

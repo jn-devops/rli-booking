@@ -28,6 +28,7 @@ class VoucherController extends Controller
         $qrCode = $this->getQrCodeSvg($url);
 
         return Inertia::render('Voucher/Show', [
+            'booking' => $voucher->toData(),
             'voucherCode' => $voucher->code,
             'qrCode' => $qrCode,
             'seller' => $order->seller,
