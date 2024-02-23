@@ -8,6 +8,7 @@ import InputError from '@/Components/InputError.vue';
 import InputLabel from '@/Components/InputLabel.vue';
 import TextInput from '@/Components/TextInput.vue';
 import { useForm, usePage } from '@inertiajs/vue3';
+import { ref, computed, watch } from 'vue';
 
 let params = new URLSearchParams(window.location.search)
 
@@ -20,6 +21,10 @@ const form = useForm({
     discount: '0',
     sku: sku
 });
+
+const affiliate_link = computed(
+    () => form.sku ? route('affiliate-reserve', {email: seller, sku: form.sku}) :  '',
+);
 
 const generateVoucher = () => {
     form.post(route('generate-voucher'), {
@@ -52,7 +57,9 @@ const generateVoucher = () => {
                     required
                     autofocus
                 />
-
+                <div class="text-gray-700 dark:text-gray-300 text-xs">
+                  {{ affiliate_link }}
+                </div>
                 <InputError :message="form.errors.sku" class="mt-2" />
             </div>
 
