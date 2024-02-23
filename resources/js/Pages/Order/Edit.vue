@@ -18,7 +18,7 @@ const selectedTerm = ref('Downpayment - 0.10');
 const selectedDownpayment = ref(0.10);
 const selectedMonths = ref(36);
 const selectedValues = ref({});
-const tcp = ref(2700000);
+const tcp = ref(2900000);
 const rFee = ref(20000);
 
 const onChange = (event) =>{
