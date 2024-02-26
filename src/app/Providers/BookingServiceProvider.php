@@ -4,6 +4,7 @@ namespace RLI\Booking\Providers;
 
 use Lorisleiva\Actions\Facades\Actions;
 use Illuminate\Support\ServiceProvider;
+use RLI\Booking\Classes\Bitly;
 
 class BookingServiceProvider extends ServiceProvider
 {
@@ -27,5 +28,8 @@ class BookingServiceProvider extends ServiceProvider
         if ($this->app->runningInConsole()) {
             Actions::registerCommands('src/app/Actions');
         }
+        Bitly::$client_token = config('booking.bitly.client.token');
+        Bitly::$client_group_guid = config('booking.bitly.client.group_guid');
+        Bitly::$client_domain = config('booking.bitly.client.domain');
     }
 }

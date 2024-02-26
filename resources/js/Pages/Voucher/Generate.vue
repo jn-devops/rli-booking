@@ -32,6 +32,15 @@ const generateVoucher = () => {
         preserveScroll: true,
     });
 };
+
+const shortUrl = ref(null);
+
+const shortenUrl = (longUrl) => {
+  return route.post(route('shorten-url', {longUrl: longUrl}), {
+    errorBag: 'shortenUrl',
+    preserveScroll: shortenUrl,
+  });
+};
 </script>
 
 <template>
@@ -85,7 +94,7 @@ const generateVoucher = () => {
             </ActionMessage>
 
             <div class="flex items-center space-x-4 px-4 py-3">
-                <SecondaryButton>
+                <SecondaryButton @click.prevent = "shortUrl.value = shortenUrl(affiliate_link); console.log(shortUrl);">
                     Share
                 </SecondaryButton>
 

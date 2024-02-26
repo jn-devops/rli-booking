@@ -26,3 +26,6 @@ Route::post('/acknowledge-payment', \RLI\Booking\Actions\AcknowledgePaymentActio
 
 Route::post('/register-seller', \RLI\Booking\Actions\RegisterSellerAction::class)
     ->name('register-seller');
+
+Route::post('/shorten-url', \RLI\Booking\Actions\ShortenURLAction::class)
+    ->name('shorten-url');
