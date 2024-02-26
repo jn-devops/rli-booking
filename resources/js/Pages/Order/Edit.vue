@@ -490,14 +490,14 @@ const navigateToMapLink = () => {
                 </PrimaryButton> -->
                 <!-- <button :disabled="!(selectedTerm && selectedDownpayment && selectedMonths)" -->
                 <button v-if="selectedTerm === 'Downpayment - 0.10' || selectedTerm === 'Downpayment - 0.30'" 
-                :disabled="!(selectedTerm && selectedDownpayment && selectedMonths)"
+                :disabled="!(form.property_code && selectedTerm && selectedDownpayment && selectedMonths)"
                 @click="openViewAmortization"
-                :class="{'hover:text-blue-400' : (selectedTerm && selectedDownpayment && selectedMonths)}"
+                :class="{'hover:text-blue-400' : (form.property_code && selectedTerm && selectedDownpayment && selectedMonths)}"
                 class="bg-gray-200 px-6 py-2 rounded">View Amortization</button>
                 <button v-else-if="selectedTerm === 'Spotcash'" 
-                :disabled="!(selectedTerm)"
+                :disabled="!(form.property_code && selectedTerm)"
                 @click="openViewAmortization"
-                :class="{'hover:text-blue-400' : (selectedTerm)}"
+                :class="{'hover:text-blue-400' : (form.property_code && selectedTerm)}"
                 class="bg-gray-200 px-6 py-2 rounded">View Amortization</button>
                 <PrimaryButton class="ms-4 px-6 py-2" :class="{ 'opacity-25': form.processing }" :disabled="form.processing" @click="submit()">
                 Submit
@@ -534,7 +534,7 @@ const navigateToMapLink = () => {
                                     <div class="flex">
                                         <p class="font-bold">Property Name: </p>
                                         <!-- <p class="ml-2">details.property_name</p> -->
-                                        <p class="ml-2">ZAYA-1A-BO1-1FB</p>
+                                        <p class="ml-2">{{ props.property_code }}</p>
                                     </div>
                                     <div class="flex flex-wrap">
                                         <p class="font-bold">Location: </p>
@@ -552,12 +552,12 @@ const navigateToMapLink = () => {
                                     <div class="flex flex-wrap">
                                         <p class="font-bold">Block / Floor Number: </p>
                                         <!-- <p class="ml-2">details.block_floor_number</p> -->
-                                        <p class="ml-2">1</p>
+                                        <p class="ml-2">{{ props.property_code.split('-')[2].substr(1,2) }}</p>
                                     </div>
                                     <div class="flex flex-wrap">
                                         <p class="font-bold">Lot / Unit Number: </p>
                                         <!-- <p class="ml-2">details.lot_unit_number</p> -->
-                                        <p class="ml-2">2</p>
+                                        <p class="ml-2">{{ props.property_code.split('-')[3].substr(1,2) }}</p>
                                     </div>
                                     <div class="flex flex-wrap">
                                         <p class="font-bold">Lot Area: </p>
@@ -759,11 +759,11 @@ const navigateToMapLink = () => {
                     <div class="border-b-2 border-l-2 border-r-2 rounded p-4">
                         <div class="grid lg:grid-cols-2 md:grid-cols-2 gap-3">
                             <div class="">
-                                <div>
+                               <div>
                                     <div class="flex">
                                         <p class="font-bold">Property Name: </p>
                                         <!-- <p class="ml-2">details.property_name</p> -->
-                                        <p class="ml-2">ZAYA-1A-BO1-1FB</p>
+                                        <p class="ml-2">{{ props.property_code }}</p>
                                     </div>
                                     <div class="flex flex-wrap">
                                         <p class="font-bold">Location: </p>
@@ -772,7 +772,6 @@ const navigateToMapLink = () => {
                                     </div>
                                     <div class="flex flex-wrap">
                                         <p class="font-bold">Unit Type/House Model: </p>
-                                        <!-- <p class="ml-2">details.unit_type_house_model</p> -->
                                         <p class="ml-2">Studio</p>
                                     </div>
                                 </div>
@@ -782,12 +781,12 @@ const navigateToMapLink = () => {
                                     <div class="flex flex-wrap">
                                         <p class="font-bold">Block / Floor Number: </p>
                                         <!-- <p class="ml-2">details.block_floor_number</p> -->
-                                        <p class="ml-2">1</p>
+                                        <p class="ml-2">{{ props.property_code.split('-')[2].substr(1,2) }}</p>
                                     </div>
                                     <div class="flex flex-wrap">
                                         <p class="font-bold">Lot / Unit Number: </p>
                                         <!-- <p class="ml-2">details.lot_unit_number</p> -->
-                                        <p class="ml-2">2</p>
+                                        <p class="ml-2">{{ props.property_code.split('-')[3].substr(1,2) }}</p>
                                     </div>
                                     <div class="flex flex-wrap">
                                         <p class="font-bold">Lot Area: </p>
