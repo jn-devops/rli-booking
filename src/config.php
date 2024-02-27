@@ -16,7 +16,8 @@ return [
     ],
     'bitly' => [
         'server' => [
-            'shorten_end_point' => env('BITLY_SERVER_SHORTEN_END_POINT')
+            'shorten_end_point' => env('BITLY_SERVER_SHORTEN_END_POINT'),
+            'update_end_point' => env('BITLY_SERVER_UPDATE_END_POINT'),
         ],
         'client' => [
             'token' => env('BITLY_CLIENT_TOKEN'),

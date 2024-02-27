@@ -35,7 +35,8 @@ const leadGenerationLink = ref(null);
 
 const createLink = () => {
   leadGenerationLink.value = null;
-  router.post(route('create-link', { sku: form.sku }));
+  let title = 'Lead Generation: ' + seller + ' (' + form.sku + ')';
+  router.post(route('create-link', { sku: form.sku, title: title }));
 };
 
 const showProductDetails = () => {
@@ -66,7 +67,8 @@ watch (
     (event) => {
       switch (event?.name) {
         case 'link.created':
-          leadGenerationLink.value = event?.data.url;
+          console.log(event?.data);
+          leadGenerationLink.value = event?.data.link;
           break;
       }
     },

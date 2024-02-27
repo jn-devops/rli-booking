@@ -45,5 +45,5 @@ Route::get('affiliate-reserve/{email}/{sku}/{property_code?}', \RLI\Booking\Acti
 Route::get('view-map/{sku?}/{voucher_number?}/{order_number?}', \RLI\Booking\Http\Controllers\MapController::class)->name('view-map');
 Route::post('/shorten-url', \RLI\Booking\Actions\ShortenURLAction::class)
     ->name('shorten-url');
-Route::post('/create-link/{sku}', \RLI\Booking\Actions\CreateLeadGenerationLinkAction::class)
+Route::post('/create-link/{sku}/{title}', \RLI\Booking\Actions\CreateLeadGenerationLinkAction::class)
     ->name('create-link');
