@@ -27,5 +27,8 @@ Route::post('/acknowledge-payment', \RLI\Booking\Actions\AcknowledgePaymentActio
 Route::post('/register-seller', \RLI\Booking\Actions\RegisterSellerAction::class)
     ->name('register-seller');
 
-Route::post('/shorten-url', \RLI\Booking\Actions\ShortenURLAction::class)
-    ->name('shorten-url');
+Route::get('/products/{sku}', function (string $sku) {
+    $product = \RLI\Booking\Models\Product::where('sku', $sku)->firstOrFail();
+
+    return $product ? $product->toData(): false;
+})->name('products-show');

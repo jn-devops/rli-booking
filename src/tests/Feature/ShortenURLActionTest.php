@@ -12,12 +12,12 @@ test('shorten url action works', function () {
     expect($shortUrl)->toBeUrl();
 });
 
-test('shorten url action has end point', function () {
-    $longUrl = 'https://book-dev.enclaves.ph/affiliate-reserve/celine.beltran@enclaves.ph/JN-AGM-CL-HLDUS-GRN';
-
-    $response = $this->post(route('shorten-url'), [
-        'longUrl' => $longUrl,
-    ]);
-    $response->assertStatus(200);
-    expect($response->getContent())->toBeUrl();
-});
+//test('shorten url action has end point', function () {
+//    $longUrl = 'https://book-dev.enclaves.ph/affiliate-reserve/celine.beltran@enclaves.ph/JN-AGM-CL-HLDUS-GRN';
+//
+//    $response = $this->post(route('shorten-url'), [
+//        'longUrl' => $longUrl,
+//    ]);
+//    $response->assertStatus(200);
+//    expect($response->getContent())->toBeUrl();
+//});
