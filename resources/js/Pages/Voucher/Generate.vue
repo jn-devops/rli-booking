@@ -9,6 +9,8 @@ import DialogModal from '@/Components/DialogModal.vue';
 import InputError from '@/Components/InputError.vue';
 import InputLabel from '@/Components/InputLabel.vue';
 import TextInput from '@/Components/TextInput.vue';
+import FloorAreaLogo from '@/MyComponents/FloorAreaLogo.vue';
+import LotAreaLogo from '@/MyComponents/LotAreaLogo.vue';
 import { ref, computed, watch } from 'vue';
 
 let params = new URLSearchParams(window.location.search)
@@ -53,7 +55,6 @@ watch (() => form.sku, () => {
         validSKU.value = true;
         product.value = response.data;
         console.log(validSKU.value);
-        console.log(product);
       }
     }).catch(error => {
       validSKU.value = false;
@@ -147,17 +148,71 @@ const generateVoucher = () => {
         </PrimaryButton>
       </div>
       <DialogModal :show="showingProductDetails" @close="closeModal">
+        <div class="w-full p-4 text-right">
+            <button 
+            class="bg-gray-50 text-gray-400 px-3 py-1 rounded-full text-2xl text-right">X</button>
+        </div>
         <template #title>
-          Product View
+         <div class="flex items-start gap-3 justify-between py-4">
+          <div class="text-3xl">{{ product.name }}</div>
+          <div class="text-2xl text-gray-300 bg-gray-50 rounded-full px-2">
+            <button @click="closeModal">&times;</button>
+          </div>
+         </div>
         </template>
         <template #content>
-          {{ product }}
+          <div class="p-4">
+            <div>
+              <!-- img -->
+              <img src="../../../img/ProductImg.png" alt="" class="w-full">
+            </div>
+
+            <div class="flex gap-6 mt-4">
+              <div class="flex gap-2">
+                  <div>
+                      <FloorAreaLogo />
+                  </div>
+                  <div class="text-1xl">
+                      <p class="text-gray-500">Floor Area</p>
+                      <p class="mt-1">{{ product.floor_area }}SQM</p>
+                  </div>
+              </div>
+              <div class="flex gap-2">
+                  <div>
+                      <LotAreaLogo />
+                  </div>
+                  <div class="text-1xl">
+                      <p class="text-gray-500">Lot Area</p>
+                      <p class="mt-1">{{ product.lot_area }}SQM</p>
+                  </div>
+              </div>
+            </div>
+
+            <div class="mt-4">
+              <div class="font-bold text-xl">
+                  <ul>
+                    <li class="mt-2">Location: <span class="font-normal">{{ product.location }}</span></li>
+                    <li class="mt-2">Category: <span class="font-normal">{{ product.category }}</span></li>
+                    <li class="mt-2">Unit Type: <span class="font-normal">{{ product.unit_type.toLowerCase().split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ') }}</span></li>
+                    <li class="mt-2">Total Contract Prize: <span class="font-normal">₱{{ product.price.toLocaleString() }}.00</span></li>
+                    <li class="mt-2">Prize: <span class="font-normal">₱{{ product.price.toLocaleString() }}.00</span></li>
+                    <li class="mt-2">Processing Fee: <span class="font-normal">₱{{ product.processing_fee.toLocaleString() }}.00</span></li>
+                  </ul>
+              </div>
+              <div>
+                <ul>
+                  <li></li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <!-- {{ product }} -->
         </template>
-        <template #footer>
+        <!-- <template #footer class="hidden">
           <SecondaryButton @click="closeModal">
             Close
           </SecondaryButton>
-        </template>
+        </template> -->
       </DialogModal>
     </template>
   </FormSection>
