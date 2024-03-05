@@ -12,10 +12,13 @@ import TextInput from '@/Components/TextInput.vue';
 import FloorAreaLogo from '@/MyComponents/FloorAreaLogo.vue';
 import LotAreaLogo from '@/MyComponents/LotAreaLogo.vue';
 import { ref, computed, watch } from 'vue';
+import ButtonPrimary from '@/MyComponents/ButtonPrimary.vue';
+import RLICardLayout from '@/MyComponents/RLICardLayout.vue';
 
 let params = new URLSearchParams(window.location.search)
 
 const seller = params.get('seller') || usePage().props.auth.user.email;
+const sellerName = params.get('seller') || usePage().props.auth.user.name;
 const reference = params.get('reference');
 const sku = params.get('sku');
 
@@ -85,25 +88,36 @@ const generateVoucher = () => {
 </script>
 
 <template>
-  <FormSection @submitted="generateVoucher">
-    <template #title>
-      Select a Product to Sell
-    </template>
-
-    <template #description>
-      Enter the Product SKU that you intend to offer to your prospect. You may also give a discount on the processing.
-    </template>
-
-    <template #form>
-      <!-- Product SKU -->
+  
+  <form @submit.prevent="generateVoucher" >
+    <RLICardLayout class="items-start">
+      
+     <template #title>
+       <h1 class="font-bold text-3xl"> Sales Reservation</h1>
+     </template>
+     <div class="bg-blue-100 w-72 mx-auto py-2 my-6 rounded-lg">
+      <div class="flex items-center gap-2">
+          <div v-if="$page.props.jetstream.managesProfilePhotos">
+            <img class="h-8 w-8 rounded-full object-cover" :src="$page.props.auth.user.profile_photo_url" :alt="$page.props.auth.user.name">
+          </div>
+          <div v-else class="h-20 w-20">
+            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" stroke="#cfcfcf"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path fill-rule="evenodd" clip-rule="evenodd" d="M22 12C22 17.5228 17.5228 22 12 22C6.47715 22 2 17.5228 2 12C2 6.47715 6.47715 2 12 2C17.5228 2 22 6.47715 22 12ZM15 9C15 10.6569 13.6569 12 12 12C10.3431 12 9 10.6569 9 9C9 7.34315 10.3431 6 12 6C13.6569 6 15 7.34315 15 9ZM12 20.5C13.784 20.5 15.4397 19.9504 16.8069 19.0112C17.4108 18.5964 17.6688 17.8062 17.3178 17.1632C16.59 15.8303 15.0902 15 11.9999 15C8.90969 15 7.40997 15.8302 6.68214 17.1632C6.33105 17.8062 6.5891 18.5963 7.19296 19.0111C8.56018 19.9503 10.2159 20.5 12 20.5Z" fill="#cfcfcf"></path> </g></svg>
+          </div>
+          <div class="text-sm">
+              <p class="text-lg font-bold">{{sellerName}}</p>
+              <p>{{seller}}</p>
+              <p class="text-rose-700 capitalize font-bold">seller</p>
+          </div>
+      </div>
+     </div>
       <div class="col-span-6 sm:col-span-4">
-        <InputLabel for="sku" value="Product SKU" />
+        <InputLabel for="sku" value="Product SKU" class="font-bold text-lg" />
         <TextInput
             id="sku"
             v-model="form.sku"
             type="text"
-            class="mt-1 block w-full"
-            placeholder="e.g., JN-AGM-CL-HLDUS-GRN, JN-AGM-CL-HLDUS-PUR"
+            class="mt-1 block w-full rounded-full"
+            placeholder="Enter value"
             required
             autofocus
         />
@@ -113,7 +127,7 @@ const generateVoucher = () => {
         <InputError :message="form.errors.sku" class="mt-2" />
       </div>
 
-      <!-- Percent Discount -->
+      
       <div class="col-span-6 sm:col-span-4 hidden">
         <InputLabel for="discount" value="Percent Discount" />
         <TextInput
@@ -127,14 +141,13 @@ const generateVoucher = () => {
         <div class="text-xs text-gray-600 dark:text-gray-400">on processing fee</div>
         <InputError :message="form.errors.discount" class="mt-2" />
       </div>
-    </template>
 
-    <template #actions>
+      <div>
       <ActionMessage :on="form.recentlySuccessful" class="me-3">
         Customized.
       </ActionMessage>
 
-      <div class="flex items-center space-x-4 px-4 py-3">
+      <div class="flex items-center justify-end space-x-4 px-4 py-3">
         <template v-if="validSKU">
           <SecondaryButton @click = "createLink()">
             Generate
@@ -143,9 +156,9 @@ const generateVoucher = () => {
             View
           </SecondaryButton>
         </template>
-        <PrimaryButton :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
+        <ButtonPrimary :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
           Start
-        </PrimaryButton>
+        </ButtonPrimary>
       </div>
       <DialogModal :show="showingProductDetails" @close="closeModal">
         <div class="w-full p-4 text-right">
@@ -153,17 +166,17 @@ const generateVoucher = () => {
             class="bg-gray-50 text-gray-400 px-3 py-1 rounded-full text-2xl text-right">X</button>
         </div>
         <template #title>
-         <div class="flex items-start gap-3 justify-between py-4">
+          <div class="flex items-start gap-3 justify-between py-4">
           <div class="text-3xl">{{ product.name }}</div>
           <div class="text-2xl text-gray-300 bg-gray-50 rounded-full px-2">
             <button @click="closeModal">&times;</button>
           </div>
-         </div>
+          </div>
         </template>
         <template #content>
           <div class="p-4">
             <div>
-              <!-- img -->
+            
               <img src="../../../img/ProductImg.png" alt="" class="w-full">
             </div>
 
@@ -206,16 +219,11 @@ const generateVoucher = () => {
               </div>
             </div>
           </div>
-          <!-- {{ product }} -->
         </template>
-        <!-- <template #footer class="hidden">
-          <SecondaryButton @click="closeModal">
-            Close
-          </SecondaryButton>
-        </template> -->
       </DialogModal>
-    </template>
-  </FormSection>
+      </div>
+    </RLICardLayout>
+  </form>
 </template>
 
 <style scoped>
