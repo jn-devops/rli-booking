@@ -4,6 +4,7 @@
     import AuthenticationCard from '@/Components/AuthenticationCard.vue';
     import { Head, Link, useForm } from '@inertiajs/vue3';
     import { router } from "@inertiajs/vue3";
+    import ButtonPrimary from '@/MyComponents/ButtonPrimary.vue';
     
     const props = defineProps({
         booking: Object,
@@ -14,6 +15,7 @@
         buyer: Object,
         url: String,
     });
+    console.log('url', props.url);
     console.log('booking:', props.booking);
     console.log('buyer info:', props.buyer);
     Echo.channel(`voucher.${props.voucherCode}`)
@@ -132,7 +134,7 @@
                                                 <div class="pl-8">
                                                     <ul>
                                                         <!-- <li>Gcash</li> -->
-                                                        <li></li>
+                                                        <li>&nbsp;</li>
                                                         <li class="text-primary font-bold">₱{{ props.booking.order.product.processing_fee.toLocaleString() }}.00</li>
                                                     </ul>
                                                 </div>
@@ -229,7 +231,7 @@
                                                 <div class="pl-8">
                                                     <ul>
                                                         <!-- <li>Gcash</li> -->
-                                                        <li></li>
+                                                        <li>&nbsp;</li>
                                                         <li class="text-primary font-bold">₱{{ props.booking.order.product.processing_fee.toLocaleString() }}.00</li>
                                                     </ul>
                                                 </div>
@@ -326,7 +328,7 @@
                                                 <div class="pl-8">
                                                     <ul>
                                                         <!-- <li>MOD Data</li> -->
-                                                        <li></li>
+                                                        <li>&nbsp;</li>
                                                         <li class="text-primary font-bold">₱{{ props.booking.order.product.processing_fee.toLocaleString() }}.00</li>
                                                     </ul>
                                                 </div>
@@ -359,7 +361,7 @@
         <template v-else>
             <AuthenticationCard> 
                 <template #logo>
-                    <AuthenticationCardLogo />
+                    <!-- <AuthenticationCardLogo /> -->
                 </template>
                 <div class="text-center py-6">
                     Take note of the reservation code:
@@ -369,13 +371,17 @@
                     <div class="mt-4 mb-2 p-2 inline-block bg-white center" v-html="qrCode" />
                     <!-- <div><button class="bg-gray-500 text-white"><a :href="url">Or click this ugly button to authenticate (eKYC)</a></button></div> -->
                     <div>
-                        <button class="bg-gray-500 text-white">
+                        <ButtonPrimary>
+                            <a :href="url" class="p-5">Proceed to Authenticate</a>
+                        </ButtonPrimary>
+                        <!-- <button class="bg-gray-500 text-white">
                             <a :href="url" class="border border-black text-white bg-black mt-4 py-2 px-6 rounded">Proceed to Authenticate</a>
-                        </button>
+                        </button> -->
                     </div>
                 </div>
             </AuthenticationCard> 
         </template>
+        
     </template>
     <style>
     .block_div-content{

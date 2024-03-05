@@ -7,6 +7,7 @@ import InputError from '@/Components/InputError.vue';
 import InputLabel from '@/Components/InputLabel.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import TextInput from '@/Components/TextInput.vue';
+import ButtonPrimary from '@/MyComponents/ButtonPrimary.vue';
 
 const form = useForm({
     name: '',
@@ -28,9 +29,14 @@ const submit = () => {
 
     <AuthenticationCard>
         <template #logo>
-            <AuthenticationCardLogo />
+            <!-- <AuthenticationCardLogo /> -->
+            <div class="relative mb-4">
+            <img src="../../../img/RaemulanLandsLogo.png" alt="RLI_Logo">
+            </div>
         </template>
-
+        <div class="text-center py-4 font-bold text-xl">
+            <h2>Create an Account</h2>
+        </div>
         <form @submit.prevent="submit">
             <div>
                 <InputLabel for="name" value="Name" />
@@ -47,7 +53,7 @@ const submit = () => {
             </div>
 
             <div class="mt-4">
-                <InputLabel for="email" value="Email" />
+                <InputLabel for="email" value="Email Address" />
                 <TextInput
                     id="email"
                     v-model="form.email"
@@ -103,9 +109,12 @@ const submit = () => {
                     Already registered?
                 </Link>
 
-                <PrimaryButton class="ms-4" :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
+                <!-- <PrimaryButton class="ms-4" :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
                     Register
-                </PrimaryButton>
+                </PrimaryButton> -->
+                <ButtonPrimary class="ms-4" :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
+                    Register
+                </ButtonPrimary>
             </div>
         </form>
     </AuthenticationCard>

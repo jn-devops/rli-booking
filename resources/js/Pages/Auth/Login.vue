@@ -7,6 +7,8 @@ import InputError from '@/Components/InputError.vue';
 import InputLabel from '@/Components/InputLabel.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import TextInput from '@/Components/TextInput.vue';
+import ButtonPrimary from '@/MyComponents/ButtonPrimary.vue';
+import AuthenticationLogov2 from '@/MyComponents/AuthenticationLogov2.vue';
 
 defineProps({
     canResetPassword: Boolean,
@@ -34,16 +36,24 @@ const submit = () => {
 
     <AuthenticationCard>
         <template #logo>
-            <AuthenticationCardLogo />
+            <!-- <AuthenticationCardLogo /> -->
+            <div class="relative mb-4">
+            <img src="../../../img/RaemulanLandsLogo.png" alt="RLI_Logo">
+            <!-- <div class="border w-12 rounded-full bg-white shadow absolute bottom-0 -left-12">
+                <AuthenticationLogov2  class="h-10 w-12"/>
+            </div> -->
+           </div>
         </template>
 
         <div v-if="status" class="mb-4 font-medium text-sm text-green-600 dark:text-green-400">
             {{ status }}
         </div>
-
+        <div class="text-center py-4 font-bold text-xl">
+            <h2>Log in your Account</h2>
+        </div>
         <form @submit.prevent="submit">
             <div>
-                <InputLabel for="email" value="Email" />
+                <InputLabel for="email" value="Email Address" />
                 <TextInput
                     id="email"
                     v-model="form.email"
@@ -75,7 +85,7 @@ const submit = () => {
                     <span class="ms-2 text-sm text-gray-600 dark:text-gray-400">Remember me</span>
                 </label>
             </div>
-
+<!-- 
             <div class="flex items-center justify-end mt-4">
                 <Link v-if="canResetPassword" :href="route('password.request')" class="underline text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800">
                     Forgot your password?
@@ -84,6 +94,18 @@ const submit = () => {
                 <PrimaryButton class="ms-4" :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
                     Log in
                 </PrimaryButton>
+            </div> -->
+
+            <div class="mt-4">
+                <Link v-if="canResetPassword" :href="route('password.request')" class="underline text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800">
+                    Forgot your password?
+                </Link>
+            </div>
+            <div class="w-full mt-4 text-center">
+
+                <ButtonPrimary class="text-center w-full" :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
+                    Log in
+                </ButtonPrimary>
             </div>
         </form>
     </AuthenticationCard>

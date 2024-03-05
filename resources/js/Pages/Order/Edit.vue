@@ -8,6 +8,7 @@ import InputError from '@/Components/InputError.vue';
 import InputLabel from '@/Components/InputLabel.vue';
 import TextInput from '@/Components/TextInput.vue';
 import { onMounted, ref, watch, computed } from 'vue';
+import ButtonPrimary from '@/MyComponents/ButtonPrimary.vue';
 
 const props = defineProps({
     voucherCode: String,
@@ -492,16 +493,17 @@ const navigateToMapLink = () => {
                 <button v-if="selectedTerm === 'Downpayment - 0.10' || selectedTerm === 'Downpayment - 0.30'" 
                 :disabled="!(form.property_code && selectedTerm && selectedDownpayment && selectedMonths)"
                 @click="openViewAmortization"
-                :class="{'hover:text-blue-400' : (form.property_code && selectedTerm && selectedDownpayment && selectedMonths)}"
-                class="bg-gray-200 px-6 py-2 rounded">View Amortization</button>
+                :class="{'hover:text-white hover:bg-rose-600' : (form.property_code && selectedTerm && selectedDownpayment && selectedMonths)}"
+                class="bg-white border border-rose-600 px-6 py-2 rounded-lg text-rose-600 capitalize">View Amortization</button>
                 <button v-else-if="selectedTerm === 'Spotcash'" 
                 :disabled="!(form.property_code && selectedTerm)"
                 @click="openViewAmortization"
-                :class="{'hover:text-blue-400' : (form.property_code && selectedTerm)}"
-                class="bg-gray-200 px-6 py-2 rounded">View Amortization</button>
-                <PrimaryButton class="ms-4 px-6 py-2" :class="{ 'opacity-25': form.processing }" :disabled="form.processing" @click="submit()">
-                Submit
-                </PrimaryButton>
+                :class="{'hover:text-white hover:bg-rose-600' : (form.property_code && selectedTerm)}"
+                class="bg-white border border-rose-600 px-6 py-2 rounded-lg text-rose-600 capitalize">View Amortization</button>
+
+                <ButtonPrimary class="ms-4 px-6 py-3" :class="{ 'opacity-25': form.processing }" :disabled="form.processing" @click="submit()">
+                    Submit
+                </ButtonPrimary>
             </div>
         </form>
     </AuthenticationCard>
