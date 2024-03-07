@@ -346,6 +346,14 @@
                       places: 2
                     }
                   },
+                  {
+                    fieldName: "COLOR",
+                    label: "Color",
+                  },
+                  {
+                    fieldName: "ORIENTATIO",
+                    label: "Orientation",
+                  },
                   // {
                   //   fieldName: "STATUS",
                   //   label: "Status",
@@ -406,7 +414,7 @@
         let whereClause = "";
 
         if (skuParam != null) {
-          whereClause = "Sku = '"+skuParam+"' and Status = 1";
+          whereClause = "Sku LIKE '%"+skuParam+"%' and Status = 1";
           queryFeatureLayer(view.extent);
 
           // const trailheadsLayer = new FeatureLayer({
