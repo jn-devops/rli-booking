@@ -77,7 +77,7 @@
         };
 
         const map = new Map({
-          basemap: "streets"
+          basemap: "osm/hybrid"
         });
 
         const view = new MapView({
@@ -404,7 +404,7 @@
             symbol: {
               type: "simple-line",
               color: [0, 0, 0], // Change this RGB value to set the line color (black in this case)
-              width: 1 // Change this value to set the line width
+              width: 2 // Change this value to set the line width
             }
           }
         });
@@ -432,7 +432,7 @@
             outFields: ["*"],
             popupTemplate: popupTrailheads,
             renderer: openSpacesRenderer,
-            opacity: .5
+            opacity: .75
           });
 
           map.add(trailheadsLayer);
@@ -452,7 +452,7 @@
           <calcite-combobox id="styleCombobox" selection-mode="single" clear-disabled>
             <calcite-combobox-item value="arcgis/navigation" text-label="arcgis/navigation"></calcite-combobox-item>
             <calcite-combobox-item value="arcgis/navigation-night" text-label="arcgis/navigation-night"></calcite-combobox-item>
-            <calcite-combobox-item value="arcgis/streets" text-label="arcgis/streets" selected></calcite-combobox-item>
+            <calcite-combobox-item value="arcgis/streets" text-label="arcgis/streets"></calcite-combobox-item>
             <calcite-combobox-item value="arcgis/streets-relief" text-label="arcgis/streets-relief"></calcite-combobox-item>
             <calcite-combobox-item value="arcgis/streets-night" text-label="arcgis/streets-night"></calcite-combobox-item>
             <calcite-combobox-item value="arcgis/outdoor" text-label="arcgis/outdoor"></calcite-combobox-item>
@@ -475,7 +475,7 @@
             <calcite-combobox-item value="osm/navigation" text-label="osm/navigation"></calcite-combobox-item>
             <calcite-combobox-item value="osm/navigation-dark" text-label="osm/navigation-dark"></calcite-combobox-item>
             <calcite-combobox-item value="osm/streets" text-label="osm/streets"></calcite-combobox-item>
-            <calcite-combobox-item value="osm/hybrid" text-label="osm/hybrid"></calcite-combobox-item>
+            <calcite-combobox-item value="osm/hybrid" text-label="osm/hybrid" selected></calcite-combobox-item>
             <calcite-combobox-item value="osm/light-gray" text-label="osm/light-gray"></calcite-combobox-item>
             <calcite-combobox-item value="osm/dark-gray" text-label="osm/dark-gray"></calcite-combobox-item>
             <calcite-combobox-item value="osm/blueprint" text-label="osm/blueprint"></calcite-combobox-item>
