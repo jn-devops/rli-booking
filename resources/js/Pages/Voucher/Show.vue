@@ -58,13 +58,13 @@
                                                         <li>Name:</li>
                                                     </ul>
                                                 </div>
-                                                <div class="pl-8 w-full lg:text-right lg:pr-7">
+                                                <div class="pl-8 w-full lg:text-left lg:pr-7">
                                                     <p>{{ props.booking.order.buyer.name }}</p>
                                                 </div>
                                             </div>
                                             <div class="flex">
                                                 <div class="font-bold">
-                                                <p>Contat Number:</p>
+                                                <p>Contact Number:</p>
                                                 </div>
                                                 <div class="pl-8">
                                                     <p>{{ props.booking.order.buyer.mobile }}</p>
@@ -155,13 +155,13 @@
                                                         <li>Name:</li>
                                                     </ul>
                                                 </div>
-                                                <div class="pl-8 w-full lg:text-right lg:pr-7">
+                                                <div class="pl-8 w-full lg:text-left lg:pr-7">
                                                     <p>{{ props.booking.order.buyer.name }}</p>
                                                 </div>
                                             </div>
                                             <div class="flex">
                                                 <div class="font-bold">
-                                                <p>Contat Number:</p>
+                                                <p>Contact Number:</p>
                                                 </div>
                                                 <div class="pl-8">
                                                     <p>{{ props.booking.order.buyer.mobile }}</p>
@@ -252,7 +252,7 @@
                                                         <li>Name:</li>
                                                     </ul>
                                                 </div>
-                                                <div class="pl-8 w-full lg:text-right lg:pr-7">
+                                                <div class="pl-8 w-full lg:text-left lg:pr-7">
                                                     <p>{{ props.buyer.name }}</p>
                                                 </div>
                                             </div>
@@ -343,11 +343,11 @@
                                     <div class="py-4 px-2 lg:col-span-4">
                                         <p>To ensure the seamless processing of your reservation, we kindly request that you complete the payment within the next 3 working days.If you have already made the payment, kindly disregard this message</p>
                                     </div>
-                                    <div class="py-4 px-1 lg:col-span-2 place-self-center">
+                                    <!-- <div class="py-4 px-1 lg:col-span-2 place-self-center">
                                         <Link
                                         href="/invoice" 
                                         class="border p-4 rounded-lg bg_rli-primary text-white text-sm">Proceed to Billing Statement</Link>
-                                    </div>
+                                    </div> -->
                                 </div>
                             </div>
                         </div>
