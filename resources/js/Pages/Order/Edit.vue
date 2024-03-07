@@ -9,6 +9,8 @@ import InputLabel from '@/Components/InputLabel.vue';
 import TextInput from '@/Components/TextInput.vue';
 import { onMounted, ref, watch, computed } from 'vue';
 import ButtonPrimary from '@/MyComponents/ButtonPrimary.vue';
+import EditOrder from '@/MyComponents/EditOrder.vue';
+import RLICard from '@/MyComponents/RLICard.vue';
 
 const props = defineProps({
     voucherCode: String,
@@ -234,19 +236,14 @@ const navigateToMapLink = () => {
 <template>
     <Head title="RLI Wizard" />
 
-    <AuthenticationCard>
-        <template #logo>
-            <AuthenticationCardLogo />
-        </template>
-
-
+    <RLICard>
         <form @submit.prevent="submit">
             <div class="mt-4">
 
             </div>
 
             <!-- References -->
-            <div class="col-span-6">
+            <!-- <div class="col-span-6">
                 <InputLabel :value="props.voucherCode" class="text-blue-500 dark:text-blue-200 font-extrabold"/>
                 <div class="flex items-center">
                     <div class="ms-4 leading-tight">
@@ -255,7 +252,7 @@ const navigateToMapLink = () => {
                         </div>
                     </div>
                 </div>
-            </div>
+            </div> -->
 
             <!-- Property Code -->
             <!-- <div class="mt-4">
@@ -272,7 +269,16 @@ const navigateToMapLink = () => {
                 <div class="text-xs text-gray-600 dark:text-gray-400">{{ props.order.product.name }} ({{ props.order.product.sku }})}</div>
                 <InputError class="mt-2" :message="form.errors.property_code" />
             </div> -->
-            <div class="mt-4">
+            <div>
+                <div class="text-3xl font-bold">
+                    <h1>{{ props.order.product.name }}</h1>
+                </div>
+                <div class="flex gap-1 mt-3 items-center">
+                    <p class="font-bold text-lg mb-0">Reservation Code:</p>
+                    <p class="text-sky-600 text-2xl">{{ props.voucherCode }}</p>
+                </div>
+            </div>
+            <div class="mt-4 w-4/6">
                 <label for="property_code" class="block font-medium leading-6 text-gray-900">Property Code</label>
                 <div class="mt-2 flex rounded-md shadow-sm">
                     <div class="relative flex flex-grow items-stretch focus-within:z-10">
@@ -333,61 +339,193 @@ const navigateToMapLink = () => {
                 <div class="text-xs text-gray-600 dark:text-gray-400">to pay downpayment</div>
                 <InputError class="mt-2" :message="form.errors.dp_months" />
             </div> -->
-            <div class="mt-4">
-                <InputLabel for="terms" value="Terms" />
-                <select @change="onChange" id="terms" name="terms" class="mt-2 block w-full rounded-md border-0 py-1.5 pl-3 pr-10 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6" v-model="selectedTerm">
-                    <option selected disabled value="Selected">Selected</option>
-                    <option value="Downpayment - 0.10">Downpayment - 10%</option>
-                    <option value="Downpayment - 0.30">Downpayment - 30%</option>
-                    <option value="Spotcash">Spotcash - 100%</option>
-                </select>
+            <div 
+            v-if="props.property_code"
+            :class="{'block': (props.property_code)}"
+            class="mt-4">
+            <EditOrder 
+            :propertyCode="props.property_code" 
+            :order="props.order" 
+            
+            />
+            <div class="">
+                <div class="my-4 font-bold">
+                    <p>Calculate Financial Scheme</p>
+                </div>
+                <div v-if="selectedTerm === 'Downpayment - 0.10' || selectedTerm === 'Downpayment - 0.30'">
+                    <div class="flex gap-2">
+                        <div class="grow w-33">
+                            <InputLabel for="terms" value="Terms" />
+                            <select @change="onChange" id="terms" name="terms" class="mt-2 block w-full rounded-md border-0 py-1.5 pl-3 pr-10 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6" v-model="selectedTerm">
+                                <option selected disabled value="Selected">Selected</option>
+                                <option value="Downpayment - 0.10">Downpayment - 10%</option>
+                                <option value="Downpayment - 0.30">Downpayment - 30%</option>
+                                <option value="Spotcash">Spotcash - 100%</option>
+                            </select>
+                        </div>
+                        <div class="grow w-33">
+                            <div v-if="selectedTerm === 'Downpayment - 0.10'" class="block">
+                            <!-- <InputLabel for="downpayment" value="Downpayment" />
+                            <select id="downpayment" name="downpayment" class="mt-2 block w-full rounded-md border-0 py-1.5 pl-3 pr-10 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6" v-model="selectedDownpayment" @change="handleDownpaymentChange">
+                                <option value="10" selected>10%</option>
+                                <option value="30">30%</option>
+                            </select> -->
+        
+                            <div class="">
+                                <InputLabel for="months" value="Months" />
+                                <select id="months" name="months" class="mt-2 block w-full rounded-md border-0 py-1.5 pl-3 pr-10 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6" v-model="selectedMonths" @change="handleMonthsChange">
+                                    <option value="36">36 Months</option>
+                                    <option value="48">48 Months</option>
+                                    <option value="60">60 Months</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div v-if="selectedTerm === 'Downpayment - 0.30'" class="block">
+                            <!-- <InputLabel for="downpayment" value="Downpayment" />
+                            <select id="downpayment" name="downpayment" class="mt-2 block w-full rounded-md border-0 py-1.5 pl-3 pr-10 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6" v-model="selectedDownpayment" @change="handleDownpaymentChange">
+                                <option value="10" selected>10%</option>
+                                <option value="30">30%</option>
+                            </select> -->
+        
+                            <div class="">
+                                <InputLabel for="months" value="Months" />
+                                <select id="months" name="months" class="mt-2 block w-full rounded-md border-0 py-1.5 pl-3 pr-10 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6" v-model="selectedMonths" @change="handleMonthsChange">
+                                    <option value="36">36 Months</option>
+                                    <option value="48">48 Months</option>
+                                    <option value="60">60 Months</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div v-else class="hidden mt-4">
+                                <InputLabel for="spotcash"  value="Spotcash" />
+                                <select id="spotcash" name="spotcash" class="mt-2 block w-full rounded-md border-0 py-1.5 pl-3 pr-10 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6" v-model="selectedDownpayment" @change="handleDownpaymentChange">
+                                    <option value="100" :value="100" selected>100%</option>
+                                </select>
+        
+                                <div class="hidden mt-3">
+                                    <InputLabel for="months" value="Months" />
+                                    <select id="months" name="months" class="mt-2 block w-full rounded-md border-0 py-1.5 pl-3 pr-10 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6" v-model="selectedMonths">
+                                        <option value="1" :value="1" selected>1 Month</option>
+                                    </select>
+                                </div>
+                                
+                            </div>
+                        </div>
+                        <div class="grow w-33">
+                            <div 
+                            v-if="selectedTerm === 'Downpayment - 0.10' && selectedMonths || selectedTerm === 'Downpayment - 0.30' && selectedMonths"
+                            class="">
+                                <InputLabel for="dp" value="Downpayment" />
+                                <input 
+                                id="dp"
+                                type="text"
+                                class="mt-2 block w-full rounded-none rounded-l-md border-0 py-1.5 text-black ring-1 ring-inset ring-gray-300 placeholder:text-black focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 bg-gray-100" 
+                                disabled
+                                :value="`₱${resultMonthstoPay[0].value.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',')}`">
+                            </div>
+                            <!-- <div v-else-if="selectedTerm === 'Spotcash'">
+                                <div class="">
+                                    <InputLabel  value="Downpayment" />
+                                    <input 
+                                
+                                    type="text"
+                                    class="mt-2 block w-full rounded-none rounded-l-md border-0 py-1.5 text-black ring-1 ring-inset ring-gray-300 placeholder:text-black focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 bg-gray-100" 
+                                    disabled
+                                    :value="`₱${totalSpotCash.toLocaleString()}.00`">
+                                </div>
+                            </div> -->
+                        </div>
 
-                <div v-if="selectedTerm === 'Downpayment - 0.10'" class="block mt-4">
-                    <!-- <InputLabel for="downpayment" value="Downpayment" />
-                    <select id="downpayment" name="downpayment" class="mt-2 block w-full rounded-md border-0 py-1.5 pl-3 pr-10 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6" v-model="selectedDownpayment" @change="handleDownpaymentChange">
-                        <option value="10" selected>10%</option>
-                        <option value="30">30%</option>
-                    </select> -->
-
-                    <div class="mt-3">
-                        <InputLabel for="months" value="Months" />
-                        <select id="months" name="months" class="mt-2 block w-full rounded-md border-0 py-1.5 pl-3 pr-10 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6" v-model="selectedMonths" @change="handleMonthsChange">
-                            <option value="36">36 Months</option>
-                            <option value="48">48 Months</option>
-                            <option value="60">60 Months</option>
-                        </select>
                     </div>
                 </div>
-                <div v-if="selectedTerm === 'Downpayment - 0.30'" class="block mt-4">
-                    <!-- <InputLabel for="downpayment" value="Downpayment" />
-                    <select id="downpayment" name="downpayment" class="mt-2 block w-full rounded-md border-0 py-1.5 pl-3 pr-10 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6" v-model="selectedDownpayment" @change="handleDownpaymentChange">
-                        <option value="10" selected>10%</option>
-                        <option value="30">30%</option>
-                    </select> -->
-
-                    <div class="mt-3">
-                        <InputLabel for="months" value="Months" />
-                        <select id="months" name="months" class="mt-2 block w-full rounded-md border-0 py-1.5 pl-3 pr-10 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6" v-model="selectedMonths" @change="handleMonthsChange">
-                            <option value="36">36 Months</option>
-                            <option value="48">48 Months</option>
-                            <option value="60">60 Months</option>
+                <div class="flex gap-2" v-else-if="selectedTerm === 'Spotcash'">
+                    <div class="basis-0 grow w-50">
+                        <InputLabel for="terms" value="Terms" />
+                        <select @change="onChange" id="terms" name="terms" class="mt-2 block w-full rounded-md border-0 py-1.5 pl-3 pr-10 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6" v-model="selectedTerm">
+                            <option selected disabled value="Selected">Selected</option>
+                            <option value="Downpayment - 0.10">Downpayment - 10%</option>
+                            <option value="Downpayment - 0.30">Downpayment - 30%</option>
+                            <option value="Spotcash">Spotcash - 100%</option>
                         </select>
                     </div>
-                </div>
-                <div v-else class="hidden mt-4">
-                    <InputLabel for="spotcash"  value="Spotcash" />
-                    <select id="spotcash" name="spotcash" class="mt-2 block w-full rounded-md border-0 py-1.5 pl-3 pr-10 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6" v-model="selectedDownpayment" @change="handleDownpaymentChange">
-                        <option value="100" :value="100" selected>100%</option>
-                    </select>
-
-                    <div class="hidden mt-3">
-                        <InputLabel for="months" value="Months" />
-                        <select id="months" name="months" class="mt-2 block w-full rounded-md border-0 py-1.5 pl-3 pr-10 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6" v-model="selectedMonths">
-                            <option value="1" :value="1" selected>1 Month</option>
-                        </select>
+                    <div class="basis-0 grow w-50">
+                        <div class="">
+                                <InputLabel  value="Downpayment" />
+                                <input 
+                            
+                                type="text"
+                                class="mt-2 block w-full rounded-none rounded-l-md border-0 py-1.5 text-black ring-1 ring-inset ring-gray-300 placeholder:text-black focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 bg-gray-100" 
+                                disabled
+                                :value="`₱${totalSpotCash.toLocaleString()}.00`">
+                            </div>
                     </div>
                 </div>
-                <div class="mt-4" v-if="selectedTerm === 'Downpayment - 0.10' && selectedMonths || selectedTerm === 'Downpayment - 0.30' && selectedMonths">
+            </div>
+            <div class="w-50">
+                <div class="">
+                    <div
+                    v-if="selectedTerm === 'Downpayment - 0.10' && selectedMonths || selectedTerm === 'Downpayment - 0.30' && selectedMonths"
+                    >
+                        <div class="mt-4">
+                            <InputLabel for="bal" value="Balance" />
+                            <input 
+                        id="bal"
+                            type="text"
+                            class="block w-full rounded-none rounded-l-md border-0 py-1.5 text-black ring-1 ring-inset ring-gray-300 placeholder:text-black focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 bg-gray-100" 
+                            disabled
+                            :value="`₱${overAllTot.toLocaleString()}.00`">
+                        </div>
+                        <div class="text-xs italic text-rose-600">
+                            <p >The remaining 80% of the total contract price will be paid through financial institution.</p>
+                        </div>
+                    </div>
+                    <!-- <div
+                    v-else-if="selectedTerm === 'Spotcash'"
+                    class=""
+                    >
+                        <div class="mt-4">
+                                <InputLabel  value="Downpayment" />
+                                <input 
+                            
+                                type="text"
+                                class="mt-2 block w-full rounded-none rounded-l-md border-0 py-1.5 text-black ring-1 ring-inset ring-gray-300 placeholder:text-black focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 bg-gray-100" 
+                                disabled
+                                :value="`₱${totalSpotCash.toLocaleString()}.00`">
+                            </div>
+                            
+                    </div> -->
+                </div>
+            </div>
+            <div class="flex gap-2">
+                <div class="grow w-50">
+                    <div class="mt-4">
+                        <InputLabel for="rDate" value="Reservation Date" />
+                        <input 
+                        id="rDate"
+                        type="text"
+                        class="block w-full rounded-none rounded-l-md border-0 py-1.5 text-black ring-1 ring-inset ring-gray-300 placeholder:text-black focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 bg-gray-100" 
+                        placeholder="January 1, 2024"
+                        :value="`${dateToday.toLocaleString()}`"
+                        disabled>
+                    </div>
+                </div>
+                <div class="grow w-50">
+                    <div class="mt-4">
+                        <InputLabel for="rDueDate" value="Reservation Due Date" />
+                        <input 
+                    id="rDueDate"
+                        type="text"
+                        class="block w-full rounded-none rounded-l-md border-0 py-1.5 text-black ring-1 ring-inset ring-gray-300 placeholder:text-black focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 bg-gray-100" 
+                        placeholder="January 10, 2024"
+                        :value="`${rDueDate.toLocaleString()}`"
+                        disabled>
+                    </div>
+                </div>
+            </div>
+                
+
+              
+                <!-- <div class="mt-4" v-if="selectedTerm === 'Downpayment - 0.10' && selectedMonths || selectedTerm === 'Downpayment - 0.30' && selectedMonths">
                     <div class="mt-4">
                         <InputLabel for="rDate" value="Reservation Date" />
                         <input 
@@ -457,7 +595,7 @@ const navigateToMapLink = () => {
                         disabled>
                     </div>
                     <div class="mt-4">
-                        <InputLabel value="Reservation Due Date" />
+                        <InputLabel value="Reservation Fee" />
                         <input 
                         
                         type="text"
@@ -466,7 +604,7 @@ const navigateToMapLink = () => {
                         disabled>
                     </div>
                     <div class="mt-4">
-                        <InputLabel  value="Reservation Due Date" />
+                        <InputLabel  value="Downpayment" />
                         <input 
                     
                         type="text"
@@ -474,9 +612,9 @@ const navigateToMapLink = () => {
                         disabled
                         :value="`₱${totalSpotCash.toLocaleString()}.00`">
                     </div>
-                </div>
+                </div> -->
             </div>
-
+            
             <div class="flex items-center justify-end mt-4">
                 <!-- <Link :href="route('login')" class="ms-4 underline text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800">
                     Select Property
@@ -490,10 +628,14 @@ const navigateToMapLink = () => {
                     Reserve
                 </PrimaryButton> -->
                 <!-- <button :disabled="!(selectedTerm && selectedDownpayment && selectedMonths)" -->
-                <button v-if="selectedTerm === 'Downpayment - 0.10' || selectedTerm === 'Downpayment - 0.30'" 
+                <button 
+                v-show="props.property_code"
+                v-if="selectedTerm === 'Downpayment - 0.10' || selectedTerm === 'Downpayment - 0.30'" 
                 :disabled="!(form.property_code && selectedTerm && selectedDownpayment && selectedMonths)"
                 @click="openViewAmortization"
-                :class="{'hover:text-white hover:bg-rose-600' : (form.property_code && selectedTerm && selectedDownpayment && selectedMonths)}"
+                :class="{'hover:text-white hover:bg-rose-600' : (form.property_code && selectedTerm && selectedDownpayment && selectedMonths),
+                'block' : (props.property_code)
+                }"
                 class="bg-white border border-rose-600 px-6 py-2 rounded-lg text-rose-600 capitalize">View Amortization</button>
                 <button v-else-if="selectedTerm === 'Spotcash'" 
                 :disabled="!(form.property_code && selectedTerm)"
@@ -506,7 +648,7 @@ const navigateToMapLink = () => {
                 </ButtonPrimary>
             </div>
         </form>
-    </AuthenticationCard>
+    </RLICard>
 
     <!-- View Amortization Modal -->
     <div v-show="viewAmortizationModal"
