@@ -12,7 +12,10 @@ class SellerFactory extends UserFactory
     public function definition(): array
     {
         return array_merge([
-            //place new attributes here
+            'mobile' => $this->faker->phoneNumber(),
+            'bank_code' => $this->faker->word(),
+            'account_number' => $this->faker->word(),
+            'account_name' => $this->faker->name(),
         ], parent::definition());
     }
 }

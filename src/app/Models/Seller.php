@@ -16,6 +16,9 @@ use App\Models\User;
  * @property string $email
  * @property string $mobile
  * @property string $personal_email
+ * @property string $bank_code
+ * @property string $account_number
+ * @property string $account_name
  *
  * @method   int    getKey()
  */
@@ -24,6 +27,8 @@ class Seller extends User implements AttributableData
     use HasFactory;
     use HasParent;
     use HasMeta;
+
+    protected $fillable = ['name', 'email', 'mobile', 'personal_email', 'bank_code', 'account_number', 'account_name'];
 
     static public function from(User $user): self
     {
@@ -49,6 +54,42 @@ class Seller extends User implements AttributableData
     public function setPersonalEmailAttribute(string $value): static
     {
         $this->getAttribute('meta')->set('personal_email', $value);
+
+        return $this;
+    }
+
+    public function getBankCodeAttribute(): ?string
+    {
+        return $this->getAttribute('meta')->get('bank_code');
+    }
+
+    public function setBankCodeAttribute(?string $value): static
+    {
+        $this->getAttribute('meta')->set('bank_code', $value);
+
+        return $this;
+    }
+
+    public function getAccountNumberAttribute(): ?string
+    {
+        return $this->getAttribute('meta')->get('account_number');
+    }
+
+    public function setAccountNumberAttribute(?string $value): static
+    {
+        $this->getAttribute('meta')->set('account_number', $value);
+
+        return $this;
+    }
+
+    public function getAccountNameAttribute(): ?string
+    {
+        return $this->getAttribute('meta')->get('account_name');
+    }
+
+    public function setAccountNameAttribute(?string $value): static
+    {
+        $this->getAttribute('meta')->set('account_name', $value);
 
         return $this;
     }

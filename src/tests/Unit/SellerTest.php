@@ -21,6 +21,10 @@ test('seller has schema attributes', function () {
     $seller = Seller::factory()->create();
     expect($seller->name)->toBeString();
     expect($seller->email)->toBeString();
+    expect($seller->mobile)->toBeString();
+    expect($seller->bank_code)->toBeString();
+    expect($seller->account_number)->toBeString();
+    expect($seller->account_name)->toBeString();
 });
 
 test('seller has data', function () {

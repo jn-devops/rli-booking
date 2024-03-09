@@ -13,5 +13,10 @@ class SellerData extends Data implements CanHydrateFromModel
     public function __construct(
         public string $email,
         public string $name,
+        public ?string $mobile,
+        public ?string $personal_email,
+        public ?string $bank_code,
+        public ?string $account_number,
+        public ?string $account_name,
     ) {}
 }

@@ -34,6 +34,7 @@ Route::middleware([
     })->name('dashboard');
 
     Route::post('generate-voucher', \RLI\Booking\Actions\GenerateVoucherAction::class)->name('generate-voucher');
+
 });
 Route::post('update-order/{voucher}', \RLI\Booking\Actions\UpdateOrderAction::class)->name('update-order');
 Route::get('references/{voucher}', [\RLI\Booking\Http\Controllers\VoucherController::class, 'show'])->name('references.show');
@@ -47,3 +48,5 @@ Route::post('/shorten-url', \RLI\Booking\Actions\ShortenURLAction::class)
     ->name('shorten-url');
 Route::post('/create-link/{sku}/{title}', \RLI\Booking\Actions\CreateLeadGenerationLinkAction::class)
     ->name('create-link');
+Route::post('update-bank', \RLI\Booking\Actions\UpdateSellerBankInformationAction::class)
+    ->name('update-bank');

@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use RLI\Booking\Models\Seller;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
 
@@ -37,6 +38,16 @@ class HandleInertiaRequests extends Middleware
     public function share(Request $request): array
     {
         return array_merge(parent::share($request), [
+            'seller' => function () use ($request) {
+                $seller = Seller::from($request->user());
+                if (!$seller) return [];
+
+                return $seller->toData();
+//                return array_merge($user->toArray(), [
+//                    'balanceFloat' => $user->wallet->balanceFloat,
+//                    'balanceUpdatedAt' => $user->wallet->updated_at,
+//                ]);
+            },
             'flash' => [
                 'message' => fn () => $request->session()->get('message'),
                 'warning' => fn () => $request->session()->get('warning'),
