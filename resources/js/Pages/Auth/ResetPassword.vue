@@ -6,6 +6,7 @@ import InputError from '@/Components/InputError.vue';
 import InputLabel from '@/Components/InputLabel.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import TextInput from '@/Components/TextInput.vue';
+import ButtonPrimary from '@/MyComponents/ButtonPrimary.vue';
 
 const props = defineProps({
     email: String,
@@ -31,7 +32,10 @@ const submit = () => {
 
     <AuthenticationCard>
         <template #logo>
-            <AuthenticationCardLogo />
+            <!-- <AuthenticationCardLogo /> -->
+            <div class="relative mb-4">
+            <img src="../../../img/RaemulanLandsLogo.png" alt="RLI_Logo">
+            </div>
         </template>
 
         <form @submit.prevent="submit">
@@ -76,9 +80,12 @@ const submit = () => {
             </div>
 
             <div class="flex items-center justify-end mt-4">
-                <PrimaryButton :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
+                <!-- <PrimaryButton :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
                     Reset Password
-                </PrimaryButton>
+                </PrimaryButton> -->
+                <ButtonPrimary :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
+                    Reset Password
+                </ButtonPrimary>
             </div>
         </form>
     </AuthenticationCard>
