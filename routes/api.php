@@ -32,3 +32,6 @@ Route::get('/products/{sku}', function (string $sku) {
 
     return $product ? $product->toData(): false;
 })->name('products-show');
+
+Route::post('/official-sale/{code}', \RLI\Booking\Actions\OfficialSaleAction::class)
+    ->name('official-sale');
