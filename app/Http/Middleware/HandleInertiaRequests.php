@@ -39,6 +39,7 @@ class HandleInertiaRequests extends Middleware
     {
         return array_merge(parent::share($request), [
             'seller' => function () use ($request) {
+                if (!$request->user()) return [];
                 $seller = Seller::from($request->user());
                 if (!$seller) return [];
 
