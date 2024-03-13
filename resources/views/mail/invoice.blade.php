@@ -11,9 +11,12 @@ Address: <b>{{$buyer->address}}</b><br>
 Contact Number: <b>{{$buyer->mobile}}</b><br>
 Project Name: <b>{{$product->brand}}</b><br>
 Unit Type: <b>{{$product->name}}</b><br>
-Total Contract Price: <b>PHP{{number_format($product->price, 2)}}</b><br>
-Processing Fee: <b>PHP{{number_format($product->processing_fee, 2)}}</b><br>
+Total Contract Price: <b>₱{{number_format($product->price, 2)}}</b><br>
+Processing Fee: <b>₱{{number_format($product->processing_fee, 2)}}</b><br>
 Mode of Payment: <b>QR PH</b><br>
+
+<p>Scan the QRCode to pay the processing  fee</p>
+<img src="{{$order->code_img_url}}">
 
 Included in this email is a copy of your billing statement document.<br>
 
