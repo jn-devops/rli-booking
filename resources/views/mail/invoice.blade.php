@@ -14,16 +14,15 @@ Processing Fee: <b>₱{{number_format($product->processing_fee, 2)}}</b><br>
 Mode of Payment: <b>QR PH</b><br>
 
 Your interest in securing this unit is greatly appreciated, and we are thrilled to assist you throughout this process.<br>
+
 To complete the reservation and secure the selected unit, please follow the instructions below:<br>
 
 <b>1. Payment of Processing Fee:</b><br>
-Please scan the QR code attached below to proceed with the payment of the processing fee.<br>
-<p>This fee is essential to finalize your reservation and ensure that the property is secured for you.</p>
+Please <b>scan the QR code</b> attached below to proceed with the payment of the processing fee. This fee is essential to finalize your reservation and ensure that the property is secured for you.</p>
 <img src="{{$order->code_img_url}}">
 
 <b>2. Submission of Latest 1-Month Payslip:</b><br>
-Additionally, as part of the reservation process, we kindly request that you submit your latest 1-month payslip by clicking on the following link:<br>
-<a href="https://form.jotform.com/240572548214051/?referenceCode={{$voucher->code}}">https://form.jotform.com/240572548214051/?referenceCode={{$voucher->code}}</a><br>
+Additionally, as part of the reservation process, we kindly request that you submit your latest 1-month payslip by clicking the <a href="https://form.jotform.com/240572548214051/?referenceCode={{$voucher->code}}">Buyer Attachment Form for Customer Qualification</a>.<br>
 
 Included in this email is a copy of your billing statement document.<br>
 
@@ -36,5 +35,5 @@ Should you have any questions or require further assistance, please do not hesit
 Thank you for choosing Raemulan Lands, Inc. We look forward to welcoming you to your new property soon!<br>
 
 Best regards,<br>
-Raemulan Lands, Inc.
+<b>Raemulan Lands, Inc.</b>
 </x-mail::message>
