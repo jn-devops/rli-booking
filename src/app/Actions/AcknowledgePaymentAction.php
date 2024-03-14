@@ -2,6 +2,7 @@
 
 namespace RLI\Booking\Actions;
 
+use RLI\Booking\Notifications\PaymentConfirmedBuyerNotification;
 use RLI\Booking\Notifications\PaymentConfirmedNotification;
 use RLI\Booking\Classes\State\PaidPendingFulfillment;
 use RLI\Booking\Http\Resources\PayloadResource;
@@ -21,9 +22,10 @@ class AcknowledgePaymentAction
     {
         $order = $voucher->getOrder();
         $order->payment_id = $payment_id;
-        $order->save();        
+        $order->save();  
+        $order->state->transitionTo(PaidPendingFulfillment::class);  
+        $order->buyer->notify(new PaymentConfirmedBuyerNotification($voucher, $payment_id));            
         $order->seller->notify(new PaymentConfirmedNotification($voucher, $payment_id));
-        $order->state->transitionTo(PaidPendingFulfillment::class);
         PaymentAcknowledged::dispatch($voucher);
 
         return $voucher->fresh();

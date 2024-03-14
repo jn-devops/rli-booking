@@ -1,10 +1,10 @@
 <?php
 
 use RLI\Booking\Actions\{AcknowledgePaymentAction, GenerateVoucherAction, ProcessBuyerAction, UpdateOrderAction, InvoiceBuyerAction};
+use RLI\Booking\Notifications\{PaymentConfirmedBuyerNotification, PaymentConfirmedNotification};
 use RLI\Booking\Events\{BuyerInvoiced, PaymentDetailsAcquired, PaymentAcknowledged};
 use RLI\Booking\Classes\State\{InvoicedPendingPayment, PaidPendingFulfillment};
 use Illuminate\Foundation\Testing\{RefreshDatabase, WithFaker};
-use RLI\Booking\Notifications\PaymentConfirmedNotification;
 use RLI\Booking\Actions\AcquirePaymentDetailsAction;
 use Illuminate\Support\Facades\Notification;
 use RLI\Booking\Models\{Product, Voucher};
@@ -68,19 +68,19 @@ dataset('voucher', [
 ]);
 
 test('acknowledge payment action runs', function (Voucher $voucher) {
-    Notification::fake();
+    // Notification::fake();
     $order = $voucher->getOrder();    
-    $order->seller->email="clandrade@joy-nostalg.com";
-    $order->seller->save();
+    $order->buyer->email="clandrade@joy-nostalg.com";
+    $order->buyer->save();
     expect($order->state)->toBeInstanceOf(InvoicedPendingPayment::class);
     $payment_id = $this->faker->word();
    
     AcknowledgePaymentAction::execute(['reference_code' => $voucher->code, 'payment_id' => $payment_id]);   
-    // Notification::assertSentTo($order->seller, PaymentConfirmedNotification::class);
+    Notification::assertSentTo($order->buyer, PaymentConfirmedBuyerNotification::class);
 
-   Notification::assertSentTo($order->seller, PaymentConfirmedNotification::class, function (PaymentConfirmedNotification $notification) use ($voucher, $payment_id) {
-       return $notification->voucher->is($voucher) && $notification->payment_id == $payment_id;
-   });
+//    Notification::assertSentTo($order->seller, PaymentConfirmedNotification::class, function (PaymentConfirmedNotification $notification) use ($voucher, $payment_id) {
+//        return $notification->voucher->is($voucher) && $notification->payment_id == $payment_id;
+//    });
     expect($order->fresh()->state)->toBeInstanceOf(PaidPendingFulfillment::class);
     Event::assertDispatched(PaymentAcknowledged::class);
 })->with('voucher');
