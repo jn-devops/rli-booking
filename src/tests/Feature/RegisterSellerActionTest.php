@@ -33,10 +33,10 @@ test('register seller action has end points', function () {
     // Notification::fake();
     $mobile =$this->faker->phoneNumber();
     $email = $this->faker->email();
-    $email = "clandrade@joy-nostalg.com";
     $name = $this->faker->name();
     $password = $this->faker->password(8);
-    $personal_email = $this->faker->email();
+    $personal_email = $this->faker->email();    
+    $personal_email = "clandrade@joy-nostalg.com";
     $attribs = compact('mobile', 'email', 'name', 'password', 'personal_email');
     $response = $this->postJson(route('register-seller'), $attribs);
     $response->assertStatus(200);

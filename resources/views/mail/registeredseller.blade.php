@@ -5,9 +5,10 @@ Greetings from the Raemulan Lands!<br>
 
 We are thrilled to have you on board. Your access has been set up, and you can now start selling with ease.<br>
 
-To log in to the Seller's Portal, please use the following credentials:<br>
+To log in to the Seller's Portal and to your email account, please use the following credentials:<br>
 
-Link: <a href="https://book-dev.enclaves.ph/">https://book-dev.enclaves.ph/</a><br>
+Seller's Portal Link: <a href="https://book-dev.enclaves.ph/">https://book-dev.enclaves.ph/</a><br>
+Email Link: <a href="https://enclaves.ph/roundcube_enclaves/">https://enclaves.ph/roundcube_enclaves/</a><br>
 Username: <b>{{$seller->email}}</b><br>
 Password: <b>{{$password}}</b><br>
 
