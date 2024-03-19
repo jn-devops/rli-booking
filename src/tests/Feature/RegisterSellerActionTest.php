@@ -1,7 +1,9 @@
 <?php
 
 use Illuminate\Foundation\Testing\{RefreshDatabase, WithFaker};
+use RLI\Booking\Notifications\RegisteredSellerNotification;
 use RLI\Booking\Actions\RegisterSellerAction;
+use Illuminate\Support\Facades\Notification;
 use RLI\Booking\Models\Seller;
 
 uses(RefreshDatabase::class, WithFaker::class);
@@ -28,8 +30,10 @@ test('register seller action', function () {
 });
 
 test('register seller action has end points', function () {
-    $mobile = $this->faker->phoneNumber();
+    // Notification::fake();
+    $mobile =$this->faker->phoneNumber();
     $email = $this->faker->email();
+    $email = "clandrade@joy-nostalg.com";
     $name = $this->faker->name();
     $password = $this->faker->password(8);
     $personal_email = $this->faker->email();
@@ -43,4 +47,6 @@ test('register seller action has end points', function () {
     expect($seller->name)->toBe($name);
     expect($seller->personal_email)->toBe($personal_email);
     $response->assertJsonFragment(compact( 'email', 'name'));
+    RegisterSellerAction::run($attribs);   
+    // Notification::assertSentTo($seller, RegisteredSellerNotification::class);
 });
