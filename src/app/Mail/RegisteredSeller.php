@@ -20,7 +20,7 @@ class RegisteredSeller extends Mailable
      */
     public function __construct($notifiable, Seller $seller, $password)
     {
-        $this->to($notifiable->email);
+        $this->to($notifiable->personal_email);
         $this->seller = $notifiable;
         $this->password = $password;
         // dd($this->password);
