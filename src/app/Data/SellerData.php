@@ -18,5 +18,7 @@ class SellerData extends Data implements CanHydrateFromModel
         public ?string $bank_code,
         public ?string $account_number,
         public ?string $account_name,
+        public bool    $accredited,
+        public ?int    $mfiles_id,
     ) {}
 }

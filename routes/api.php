@@ -35,3 +35,6 @@ Route::get('/products/{sku}', function (string $sku) {
 
 Route::post('/official-sale/{code}', \RLI\Booking\Actions\OfficialSaleAction::class)
     ->name('official-sale');
+
+Route::post('/accredit-seller', \RLI\Booking\Actions\AccreditSellerAction::class)
+    ->name('accredit-seller');

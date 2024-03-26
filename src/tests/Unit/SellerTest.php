@@ -25,6 +25,8 @@ test('seller has schema attributes', function () {
     expect($seller->bank_code)->toBeString();
     expect($seller->account_number)->toBeString();
     expect($seller->account_name)->toBeString();
+    expect($seller->mfiles_id)->toBeInt();
+    expect($seller->accredited)->toBeFalse();
 });
 
 test('seller has data', function () {

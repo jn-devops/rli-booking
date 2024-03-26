@@ -19,6 +19,8 @@ use App\Models\User;
  * @property string $bank_code
  * @property string $account_number
  * @property string $account_name
+ * @property bool   $accredited
+ * @property int    $mfiles_id
  *
  * @method   int    getKey()
  */
@@ -28,7 +30,7 @@ class Seller extends User implements AttributableData
     use HasParent;
     use HasMeta;
 
-    protected $fillable = ['name', 'email', 'mobile', 'personal_email', 'bank_code', 'account_number', 'account_name'];
+    protected $fillable = ['name', 'email', 'mobile', 'personal_email', 'bank_code', 'account_number', 'account_name', 'accredited', 'mfiles_id'];
 
     static public function from(User $user): self
     {
@@ -92,5 +94,16 @@ class Seller extends User implements AttributableData
         $this->getAttribute('meta')->set('account_name', $value);
 
         return $this;
+    }
+
+    public function getAccreditedAttribute(): bool
+    {
+        return $this->getAttribute('accredited_at')
+            && $this->getAttribute('accredited_at') <= now();
+    }
+
+    public function setAccreditedAttribute(bool $value): void
+    {
+        $this->setAttribute('accredited_at', $value ? now() : null);
     }
 }

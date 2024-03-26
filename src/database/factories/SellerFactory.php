@@ -16,6 +16,7 @@ class SellerFactory extends UserFactory
             'bank_code' => $this->faker->word(),
             'account_number' => $this->faker->word(),
             'account_name' => $this->faker->name(),
+            'mfiles_id' => $this->faker->numberBetween(1,1000),
         ], parent::definition());
     }
 }
