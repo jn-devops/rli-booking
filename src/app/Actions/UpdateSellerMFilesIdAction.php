@@ -3,21 +3,20 @@
 namespace RLI\Booking\Actions;
 
 use Lorisleiva\Actions\Concerns\AsAction;
-use Lorisleiva\Actions\ActionRequest;
 use RLI\Booking\Models\Seller;
 
-class AccreditSellerAction
+class UpdateSellerMFilesIdAction
 {
     use AsAction;
 
     /**
      * @param Seller $seller
-     * @param bool $accredit
+     * @param int $mfiles_id
      * @return Seller
      */
-    public function handle(Seller $seller, bool $accredit = true): Seller
+    public function handle(Seller $seller, int $mfiles_id): Seller
     {
-        $seller->accredited = $accredit;
+        $seller->mfiles_id = $mfiles_id;
         $seller->save();
 
         return $seller;
@@ -25,13 +24,13 @@ class AccreditSellerAction
 
     /**
      * @param string $email
-     * @param bool $accredit
+     * @param int $mfiles_id
      * @return \Illuminate\Http\Response
      */
-    public function asController(string $email, bool $accredit = true): \Illuminate\Http\Response
+    public function asController(string $email, int $mfiles_id): \Illuminate\Http\Response
     {
         $seller = Seller::where('email', $email)->firstOrFail();
-        $seller = $this->handle($seller, $accredit);
+        $seller = $this->handle($seller, $mfiles_id);
 
         return response($seller->toData(), 200);
     }

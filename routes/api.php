@@ -38,3 +38,6 @@ Route::post('/official-sale/{code}', \RLI\Booking\Actions\OfficialSaleAction::cl
 
 Route::post('/accredit-seller/{email}/{accredit?}', \RLI\Booking\Actions\AccreditSellerAction::class)
     ->name('accredit-seller');
+
+Route::post('/update-seller-mfiles_id/{email}/{mfiles_id}', \RLI\Booking\Actions\UpdateSellerMFilesIdAction::class)
+    ->name('update-seller-mfiles_id');
