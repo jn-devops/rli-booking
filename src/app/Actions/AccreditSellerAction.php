@@ -19,18 +19,9 @@ class AccreditSellerAction
         return $seller;
     }
 
-    public function rules(): array
+    public function asController(ActionRequest $request, string $email, bool $accredit = true): \Illuminate\Http\Response
     {
-        return [
-            'accredit' => ['nullable', 'bool'],
-        ];
-    }
-
-    public function asController(ActionRequest $request): \Illuminate\Http\Response
-    {
-        $seller = Seller::from($request->user());
-        $validated = $request->validated();
-        $accredit = Arr::get($validated, 'accredit', true);
+        $seller = Seller::where('email', $email)->firstOrFail();
         $seller = $this->handle($seller, $accredit);
 
         return response($seller->toData(), 200);

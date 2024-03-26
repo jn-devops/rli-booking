@@ -32,8 +32,8 @@ test('accredit seller action works even without accredit parameter', function (S
 
 test('accredit seller action works has end points - works with parameter', function (Seller $seller) {
     expect($seller->accredited)->toBeFalse();
-    $attribs = ['accredit' => true];
-    $response = $this->actingAs($seller)->postJson(route('accredit-seller'), $attribs);
+    $attribs = ['email' => $seller->email, 'accredit' => true];
+    $response = $this->postJson(route('accredit-seller', $attribs));
     $response->assertStatus(200);
     $seller->refresh();
     $response->assertJsonFragment($seller->toData());
@@ -42,8 +42,8 @@ test('accredit seller action works has end points - works with parameter', funct
 
 test('accredit seller action works has end points - works without parameter', function (Seller $seller) {
     expect($seller->accredited)->toBeFalse();
-//    $attribs = ['accredit' => true];
-    $response = $this->actingAs($seller)->postJson(route('accredit-seller'));
+    $attribs = ['email' => $seller->email];
+    $response = $this->postJson(route('accredit-seller', $attribs));
     $response->assertStatus(200);
     $seller->refresh();
     $response->assertJsonFragment($seller->toData());
