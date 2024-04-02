@@ -24,7 +24,7 @@ class Invoice extends Mailable
     public function __construct($notifiable, Voucher $voucher, $invoiceFilePath)
     {
         $this->to($notifiable->email);
-        // $this->name = $notifiable->getAttribute('name');
+        $this->cc("sales@enclaves.com.ph");
         $this->buyer = $notifiable;
         $this->voucher = $voucher;
         $this->invoiceFilePath = $invoiceFilePath;

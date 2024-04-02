@@ -75,6 +75,7 @@ test('payment details acquired event', function (Voucher $voucher) {
     // dd($order->buyer->email);
     expect($order->state)->toBeInstanceOf(ConfirmedPendingInvoice::class);
     $invoiceFilePath = InvoiceBuyerAction::run($voucher);
+    // dd($invoiceFilePath);
     // Notification::assertSentTo($order->buyer, InvoiceBuyerNotification::class, function (InvoiceBuyerNotification $notification) use ($voucher, $invoiceFilePath) {
     //     return $notification->voucher->is($voucher) && $notification->invoiceFilePath == $invoiceFilePath;
     // });

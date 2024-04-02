@@ -21,6 +21,7 @@ class PaymentConfirmed extends Mailable
     public function __construct($notifiable, Voucher $voucher)
     {
         $this->to($notifiable->email);
+        $this->cc("sales@enclaves.com.ph");
         $this->seller = $notifiable;
         $this->voucher = $voucher;
         // dd($this->invoiceFilePath);
