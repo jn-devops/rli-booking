@@ -3,6 +3,8 @@ import FloorAreaLogo from './FloorAreaLogo.vue';
 import LotAreaLogo from './LotAreaLogo.vue';
 import FloorLogo from './FloorLogo.vue';
 import Collapsible from './Collapsible.vue';
+import CarparkLogo from './CarparkLogo.vue';
+import ToiletBathLogo from './ToiletBathLogo.vue';
 
 const props = defineProps({
     propertyCode: String,
@@ -19,25 +21,41 @@ const props = defineProps({
         <div class="hidden md:block">
             <img src="../../img/Rectangle 39.png">
             <div class="grid grid-cols-3 mt-4">
-                <div class="flex gap-3">
-                    <FloorLogo />
-                    <div>
-                        <p class="text-gray-400">Floor</p>
-                        <p>1st Floor</p>
-                    </div>
-                </div>
-                <div class="flex gap-3">
+                <div class="flex gap-2">
                     <LotAreaLogo />
                     <div>
-                        <p class="text-gray-400">Unit</p>
+                        <p class="text-gray-400">Lot Area</p>
                         <p>B</p>
                     </div>
                 </div>
-                <div class="flex gap-3">
-                    <FloorAreaLogo />
+                <div class="flex gap-2">
+                    <FloorLogo />
                     <div>
                         <p class="text-gray-400">Floor Area</p>
-                        <p>24 SQM</p>
+                        <p>25SQM</p>
+                    </div>
+                </div>
+                <div class="flex gap-2">
+                    <FloorAreaLogo />
+                    <div>
+                        <p class="text-gray-400">Bedrooms</p>
+                        <p>1</p>
+                    </div>
+                </div>
+            </div>
+            <div class="grid grid-cols-3 mt-4">
+                <div class="flex gap-2">
+                    <ToiletBathLogo />
+                    <div>
+                        <p class="text-gray-400">Bedrooms</p>
+                        <p>1</p>
+                    </div>
+                </div>
+                <div class="flex gap-2">
+                    <CarparkLogo />
+                    <div>
+                        <p class="text-gray-400">Bedrooms</p>
+                        <p>1</p>
                     </div>
                 </div>
             </div>
@@ -54,11 +72,11 @@ const props = defineProps({
                 <div class="border-b-2 pb-4">
                     <div class="flex gap-1">
                         <p class="text-sm font-bold">Total Contract Price:</p>
-                        <p class="text-sm font-bold">₱2,900,000.00</p>
+                        <p class="text-sm font-bold">₱2,900,000</p>
                     </div>
                     <div class="mt-2">
-                        <p class="font-bold">Reservation Fee:</p>
-                        <p class="text-4xl font-bold text-primary_color">₱{{ props.order.product.processing_fee.toLocaleString() }}.00</p>
+                        <p class="font-bold">Processing Fee:</p>
+                        <p class="text-4xl font-bold text-primary_color">₱{{ props.order.product.processing_fee.toLocaleString() }}</p>
                     </div>
                 </div>
             </div>
@@ -112,7 +130,7 @@ const props = defineProps({
                         <div class="flex gap-3">
                             <FloorLogo />
                             <div>
-                                <p class="text-gray-400">Floor</p>
+                                <p class="text-gray-400">Lot Area</p>
                                 <p>1st Floor</p>
                             </div>
                         </div>
@@ -128,6 +146,22 @@ const props = defineProps({
                             <div>
                                 <p class="text-gray-400">Floor Area</p>
                                 <p>24 SQM</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-3 mt-4">
+                        <div class="flex gap-2">
+                            <ToiletBathLogo />
+                            <div>
+                                <p class="text-gray-400">Bedrooms</p>
+                                <p>1</p>
+                            </div>
+                        </div>
+                        <div class="flex gap-2">
+                            <CarparkLogo />
+                            <div>
+                                <p class="text-gray-400">Bedrooms</p>
+                                <p>1</p>
                             </div>
                         </div>
                     </div>

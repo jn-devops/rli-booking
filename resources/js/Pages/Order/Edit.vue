@@ -121,11 +121,11 @@ const navigateToMapLink = () => {
                         </div>    
                         <div class="flex gap-1 mt-4">
                             <p class="text-sm font-bold">Total Contract Price:</p>
-                            <p class="text-sm font-bold">₱2,900,000.00</p>
+                            <p class="text-sm font-bold">₱2,900,000</p>
                         </div>
                         <div class="mt-2">
                             <p class="font-bold">Reservation Fee:</p>
-                            <p class="text-4xl font-bold text-primary_color">₱{{ props.order.product.processing_fee.toLocaleString() }}.00</p>
+                            <p class="text-4xl font-bold text-primary_color">₱{{ props.order.product.processing_fee.toLocaleString() }}</p>
                         </div>
                     </div>
                 </div>
@@ -177,13 +177,13 @@ const navigateToMapLink = () => {
                             id="property_code"
                             v-model="form.property_code"
                             type="text"
-                            class="block w-full rounded-full border-0 py-1.5 pl-3 pr-10 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 font-bold" 
-                            placeholder="e.g., PC-001, PC-002"
+                            class="block w-full rounded-full border-0 py-3 pl-5 pr-10 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 font-bold" 
+                            placeholder="e.g., AGM-01-045-001"
                             autofocus>
                         <button
                             target="_blank"
                             @click="navigateToMapLink"
-                            class="absolute inset-y-0 right-0 flex items-center justify-center px-4 border border-rose-600 text-rose-600 hover:bg-rose-600 hover:text-white rounded-full"
+                            class="absolute inset-y-0 right-0 flex items-center justify-center px-4 underline border border-rose-600 text-rose-600 hover:bg-rose-600 hover:text-white rounded-full"
                         >
                             Change Unit
                         </button>
@@ -191,7 +191,7 @@ const navigateToMapLink = () => {
                 </div>
                 <div class="block md:hidden">
                     <div class="my-2">
-                        <h1 class="font-bold text-2xl">Calculate Financial Scheme</h1>
+                        <h1 class="font-bold text-2xl">Calculate Financing Scheme</h1>
                     </div>
                     <Calculator 
                     :voucherCode="props.voucherCode" 
@@ -202,7 +202,7 @@ const navigateToMapLink = () => {
                     >
                         <template #buttons>
                                 <ButtonPrimary class="ms-4 px-6 py-3" :class="{ 'opacity-25': form.processing }" :disabled="form.processing" @click="submit()">
-                                    Submit
+                                    Submit & Continue
                                 </ButtonPrimary>
                         </template>
                     </Calculator>
@@ -211,7 +211,7 @@ const navigateToMapLink = () => {
         </template>
         <template #contentRight>
             <div class="my-4 font-bold text-2xl">
-                <p>Calculate Financial Scheme</p>
+                <p>Calculate Financing Scheme</p>
             </div>
 
             <Calculator 
@@ -223,7 +223,7 @@ const navigateToMapLink = () => {
             >
                 <template #buttons>
                         <ButtonPrimary class="ms-4 px-6 py-3" :class="{ 'opacity-25': form.processing }" :disabled="form.processing" @click="submit()">
-                            Submit
+                            Submit & Continue
                         </ButtonPrimary>
                 </template>
             </Calculator>
@@ -301,7 +301,7 @@ const navigateToMapLink = () => {
                             v-model="form.property_code"
                             type="text"
                             class="block w-full rounded-full border-0 py-1.5 pl-3 pr-10 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" 
-                            placeholder="e.g., PC-001, PC-002"
+                            placeholder="e.g., AGM-01-045-001"
                             autofocus>
                         <button
                             target="_blank"

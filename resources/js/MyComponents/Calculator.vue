@@ -223,6 +223,19 @@ const submit = () => {
     });
 };
 
+const people = [
+  { name: 'Lindsay Walton', title: 'Front-end Developer', email: 'lindsay.walton@example.com', role: 'Member' },
+  { name: 'Lindsay Walton', title: 'Front-end Developer', email: 'lindsay.walton@example.com', role: 'Member' },
+  { name: 'Lindsay Walton', title: 'Front-end Developer', email: 'lindsay.walton@example.com', role: 'Member' },
+  { name: 'Lindsay Walton', title: 'Front-end Developer', email: 'lindsay.walton@example.com', role: 'Member' },
+  { name: 'Lindsay Walton', title: 'Front-end Developer', email: 'lindsay.walton@example.com', role: 'Member' },
+  { name: 'Lindsay Walton', title: 'Front-end Developer', email: 'lindsay.walton@example.com', role: 'Member' },
+  { name: 'Lindsay Walton', title: 'Front-end Developer', email: 'lindsay.walton@example.com', role: 'Member' },
+  { name: 'Lindsay Walton', title: 'Front-end Developer', email: 'lindsay.walton@example.com', role: 'Member' },
+  { name: 'Lindsay Walton', title: 'Front-end Developer', email: 'lindsay.walton@example.com', role: 'Member' },
+  { name: 'Lindsay Walton', title: 'Front-end Developer', email: 'lindsay.walton@example.com', role: 'Member' },
+  // More people...
+]
 </script>
 <template>
 <div class="">
@@ -431,17 +444,18 @@ const submit = () => {
 </div>
  <!-- View Amortization Modal -->
  <div v-show="viewAmortizationModal"
-    class="fixed inset-0 bg-black bg-opacity-30 top-0 left-0 flex justify-center p-6 z-10  overflow-y-auto">
+    class="fixed inset-0 bg-black bg-opacity-30 top-0 left-0 flex justify-center px-6 py-1 z-10  overflow-y-auto">
         <div
         v-if="viewAmortizationModal" 
-        class="p-4 bg-white self-start max-w-screen-md rounded">
+        class="px-4 bg-white self-start max-w-screen-xl rounded">
             <div class="w-full p-4 text-right">
                 <button 
                 @click="openViewAmortization"
-                class="bg-gray-50 text-gray-400 px-3 py-1 rounded-full text-2xl text-right">&times;</button>
+                class="bg-gray-50 text-gray-400 px-3 py-1 rounded-full text-1xl text-right">&times;</button>
             </div>
-            <div class="py-2 mb-3">
-                <img src="../../img/Elnvital_Logo.png" alt="Logo" class="mx-auto">
+            <div class="py-2 mb-3 md:flex flex-row gap-4">
+                <img src="../../img/RaemulanLandsLogo.png" alt="Logo" class="mx-auto h-20 mt-2">
+                <img src="../../img/Elnvital_Logo.png" alt="Logo" class="mx-auto h-20 mt-2">
             </div>
 
             <div v-if="selectedTerm === 'Downpayment - 0.10' || selectedTerm === 'Downpayment - 0.30'">
@@ -496,58 +510,56 @@ const submit = () => {
                     <div class="mt-4 text-2xl font-bold">
                         <p class="">Term Details</p>
                         <!-- <p class="text-primary_color font-normal text-sm">TCP: <span class="font-bold text-md">{{ tcp.toLocaleString() }}.00</span></p> -->
-                        <p class="text-primary_color font-normal text-sm mt-4">Remaining balance will be paid thru preferred Financing</p>
+                        <!-- <p class="text-primary_color font-normal text-sm mt-4">Remaining balance will be paid thru preferred Financing</p> -->
                     </div>
-                    <div class="overflow-x-auto">
+                    <div class="overflow-auto">
                     <div class="w-full">
-                        <div class="mt-4">
-                            <div class="grid grid-cols-6 text-center w-full">
-                                <div class="bg-sky-100 py-4 border border-r-gray border-b-0 rounded-tl-lg">
-                                    <p class="text-xs sm:text-sm lg:text-sm font-bold">Payment Category</p>
-                                </div>
-                                <div class="bg-sky-100 py-4 border border-r-gray border-b-0">
-                                    <p class="text-xs sm:text-sm lg:text-sm font-bold">Payment Term</p>
-                                </div>
-                                <div class="bg-sky-100 py-4 border border-r-gray border-b-0">
-                                    <p class="text-xs sm:text-sm lg:text-sm font-bold">Start Date</p>
-                                </div>
-                                <div class="bg-sky-100 py-4 border border-r-gray border-b-0">
-                                    <p class="text-xs sm:text-sm lg:text-sm font-bold">End Date</p>
-                                </div>
-                                <div class="bg-sky-100 py-4 border border-r-gray border-b-0">
-                                    <p class="text-xs sm:text-sm lg:text-sm font-bold">Downpayment</p>
-                                </div>
-                                <div class="bg-sky-100 py-4 border border-b-0 rounded-tr-lg">
-                                    <p class="text-xs sm:text-sm lg:text-sm font-bold">Balance</p>
-                                </div>
+                        <div class="mt-4 relative grid grid-cols-6 text-center w-full">
+                            <div class="bg-sky-100 py-4 b border-b-0 rounded-tl-lg sticky">
+                                <p class="text-xs sm:text-sm lg:text-sm font-bold">Payment Category</p>
+                            </div>
+                            <div class="bg-sky-100 py-4 border-b-0 sticky">
+                                <p class="text-xs sm:text-sm lg:text-sm font-bold">Payment Term</p>
+                            </div>
+                            <div class="bg-sky-100 py-4  border-b-0 sticky">
+                                <p class="text-xs sm:text-sm lg:text-sm font-bold">Start Date</p>
+                            </div>
+                            <div class="bg-sky-100 py-4  border-b-0 sticky">
+                                <p class="text-xs sm:text-sm lg:text-sm font-bold">End Date</p>
+                            </div>
+                            <div class="bg-sky-100 py-4  border-b-0 sticky">
+                                <p class="text-xs sm:text-sm lg:text-sm font-bold">Downpayment</p>
+                            </div>
+                            <div class="bg-sky-100 py-4 border-b-0 rounded-tr-lg sticky">
+                                <p class="text-xs sm:text-sm lg:text-sm font-bold">Balance</p>
                             </div>
                         </div>
-                        <div class="">
+                        <div class="overflow-auto">
                             <div class="grid grid-cols-6 text-center">
-                                <div class="py-4 border border-r-gray border-t-0 rounded-bl-lg ">
+                                <div class="py-2 border border-r-gray border-t-0 rounded-bl-lg ">
                                     <!-- <p class="text-xs sm:text-sm lg:text-base">details.dp_category</p> -->
                                     <!-- <p class="text-xs sm:text-sm lg:text-sm">Downpayment - {{ selectedDownpayment.slice(2,4)  }}%</p> -->
-                                    <p class="text-xs sm:text-sm lg:text-sm">Downpayment - {{ selectedDownpayment * 100  }}%</p>
+                                    <p class="text-xs sm:text-sm lg:text-sm">DP - {{ selectedDownpayment * 100  }}%</p>
                                     
                                 </div>
-                                <div class="py-4 border border-r-gray border-t-0  ">
+                                <div class="py-2 border border-r-gray border-t-0  ">
                                     <!-- <p class="text-xs sm:text-sm lg:text-base">details.term</p> -->
                                     <p class="text-xs sm:text-sm lg:text-sm">{{ selectedMonths }} Months</p>
                                 </div>
-                                <div class="py-4 border border-r-gray border-t-0  ">
+                                <div class="py-2 border border-r-gray border-t-0  ">
                                     <!-- <p class="text-xs sm:text-sm lg:text-base">details.start_date</p> -->
                                     <p class="text-xs sm:text-sm lg:text-sm"> {{ dateToday }}</p>
                                 </div>
-                                <div class="py-4 border border-r-gray border-t-0  ">
+                                <div class="py-2 border border-r-gray border-t-0  ">
                                     <!-- <p class="text-xs sm:text-sm lg:text-base">details.end_date</p> -->
                                     <p class="text-xs sm:text-sm lg:text-sm">{{ fDate.toLocaleString() }}</p>
                                 </div>
-                                <div class="py-4 border border-r-gray border-t-0 ">
+                                <div class="py-2 border border-r-gray border-t-0 ">
                                     <!-- <p class="text-xs sm:text-sm lg:text-base">details.downpayment</p> -->
                                     <!-- <p class="text-xs sm:text-sm lg:text-sm">₱21,750.00</p> -->
                                     <p class="text-xs sm:text-sm lg:text-sm">₱{{ resultMonthstoPay[0].value.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',') }}</p>
                                 </div>
-                                <div class="py-4 border border-t-0 rounded-br-lg ">
+                                <div class="py-2 border border-t-0 rounded-br-lg ">
                                     <p class="text-xs sm:text-sm lg:text-sm">₱{{ overAllTot.toLocaleString() }}.00</p>
                                 </div>
                             </div>
@@ -559,97 +571,98 @@ const submit = () => {
                     <div class="mt-4 text-2xl font-bold">
                         <p class="">Payment Schedule</p>
                     </div>
+                    
                     <div class="overflow-x-auto">
                         <div class="w-full">
-                            <div class="mt-4">
-                            <div class="grid grid-cols-5 text-center w-full">
-                                <div class="bg-sky-100 py-4 border border-r-gray border-b-0 rounded-tl-lg">
+                            <div class="mt-4 grid grid-cols-5 text-center">
+                                <div class="bg-sky-100 py-3  border-b-0 rounded-tl-lg sticky">
                                     <p class="text-xs sm:text-sm lg:text-sm font-bold">No.</p>
                                 </div>
-                                <div class="bg-sky-100 py-4 border border-r-gray border-b-0">
+                                <div class="bg-sky-100 py-3  border-b-0 sticky">
                                     <p class="text-xs sm:text-sm lg:text-sm font-bold">Particulars</p>
                                 </div>
-                                <div class="bg-sky-100 py-4 border border-r-gray border-b-0">
+                                <div class="bg-sky-100 py-3  border-b-0 sticky">
                                     <p class="text-xs sm:text-sm lg:text-sm font-bold">Due Date</p>
                                 </div>
-                                <div class="bg-sky-100 py-4 border border-r-gray border-b-0">
+                                <div class="bg-sky-100 py-3  border-b-0 sticky">
                                     <p class="text-xs sm:text-sm lg:text-sm font-bold">Total Payment</p>
                                 </div>
-                                <div class="bg-sky-100 py-4 border border-b-0 rounded-tr-lg">
+                                <div class="bg-sky-100 py-3  rounded-tr-lg sticky ">
                                     <p class="text-xs sm:text-sm lg:text-sm font-bold">Balance</p>
                                 </div>
                             </div>
-                            </div>
-                            <div class="">
-                                <div class="grid grid-cols-5 text-center w-full">
-                                    <div class="py-4 border border-r-gray border-t-0">
-                                        <!-- <p class="text-xs sm:text-sm lg:text-base font-bold">details.no</p> -->
-                                        <p class="text-xs sm:text-sm lg:text-sm font-bold"></p>
-                                    </div>
-                                    <div class="py-4 border border-r-gray border-t-0">
-                                        <!-- <p class="text-xs sm:text-sm lg:text-base font-bold">details.reservation_fee</p> -->
-                                        <p class="text-xs sm:text-sm lg:text-sm font-bold">Downpayment - {{ selectedDownpayment * 100 }}%</p>
-                                    </div>
-                                    <div class="py-4 border border-r-gray border-t-0 ">
-                                        <!-- <p class="text-xs sm:text-sm lg:text-base font-bold">details.due_date</p> -->
-                                        <p class="text-xs sm:text-sm lg:text-sm font-bold"></p>
-                                    </div>
-                                    <div class="py-4 border border-r-gray border-t-0 ">
-                                        <!-- <p class="text-xs sm:text-sm lg:text-base font-bold">details.total_payment</p> -->
-                                        <p class="text-xs sm:text-sm lg:text-sm font-bold"></p>
-                                    </div>
-                                    <div class="py-4 border border-t-0">
-                                        <p class="text-xs sm:text-sm lg:text-sm font-bold">₱ {{ DPComputationTotal.toLocaleString() }}.00</p>
-                                        <!-- <p class="text-xs sm:text-sm lg:text-sm font-bold">₱{{ resultDP.toLocaleString() }}.00</p> -->
-                                        <!-- <p class="text-xs sm:text-sm lg:text-sm font-bold">₱{{ DPComputationTotal.toLocaleString()  }}.00</p> -->
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="">
-                                <div class="grid grid-cols-5 text-center w-full">
-                                    <div class="py-4 border border-r-gray border-t-0">
-                                        <!-- <p class="text-xs sm:text-sm lg:text-base font-bold">details.no</p> -->
-                                        <p class="text-xs sm:text-sm lg:text-sm font-bold">0</p>
-                                    </div>
-                                    <div class="py-4 border border-r-gray border-t-0">
-                                        <!-- <p class="text-xs sm:text-sm lg:text-base font-bold">details.reservation_fee</p> -->
-                                        <p class="text-xs sm:text-sm lg:text-sm font-bold">Reservation Fee</p>
-                                    </div>
-                                    <div class="py-4 border border-r-gray border-t-0 ">
-                                        <!-- <p class="text-xs sm:text-sm lg:text-base font-bold">details.due_date</p> -->
-                                        <p class="text-xs sm:text-sm lg:text-sm font-bold">{{ dateToday }}</p>
-                                    </div>
-                                    <div class="py-4 border border-r-gray border-t-0 ">
-                                        <!-- <p class="text-xs sm:text-sm lg:text-base font-bold">details.total_payment</p> -->
-                                        <p class="text-xs sm:text-sm lg:text-sm font-bold">₱{{ rFee.toLocaleString() }}.00</p>
-                                    </div>
-                                    <div class="py-4 border border-t-0">
-                                        <!-- <p class="text-xs sm:text-sm lg:text-sm font-bold">₱ 2,700,000.00</p> -->
-                                        <p class="text-xs sm:text-sm lg:text-sm font-bold">₱{{ resultDP.toLocaleString() }}.00</p>
-                                        <!-- <p class="text-xs sm:text-sm lg:text-sm font-bold">₱{{ DPComputationTotal.toLocaleString()  }}.00</p> -->
+                            <div class="overflow-y-auto max-h-24 scrollbar-w-2">
+                                <div class="">
+                                    <div class="grid grid-cols-5 text-center w-full">
+                                        <div class="py-2 border border-r-gray border-t-0">
+                                            <!-- <p class="text-xs sm:text-sm lg:text-base font-bold">details.no</p> -->
+                                            <p class="text-xs sm:text-sm lg:text-sm font-bold"></p>
+                                        </div>
+                                        <div class="py-2 border border-r-gray border-t-0">
+                                            <!-- <p class="text-xs sm:text-sm lg:text-base font-bold">details.reservation_fee</p> -->
+                                            <p class="text-xs sm:text-sm lg:text-sm font-bold">DP - {{ selectedDownpayment * 100 }}%</p>
+                                        </div>
+                                        <div class="py-2 border border-r-gray border-t-0 ">
+                                            <!-- <p class="text-xs sm:text-sm lg:text-base font-bold">details.due_date</p> -->
+                                            <p class="text-xs sm:text-sm lg:text-sm font-bold"></p>
+                                        </div>
+                                        <div class="py-2 border border-r-gray border-t-0 ">
+                                            <!-- <p class="text-xs sm:text-sm lg:text-base font-bold">details.total_payment</p> -->
+                                            <p class="text-xs sm:text-sm lg:text-sm font-bold"></p>
+                                        </div>
+                                        <div class="py-2 border border-t-0">
+                                            <p class="text-xs sm:text-sm lg:text-sm font-bold">₱ {{ DPComputationTotal.toLocaleString() }}.00</p>
+                                            <!-- <p class="text-xs sm:text-sm lg:text-sm font-bold">₱{{ resultDP.toLocaleString() }}.00</p> -->
+                                            <!-- <p class="text-xs sm:text-sm lg:text-sm font-bold">₱{{ DPComputationTotal.toLocaleString()  }}.00</p> -->
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="" v-for="(item,index) in resultMonthstoPay" :key="index">
-                                <div class="grid grid-cols-5 text-center w-full">
-                                    <div class="py-4 border border-r-gray border-t-0">
-                                        <p class="text-xs sm:text-sm lg:text-sm font-bold">{{ index + 1 }}</p>
-                                    </div>
-                                    <div class="py-4 border border-r-gray border-t-0">
-                                        <!-- <p class="text-xs sm:text-sm lg:text-sm font-bold">Monthly Amortization({{ index === resultMonthstoPay.length - 1 ? index : index + 1 }}/{{ selectedMonths }})</p> -->
-                                        <p class="text-xs sm:text-sm lg:text-sm font-bold">Downpayment({{  index + 1 }}/{{ selectedMonths }})</p>
-                                    </div>
-                                    <div class="py-4 border border-r-gray border-t-0 ">
-                                        <p class="text-xs sm:text-sm lg:text-sm font-bold">{{ item.Month + '/' + item.Day + '/' + item.Year  }}</p>
-                                    </div>
-                                    <div class="py-4 border border-r-gray border-t-0 ">
-                                        <p class="text-xs sm:text-sm lg:text-sm font-bold">₱{{Number(item.value).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',') }}</p>
-                                    </div>
-                                    <div class="py-4 border border-r-gray border-t-0">
-                                        <p class="text-xs sm:text-sm lg:text-sm font-bold">₱{{item.additionalData.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',')}}</p>
+                                <div class="">
+                                    <div class="grid grid-cols-5 text-center">
+                                        <div class="py-2 border border-r-gray border-t-0">
+                                            <!-- <p class="text-xs sm:text-sm lg:text-base font-bold">details.no</p> -->
+                                            <p class="text-xs sm:text-sm lg:text-sm font-bold">0</p>
+                                        </div>
+                                        <div class="py-2 border border-r-gray border-t-0">
+                                            <!-- <p class="text-xs sm:text-sm lg:text-base font-bold">details.reservation_fee</p> -->
+                                            <p class="text-xs sm:text-sm lg:text-sm font-bold">Reservation Fee</p>
+                                        </div>
+                                        <div class="py-2 border border-r-gray border-t-0 ">
+                                            <!-- <p class="text-xs sm:text-sm lg:text-base font-bold">details.due_date</p> -->
+                                            <p class="text-xs sm:text-sm lg:text-sm font-bold">{{ dateToday }}</p>
+                                        </div>
+                                        <div class="py-2 border border-r-gray border-t-0 ">
+                                            <!-- <p class="text-xs sm:text-sm lg:text-base font-bold">details.total_payment</p> -->
+                                            <p class="text-xs sm:text-sm lg:text-sm font-bold">₱{{ rFee.toLocaleString() }}.00</p>
+                                        </div>
+                                        <div class="py-2 border border-t-0">
+                                            <!-- <p class="text-xs sm:text-sm lg:text-sm font-bold">₱ 2,700,000.00</p> -->
+                                            <p class="text-xs sm:text-sm lg:text-sm font-bold">₱{{ resultDP.toLocaleString() }}.00</p>
+                                            <!-- <p class="text-xs sm:text-sm lg:text-sm font-bold">₱{{ DPComputationTotal.toLocaleString()  }}.00</p> -->
+                                        </div>
                                     </div>
                                 </div>
-                            </div> 
+                                <div class="" v-for="(item,index) in resultMonthstoPay" :key="index">
+                                    <div class="grid grid-cols-5 text-center">
+                                        <div class="py-2 border border-r-gray border-t-0">
+                                            <p class="text-xs sm:text-sm lg:text-sm font-bold">{{ index + 1 }}</p>
+                                        </div>
+                                        <div class="py-2 border border-r-gray border-t-0">
+                                            <!-- <p class="text-xs sm:text-sm lg:text-sm font-bold">Monthly Amortization({{ index === resultMonthstoPay.length - 1 ? index : index + 1 }}/{{ selectedMonths }})</p> -->
+                                            <p class="text-xs sm:text-sm lg:text-sm font-bold">DP({{  index + 1 }}/{{ selectedMonths }})</p>
+                                        </div>
+                                        <div class="py-2 border border-r-gray border-t-0 ">
+                                            <p class="text-xs sm:text-sm lg:text-sm font-bold">{{ item.Month + '/' + item.Day + '/' + item.Year  }}</p>
+                                        </div>
+                                        <div class="py-2 border border-r-gray border-t-0 ">
+                                            <p class="text-xs sm:text-sm lg:text-sm font-bold">₱{{Number(item.value).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',') }}</p>
+                                        </div>
+                                        <div class="py-2 border border-r-gray border-t-0">
+                                            <p class="text-xs sm:text-sm lg:text-sm font-bold">₱{{item.additionalData.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',')}}</p>
+                                        </div>
+                                    </div>
+                                </div> 
+                            </div>
                             <!-- <div class="">
                                 <div class="grid grid-cols-5 text-center w-full">
                                     <div class="py-4 border border-r-gray border-t-0 rounded-bl-lg">
@@ -725,7 +738,7 @@ const submit = () => {
                     <div class="mt-4 text-2xl font-bold">
                         <p class="">Term Details</p>
                         <!-- <p class="text-primary_color font-normal text-sm">TCP: <span class="font-bold text-md">{{ tcp.toLocaleString() }}.00</span></p> -->
-                        <p class="text-primary_color font-normal text-sm mt-4">Remaining balance will be paid thru preferred Financing</p>
+                        <!-- <p class="text-primary_color font-normal text-sm mt-4">Remaining balance will be paid thru preferred Financing</p> -->
                     </div>
                     <div class="overflow-x-auto">
                     <div class="w-full">

@@ -15,7 +15,7 @@
             </svg>
         </div>
         <!-- Content -->
-        <div class="bg-white overflow-hidden transition-all duration-500 max-h-0 peer-checked:max-h-80">
+        <div class="bg-white overflow-hidden transition-all duration-500 max-h-0 peer-checked:max-h-96">
             <div class="">
                 <slot />
             </div>
