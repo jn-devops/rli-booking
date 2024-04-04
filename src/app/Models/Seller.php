@@ -106,4 +106,9 @@ class Seller extends User implements AttributableData
     {
         $this->setAttribute('accredited_at', $value ? now() : null);
     }
+
+    public function routeNotificationForEngageSpark()
+    {
+        return $this->mobile;
+    } 
 }

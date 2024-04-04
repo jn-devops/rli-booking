@@ -3,6 +3,8 @@
 namespace RLI\Booking\Notifications;
 
 use Illuminate\Notifications\Messages\MailMessage;
+use LBHurtado\EngageSpark\EngageSparkChannel;
+use LBHurtado\EngageSpark\EngageSparkMessage;
 use Illuminate\Notifications\Notification;
 use RLI\Booking\Mail\RegisteredSeller;
 use RLI\Booking\Models\Seller;
@@ -30,7 +32,7 @@ class RegisteredSellerNotification extends Notification
      */
     public function via(object $notifiable): array
     {
-        return ['mail'];
+        return ['mail', EngageSparkChannel::class];
     }
 
     /**
@@ -41,7 +43,12 @@ class RegisteredSellerNotification extends Notification
         return new RegisteredSeller($notifiable, $this->seller, $this->password);
     }
 
-
+    public function toEngageSpark($notifiable)
+    {
+        return (new EngageSparkMessage())
+            ->content('Dear Seller, good day. We are thrilled to have you on board. Please check the email we sent to your registered personal email to get started. Thank you! -RLI')
+            ;
+    }  
     /**
      * Get the array representation of the notification.
      *
