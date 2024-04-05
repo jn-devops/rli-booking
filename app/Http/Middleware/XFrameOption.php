@@ -19,6 +19,12 @@ class XFrameOption
 
         $option = 'SAMEORIGIN';
 
+
+        $response->header('Content-Security-Policy', 'frame-ancestors *');
+        $response->header('X-Frame-Options', 'ALLOW-FROM *');
+
+        return $response;
+
         // In this example, we are only allowing the third party to include the "iframe" route
         // It's always better to scope this to a given route / set of routes to avoid any unattended security problems
         if ($request->routeIs('iframe') && $xframeOptions = env('X_FRAME_OPTIONS', $option)) {
