@@ -370,7 +370,7 @@
               },
               {
                 type: "text",
-                text: `<b><a href='https://book-dev.enclaves.ph/edit-order/${voucherNumParam}/${orderNumParam}/{PROPERTY_C}'>SELECT THIS PROPERTY</a></b>`
+                text: `<b><a target="_self" href='https://book-dev.enclaves.ph/edit-order/${voucherNumParam}/${orderNumParam}/{PROPERTY_C}'>SELECT THIS PROPERTY</a></b>`
               }
             ]
           };
