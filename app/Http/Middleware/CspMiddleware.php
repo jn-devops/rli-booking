@@ -18,7 +18,7 @@ class CspMiddleware
         $response = $next($request);
 
         logger('X-Frame-Options updated');
-        $response->headers->set('X-Frame-Options', 'ALLOW-FROM *', false);
+        $response->headers->set('X-Frame-Options', 'ALLOW FROM *', false);
 
         return $response;
     }
