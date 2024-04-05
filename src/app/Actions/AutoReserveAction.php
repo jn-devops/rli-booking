@@ -28,6 +28,6 @@ class AutoReserveAction
         return redirect()->route('edit-order', [
             'voucher' => $voucher->code,
             'order' => $order->id
-        ])->withHeaders(['X-Frame-Options' => 'ALLOW FROM *']);
+        ]);
     }
 }
