@@ -17,7 +17,7 @@ class CspMiddleware
     {
         $response = $next($request);
 
-        $response->headers->set('X-Frame-Options', 'ALLOW FROM https://shop-dev.enclaves.ph/');
+        $response->headers->set('X-Frame-Options', 'ALLOW-FROM https://shop-dev.enclaves.ph/');
 
         return $response;
     }
