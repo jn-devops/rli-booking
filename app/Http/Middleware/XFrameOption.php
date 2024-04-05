@@ -25,10 +25,10 @@ class XFrameOption
             if (false !== strpos($xframeOptions, 'ALLOW-FROM')) {
                 $url = trim(str_replace('ALLOW-FROM', '', $xframeOptions));
 
-                $response->header('Content-Security-Policy', 'frame-ancestors '.$url);
+                return $response->header('Content-Security-Policy', 'frame-ancestors '.$url);
             }
         }
 
-        $response->header('X-Frame-Options', $xframeOptions);
+        return $response->header('X-Frame-Options', $xframeOptions);
     }
 }
