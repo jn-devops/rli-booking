@@ -31,6 +31,10 @@
 
       <script>
         var request = @json($request);
+        var baseUrl = "{{ env('BASE_URL') }}";
+        var apiKey = "{{ env('ARC_GIS_KEY') }}";
+        var polygonLayerEnv = "{{ env('AGAPEYA_POLYGON_LAYER') }}";
+        var lineLayerEnv = "{{ env('AGAPEYA_LINE_LAYER') }}";
 
         require([
             "esri/config",
@@ -45,7 +49,7 @@
             "esri/popup/content/MediaContent",
         ], function(esriConfig, Map, MapView, FeatureLayer, Home, Search) {
 
-        esriConfig.apiKey = "AAPKbb1ec31993bc4b53a4561f7a92ec0f93fsCodiuTnhs0UTa1VHfVhKIkCj2sg2Z1aLmCrqdyKt_XsLsouJLDRKIJbVfqicEQ";
+        esriConfig.apiKey = apiKey;
 
         const skuParam = request.sku;
         const voucherNumParam = request.voucher_number;
@@ -248,7 +252,7 @@
 
         // Get query layer and set up query
         const parcelLayer = new FeatureLayer({
-          url: "https://services8.arcgis.com/otYxeEfDBekePP4u/arcgis/rest/services/Agapeya_Pol_ExportFeatures_2/FeatureServer",
+          url: polygonLayerEnv,
           labelingInfo: [labelClass],
         });
 
@@ -370,7 +374,7 @@
               },
               {
                 type: "text",
-                text: `<b><a target="_self" href='https://book-dev.enclaves.ph/edit-order/${voucherNumParam}/${orderNumParam}/{PROPERTY_C}'>SELECT THIS PROPERTY</a></b>`
+                text: `<b><a target="_self" href='${baseUrl}/edit-order/${voucherNumParam}/${orderNumParam}/{PROPERTY_C}'>SELECT THIS PROPERTY</a></b>`
               }
             ]
           };
@@ -398,7 +402,7 @@
         }
 
         const lineLayer = new FeatureLayer({
-          url: "https://services8.arcgis.com/otYxeEfDBekePP4u/arcgis/rest/services/Agapeya_Line_Layer/FeatureServer",
+          url: lineLayerEnv,
           renderer: {
             type: "simple",
             symbol: {
@@ -428,7 +432,7 @@
         } else {
 
           const trailheadsLayer = new FeatureLayer({
-            url: "https://services8.arcgis.com/otYxeEfDBekePP4u/arcgis/rest/services/Agapeya_Pol_ExportFeatures_2/FeatureServer",
+            url: polygonLayerEnv,
             outFields: ["*"],
             popupTemplate: popupTrailheads,
             renderer: openSpacesRenderer,
