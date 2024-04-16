@@ -22,6 +22,36 @@
               width: 250px;
               padding: 10px;
             }
+            .hide{
+              display: none;
+            }
+            table {
+              font-family: Arial, sans-serif;
+              border-collapse: collapse;
+              width: 100%;
+            }
+
+            th, td {
+              border: 1px solid #dddddd;
+              text-align: left;
+              padding: 8px;
+            }
+
+            .media {
+              display: block;
+              margin-left: auto;
+              margin-right: auto;
+              max-width: 100%;
+              height: auto;
+            }
+
+            .select-property {
+              text-align: center;
+            }
+
+            .hidden {
+              display: none;
+            }
         </style>
       <link rel="stylesheet" href="https://js.arcgis.com/4.29/esri/themes/dark/main.css">
       <script src="https://js.arcgis.com/4.29/"></script>
@@ -127,74 +157,26 @@
 
         const popupTrailheads = {
           title : "{PROPERTY_C}",
-          content: [
-              {
-              // Add media content for the image
-              type: "media",
-              mediaInfos: [{
-                title: "",
-                caption: "",
-                type: "image",
-                value: {
-                  sourceURL: "{IMAGE}"
-                }
-              }]
-            },
-            {
-              type: "fields",
-              fieldInfos: [
-                {
-                  fieldName: "N___PROJEC",
-                  label: "Project Code",
-                  format: {
-                    digitSeparator: true,
-                    places: 0
-                  }
-                },
-                {
-                  fieldName: "BLOCK",
-                  label: "Block"
-                },
-                {
-                  fieldName: "Lot",
-                  label: "Lot"
-                },
-                {
-                  fieldName: "TCP_DUPLEX",
-                  label: "Selling Price",
-                  format: {
-                    digitSeparator: true,
-                    places: 2
-                  }
-                },
-                {
-                  fieldName: "LOT_AREA",
-                  label: "Lot Area",
-                  format: {
-                    digitSeparator: true,
-                    places: 2
-                  }
-                },
-                {
-                  fieldName: "FLOOR_AREA",
-                  label: "Floor Area",
-                  format: {
-                    digitSeparator: true,
-                    places: 2
-                  }
-                },
-                {
-                  fieldName: "STATUS",
-                  label: "Status"
-                },
-                {
-                  fieldName: "SKU",
-                  label: "SKU"
-                },
-                // Add other fieldInfos as needed
-              ]
-            }
-          ]
+          content: function (feature) {
+            console.log(feature.graphic.attributes);
+
+            const IMAGE  = ( feature.graphic.attributes.IMAGE ? feature.graphic.attributes.IMAGE : "https://placehold.co/600x400");
+            const PROJECT_CO  = feature.graphic.attributes.PROJECT_CO;
+            const BLOCK  = feature.graphic.attributes.BLOCK;
+            const LOT  = feature.graphic.attributes.LOT;
+            const TCP_DUPLEX  = feature.graphic.attributes.TCP_DUPLEX;
+            const LOT_AREA  = feature.graphic.attributes.LOT_AREA;
+            const FLOOR_AREA  = ( feature.graphic.attributes.FLOOR_AREA ? feature.graphic.attributes.FLOOR_AREA : "");
+            const STATUS  = ( feature.graphic.attributes.STATUS ? "Available" : "Not Available");
+            const PROPERTY_C  = feature.graphic.attributes.PROPERTY_C;
+            const SKU  = ( feature.graphic.attributes.SKU ? feature.graphic.attributes.SKU : "");
+            const hide  = ( ((feature.graphic.attributes.STATUS && voucherNumParam) && (skuParam == SKU)) ? "" : "hide");
+
+            const div = document.createElement("div");
+            div.innerHTML =
+              `<div><img style="width:100%" src="${IMAGE}" alt="Media Image"></div><table><tbody><tr><th>Project Code</th><td>${PROJECT_CO}</td></tr><tr><th>Block</th><td>${BLOCK}</td></tr><tr><th>Lot</th><td>${LOT}</td></tr><tr><th>Selling Price</th><td>${TCP_DUPLEX}</td></tr><tr><th>Lot Area</th><td>${LOT_AREA}</td></tr><tr><th>Floor Area</th><td>${FLOOR_AREA}</td></tr><tr><th>Status</th><td>${STATUS}</td></tr><tr><th>SKU</th><td>${SKU}</td></tr><tr><td colspan="2" class="select-property"><b><a style="color:white;cursor:pointer" target="_self" class="${hide}" href="${baseUrl}/edit-order/${voucherNumParam}/${orderNumParam}/${PROPERTY_C}">SELECT THIS PROPERTY</a></b></td></tr></tbody></table>`;
+            return div;
+          }
         }
 
         // Add parks with a class breaks renderer and unique symbols
@@ -224,6 +206,38 @@
             createFillSymbol(" ", "GRAY"),
           ]
         };
+
+        // const availableSpacesRenderer = {
+        //   field: "STATUS",
+        //   type: "unique-value",
+        //   uniqueValueInfos: [
+        //     createFillSymbol("1", "GREEN"),
+        //     createFillSymbol("0", "GRAY"),
+        //   ]
+        // };
+
+        const availableSpacesRenderer = {
+          type: "unique-value",
+          valueExpression: "When($feature.STATUS > 0 && $feature.SKU == '"+skuParam+"', 'available', 'not_available')",
+          uniqueValueInfos: [
+            {
+              value: "available",
+              symbol: {
+                type: "simple-fill",
+                color: "green"
+              }
+            },
+            {
+              value: "not_available",
+              symbol: {
+                type: "simple-fill",
+                color: "gray"
+              }
+            }
+          ]
+        };
+
+        
 
         // SELECT STATUS EVENT TRIGGER 
         // SQL query array
@@ -418,8 +432,18 @@
         let whereClause = "";
 
         if (skuParam != null) {
-          whereClause = "Sku LIKE '%"+skuParam+"%' and Status = 1";
-          queryFeatureLayer(view.extent);
+          // whereClause = "Sku LIKE '%"+skuParam+"%' and Status = 1";
+          // queryFeatureLayer(view.extent);
+
+          const trailheadsLayer = new FeatureLayer({
+            url: polygonLayerEnv,
+            outFields: ["*"],
+            popupTemplate: popupTrailheads,
+            renderer: availableSpacesRenderer,
+            opacity: .8
+          });
+
+          map.add(trailheadsLayer);
 
           // const trailheadsLayer = new FeatureLayer({
           //   url: "https://services8.arcgis.com/otYxeEfDBekePP4u/arcgis/rest/services/Agapeya_Pol/FeatureServer",
