@@ -14,6 +14,8 @@ import LotAreaLogo from '@/MyComponents/LotAreaLogo.vue';
 import { ref, computed, watch } from 'vue';
 import ButtonPrimary from '@/MyComponents/ButtonPrimary.vue';
 import RLICardLayout from '@/MyComponents/RLICardLayout.vue';
+import RLICardv2 from "@/MyComponents/RLICardv2.vue";
+import UserIconLogo from '@/MyComponents/UserIconLogo.vue';
 
 let params = new URLSearchParams(window.location.search)
 
@@ -89,24 +91,27 @@ const generateVoucher = () => {
 
 <template>
   
-  <form @submit.prevent="generateVoucher" >
-    <RLICardLayout class="items-start">
+  
+  <form @submit.prevent="generateVoucher">
+    <RLICardv2 class="items-start">
       
      <template #title>
        <h1 class="font-bold text-3xl"> Sales Reservation</h1>
      </template>
-     <div class="bg-blue-100 w-72 mx-auto py-2 my-6 rounded-lg">
+     <div class="bg-gray-100 w-72 mx-auto py-2 my-6 rounded-lg">
       <div class="flex items-center gap-2">
           <div v-if="$page.props.jetstream.managesProfilePhotos">
             <img class="h-8 w-8 rounded-full object-cover" :src="$page.props.auth.user.profile_photo_url" :alt="$page.props.auth.user.name">
           </div>
-          <div v-else class="h-20 w-20">
-            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" stroke="#cfcfcf"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path fill-rule="evenodd" clip-rule="evenodd" d="M22 12C22 17.5228 17.5228 22 12 22C6.47715 22 2 17.5228 2 12C2 6.47715 6.47715 2 12 2C17.5228 2 22 6.47715 22 12ZM15 9C15 10.6569 13.6569 12 12 12C10.3431 12 9 10.6569 9 9C9 7.34315 10.3431 6 12 6C13.6569 6 15 7.34315 15 9ZM12 20.5C13.784 20.5 15.4397 19.9504 16.8069 19.0112C17.4108 18.5964 17.6688 17.8062 17.3178 17.1632C16.59 15.8303 15.0902 15 11.9999 15C8.90969 15 7.40997 15.8302 6.68214 17.1632C6.33105 17.8062 6.5891 18.5963 7.19296 19.0111C8.56018 19.9503 10.2159 20.5 12 20.5Z" fill="#cfcfcf"></path> </g></svg>
+          <div v-else class="">
+            <!-- <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" stroke="#cfcfcf"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path fill-rule="evenodd" clip-rule="evenodd" d="M22 12C22 17.5228 17.5228 22 12 22C6.47715 22 2 17.5228 2 12C2 6.47715 6.47715 2 12 2C17.5228 2 22 6.47715 22 12ZM15 9C15 10.6569 13.6569 12 12 12C10.3431 12 9 10.6569 9 9C9 7.34315 10.3431 6 12 6C13.6569 6 15 7.34315 15 9ZM12 20.5C13.784 20.5 15.4397 19.9504 16.8069 19.0112C17.4108 18.5964 17.6688 17.8062 17.3178 17.1632C16.59 15.8303 15.0902 15 11.9999 15C8.90969 15 7.40997 15.8302 6.68214 17.1632C6.33105 17.8062 6.5891 18.5963 7.19296 19.0111C8.56018 19.9503 10.2159 20.5 12 20.5Z" fill="#cfcfcf"></path> </g></svg>
+             -->
+             <UserIconLogo class="h-20 w-20 py-2"/>
           </div>
           <div class="text-sm">
               <p class="text-lg font-bold">{{sellerName}}</p>
               <p>{{seller}}</p>
-              <p class="text-rose-700 capitalize font-bold">seller</p>
+              <p class="bg_text capitalize">seller</p>
           </div>
       </div>
      </div>
@@ -222,10 +227,12 @@ const generateVoucher = () => {
         </template>
       </DialogModal>
       </div>
-    </RLICardLayout>
+    </RLICardv2>
   </form>
 </template>
 
 <style scoped>
-
+.bg_text{
+  color: #CD045D;
+}
 </style>

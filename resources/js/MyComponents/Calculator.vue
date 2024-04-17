@@ -7,7 +7,11 @@ import ButtonPrimary from '@/MyComponents/ButtonPrimary.vue';
 const props = defineProps({
     voucherCode: String,
     order: Object,
-    property_code: String
+    property_code: String,
+    closeable: {
+        type: Boolean,
+        default: true,
+    }
 });
 
 const selectedTerm = ref('Downpayment - 0.10');
@@ -130,6 +134,15 @@ const openViewAmortization = (event) =>{
     viewAmortizationModal.value = !viewAmortizationModal.value;
 }
 
+const showModalClose = ref(false)
+// const closeModal = () => {
+//     showModalClose.value = false;
+// }
+
+const close = () => {
+    // emit('close');
+    viewAmortizationModal.value = false;
+};
 
 const downPayment = (percentage) =>{
     // console.log('downPayment Function: ', tcp.value * percentage - rFee.value);
@@ -223,19 +236,6 @@ const submit = () => {
     });
 };
 
-const people = [
-  { name: 'Lindsay Walton', title: 'Front-end Developer', email: 'lindsay.walton@example.com', role: 'Member' },
-  { name: 'Lindsay Walton', title: 'Front-end Developer', email: 'lindsay.walton@example.com', role: 'Member' },
-  { name: 'Lindsay Walton', title: 'Front-end Developer', email: 'lindsay.walton@example.com', role: 'Member' },
-  { name: 'Lindsay Walton', title: 'Front-end Developer', email: 'lindsay.walton@example.com', role: 'Member' },
-  { name: 'Lindsay Walton', title: 'Front-end Developer', email: 'lindsay.walton@example.com', role: 'Member' },
-  { name: 'Lindsay Walton', title: 'Front-end Developer', email: 'lindsay.walton@example.com', role: 'Member' },
-  { name: 'Lindsay Walton', title: 'Front-end Developer', email: 'lindsay.walton@example.com', role: 'Member' },
-  { name: 'Lindsay Walton', title: 'Front-end Developer', email: 'lindsay.walton@example.com', role: 'Member' },
-  { name: 'Lindsay Walton', title: 'Front-end Developer', email: 'lindsay.walton@example.com', role: 'Member' },
-  { name: 'Lindsay Walton', title: 'Front-end Developer', email: 'lindsay.walton@example.com', role: 'Member' },
-  // More people...
-]
 </script>
 <template>
 <div class="">
@@ -278,8 +278,8 @@ const people = [
                 </select> -->
 
                 <div class="">
-                    <InputLabel for="months" value="Months" />
-                    <select id="months" name="months" class="mt-2 block w-full rounded-md border-0 py-1.5 pl-3 pr-10 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6" v-model="selectedMonths" @change="handleMonthsChange">
+                    <InputLabel for="monthsDP30" value="Months" />
+                    <select id="monthsDP30" name="monthsDP30" class="mt-2 block w-full rounded-md border-0 py-1.5 pl-3 pr-10 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6" v-model="selectedMonths" @change="handleMonthsChange">
                         <option value="36">36 Months</option>
                         <option value="48">48 Months</option>
                         <option value="60">60 Months</option>
@@ -293,8 +293,8 @@ const people = [
                     </select>
 
                     <div class="hidden mt-3">
-                        <InputLabel for="months" value="Months" />
-                        <select id="months" name="months" class="mt-2 block w-full rounded-md border-0 py-1.5 pl-3 pr-10 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6" v-model="selectedMonths">
+                        <InputLabel for="monthsSpotCash" value="Months" />
+                        <select id="monthsSpotCash" name="monthsSpotCash" class="mt-2 block w-full rounded-md border-0 py-1.5 pl-3 pr-10 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6" v-model="selectedMonths">
                             <option value="1" :value="1" selected>1 Month</option>
                         </select>
                     </div>
@@ -365,8 +365,11 @@ const people = [
                 disabled
                 :value="`₱${overAllTot.toLocaleString()}.00`">
             </div>
-            <div class="text-xs italic text-rose-600">
-                <p >The remaining 80% of the total contract price will be paid through financial institution.</p>
+            <div v-if="selectedTerm === 'Downpayment - 0.10'" class="text-xs italic text-rose-600">
+                <p >The remaining 90% of the total contract price will be paid through financial institution.</p>
+            </div>
+            <div v-else-if="selectedTerm === 'Downpayment - 0.30'" class="text-xs italic text-rose-600">
+                <p >The remaining 70% of the total contract price will be paid through financial institution.</p>
             </div>
         </div>
         <!-- <div
@@ -444,10 +447,12 @@ const people = [
 </div>
  <!-- View Amortization Modal -->
  <div v-show="viewAmortizationModal"
+ :closeable="props.closeable"
+ @click="close"
     class="fixed inset-0 bg-black bg-opacity-30 top-0 left-0 flex justify-center px-6 py-1 z-10  overflow-y-auto">
         <div
         v-if="viewAmortizationModal" 
-        class="px-4 bg-white self-start max-w-screen-xl rounded">
+        class="px-4 bg-white self-start max-w-screen-2xl rounded">
             <div class="w-full p-4 text-right">
                 <button 
                 @click="openViewAmortization"

@@ -9,6 +9,7 @@ import PrimaryButton from '@/Components/PrimaryButton.vue';
 import TextInput from '@/Components/TextInput.vue';
 import ButtonPrimary from '@/MyComponents/ButtonPrimary.vue';
 import AuthenticationLogov2 from '@/MyComponents/AuthenticationLogov2.vue';
+import RLICardv2 from '@/MyComponents/RLICardv2.vue';
 
 defineProps({
     canResetPassword: Boolean,
@@ -34,7 +35,7 @@ const submit = () => {
 <template>
     <Head title="Log in" />
 
-    <AuthenticationCard>
+    <RLICardv2>
         <template #logo>
             <!-- <AuthenticationCardLogo /> -->
             <div class="relative mb-4">
@@ -42,6 +43,12 @@ const submit = () => {
             <!-- <div class="border w-12 rounded-full bg-white shadow absolute bottom-0 -left-12">
                 <AuthenticationLogov2  class="h-10 w-12"/>
             </div> -->
+           </div>
+           <div class="flex items-center justify-center gap-2">
+            <img src="https://jn-img.enclaves.ph/Microservices%20Logo/Booking.png?updatedAt=1712900825090" alt="booking_logo"
+            class="w-12 h-12"
+            >
+            <p class="font-semibold text-xl">Booking</p>
            </div>
         </template>
 
@@ -108,5 +115,5 @@ const submit = () => {
                 </ButtonPrimary>
             </div>
         </form>
-    </AuthenticationCard>
+    </RLICardv2>
 </template>

@@ -1,5 +1,5 @@
 <template>
-    <div class="min-h-96 flex flex-col sm:justify-center items-center pt-6 md:mt-32 sm:pt-0 bg-gray-100 dark:bg-gray-900">
+    <div class="min-h-96 flex flex-col justify-center pt-6 md:mt-0 sm:pt-0 bg-gray-100 dark:bg-gray-900 bg_layout">
         <div v-if="$slots.logo">
             <slot name="logo" />
         </div>
@@ -12,3 +12,10 @@
         </div>
     </div>
 </template>
+<style>
+.bg_layout{
+    background: url('../../img/BGLayout.png') center no-repeat ;
+    background-size: cover;
+    z-index: 1;
+}
+</style>

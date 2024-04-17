@@ -5,22 +5,24 @@ import FloorLogo from './FloorLogo.vue';
 import Collapsible from './Collapsible.vue';
 import CarparkLogo from './CarparkLogo.vue';
 import ToiletBathLogo from './ToiletBathLogo.vue';
+import {ref} from 'vue';
 
 const props = defineProps({
     propertyCode: String,
     order: Object
 })
 
-// console.log("property_code: ", props.propertyCode);
-// console.log("order: ", props.order);
+
 </script>
 
 <template>
-    <div class=" grid grid-rows-1 gap-2 md:gap-5">
+    <div class=" grid grid-rows-1 gap-2 md:gap-2">
         <!-- Tablet/Desktop -->
         <div class="hidden md:block">
-            <img src="../../img/Rectangle 39.png">
-            <div class="grid grid-cols-3 mt-4">
+            <div class="relative">
+                <img src="../../img/Rectangle_39.png" class="w-full">
+            </div>
+            <div class="hidden lg:grid lg:grid-cols-5 mt-2">
                 <div class="flex gap-2">
                     <LotAreaLogo />
                     <div>
@@ -38,12 +40,67 @@ const props = defineProps({
                 <div class="flex gap-2">
                     <FloorAreaLogo />
                     <div>
+                        <p class="text-gray-400">Unit Type</p>
+                        <p>1</p>
+                    </div>
+                </div>
+                <div class="flex gap-2">
+                    <ToiletBathLogo />
+                    <div>
                         <p class="text-gray-400">Bedrooms</p>
                         <p>1</p>
                     </div>
                 </div>
+                <div class="flex gap-2">
+                    <CarparkLogo />
+                    <div>
+                        <p class="text-gray-400">Carpark</p>
+                        <p>1</p>
+                    </div>
+                </div>
             </div>
-            <div class="grid grid-cols-3 mt-4">
+            <div class="lg:hidden md:block">
+                <div class="grid md:grid-cols-3 mt-2">
+                    <div class="flex gap-2">
+                        <LotAreaLogo />
+                        <div>
+                            <p class="text-gray-400">Lot Area</p>
+                            <p>B</p>
+                        </div>
+                    </div>
+                    <div class="flex gap-2">
+                        <FloorLogo />
+                        <div>
+                            <p class="text-gray-400">Floor Area</p>
+                            <p>25SQM</p>
+                        </div>
+                    </div>
+                    <div class="flex gap-2">
+                        <FloorAreaLogo />
+                        <div>
+                            <p class="text-gray-400">Unit Type</p>
+                            <p>1</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="grid grid-cols-3 mt-4">
+                    <div class="flex gap-2">
+                        <ToiletBathLogo />
+                        <div>
+                            <p class="text-gray-400">Bedrooms</p>
+                            <p>1</p>
+                        </div>
+                    </div>
+                    <div class="flex gap-2">
+                        <CarparkLogo />
+                        <div>
+                            <p class="text-gray-400">Carparks</p>
+                            <p>1</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- <div class="grid grid-cols-3 mt-4">
                 <div class="flex gap-2">
                     <ToiletBathLogo />
                     <div>
@@ -58,8 +115,8 @@ const props = defineProps({
                         <p>1</p>
                     </div>
                 </div>
-            </div>
-            <div class="mt-4 relative">
+            </div> -->
+            <div class="mt-2 relative">
                 <div class="flex rounded-md shadow-sm">
                     <slot />
                 </div>
@@ -68,7 +125,7 @@ const props = defineProps({
                 <p>Calculate Financial Scheme</p>
             </div> -->
             <div class="hidden md:block">
-            <div class="mt-4">
+            <!-- <div class="mt-4">
                 <div class="border-b-2 pb-4">
                     <div class="flex gap-1">
                         <p class="text-sm font-bold">Total Contract Price:</p>
@@ -79,9 +136,9 @@ const props = defineProps({
                         <p class="text-4xl font-bold text-primary_color">₱{{ props.order.product.processing_fee.toLocaleString() }}</p>
                     </div>
                 </div>
-            </div>
-            <div class="mt-4">
-                <div class="border-b-2 pb-4 mt-4 py-3">
+            </div> -->
+            <!-- <div class="mt-2">
+                <div class="flex flex-wrap gap-3 border-b-2 pb-3 mt-2 py-2">
                     <div class="flex gap-1 font-bold">
                             <p>Property Code:</p>
                             <p>{{ props.propertyCode }}</p>
@@ -100,10 +157,10 @@ const props = defineProps({
                     </div>
                 </div>
            
-            </div>
-            <div class="my-4">
+            </div> -->
+            <div class="my-2">
                 <h3 class="font-bold">Seller Details:</h3>
-                <div class="flex gap-1 mt-4">
+                <div class="flex gap-1 mt-1">
                     <div class="grow w-8">
                         <p class="font-bold">Name:</p>
                         <p>{{ props.order.seller.name}}</p>
@@ -118,34 +175,34 @@ const props = defineProps({
         </div>
         <!-- Mobile -->
         <div class="block md:hidden">
-            <img src="../../img/Rectangle 39.png">
+            <img src="../../img/Rectangle_39.png">
             <div class="my-4 relative">
                 <div class="flex rounded-md shadow-sm">
                     <slot />
                 </div>
             </div>
             <div class="w-full">
-                <Collapsible>
+                <Collapsible >
                     <div class="grid grid-cols-3">
-                        <div class="flex gap-3">
-                            <FloorLogo />
-                            <div>
-                                <p class="text-gray-400">Lot Area</p>
-                                <p>1st Floor</p>
-                            </div>
-                        </div>
-                        <div class="flex gap-3">
+                        <div class="flex gap-2">
                             <LotAreaLogo />
                             <div>
-                                <p class="text-gray-400">Unit</p>
+                                <p class="text-gray-400">Lot Area</p>
                                 <p>B</p>
                             </div>
                         </div>
-                        <div class="flex gap-3">
-                            <FloorAreaLogo />
+                        <div class="flex gap-2">
+                            <FloorLogo />
                             <div>
                                 <p class="text-gray-400">Floor Area</p>
-                                <p>24 SQM</p>
+                                <p>25SQM</p>
+                            </div>
+                        </div>
+                        <div class="flex gap-2">
+                            <FloorAreaLogo />
+                            <div>
+                                <p class="text-gray-400">Unit Type</p>
+                                <p>1</p>
                             </div>
                         </div>
                     </div>
@@ -160,7 +217,7 @@ const props = defineProps({
                         <div class="flex gap-2">
                             <CarparkLogo />
                             <div>
-                                <p class="text-gray-400">Bedrooms</p>
+                                <p class="text-gray-400">Carparks</p>
                                 <p>1</p>
                             </div>
                         </div>
