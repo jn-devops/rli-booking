@@ -13,7 +13,6 @@ import EditOrder from '@/MyComponents/EditOrder.vue';
 import RLICard from '@/MyComponents/RLICard.vue';
 import RLICardv2 from '@/MyComponents/RLICardv2.vue';
 import Calculator from '@/MyComponents/Calculator.vue';
-import AppLayout from '@/Layouts/AppLayout.vue';
 
 const props = defineProps({
     voucherCode: String,
@@ -69,7 +68,6 @@ console.log("product", props.order);
 <template>
     <Head title="RLI Wizard" />
 
-    <AppLayout>
         <RLICard v-if="props.property_code">
             <template #contentLeft>
                 <form id="formId" @submit.prevent="submit">
@@ -383,7 +381,6 @@ console.log("product", props.order);
                 </div>
             </form>
         </RLICardv2>
-    </AppLayout>
 
 </template>
 
