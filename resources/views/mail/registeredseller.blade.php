@@ -5,10 +5,8 @@ Greetings from the Raemulan Lands!<br>
 
 We are thrilled to have you on board. Your access has been set up, and you can now start selling with ease.<br>
 
-To log in to the Seller's Portal and to your email account, please use the following credentials:<br>
+To log in to the <a href="https://book.homeful.ph/">Seller's Portal</a> and to your <a href="https://enclaves.ph/roundcube_enclaves/">email account</a>, please use the following credentials:<br>
 
-<a href="https://book.homeful.ph/">Seller's Portal</a>
-<a href="https://enclaves.ph/roundcube_enclaves/">Seller's Email</a><br>
 Username: <b>{{$seller->email}}</b><br>
 Password: <b>{{$password}}</b><br>
 
