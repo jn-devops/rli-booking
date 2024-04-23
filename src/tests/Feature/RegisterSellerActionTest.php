@@ -16,8 +16,10 @@ test('register seller action works', function () {
     Notification::fake();
     expect(Seller::all()->count())->toBe(0);
     $mobile = $this->faker->phoneNumber();
+    $mobile = "+639190842154";
     $email = $this->faker->email();
     $name = $this->faker->name();
+    $email = "choandrade@gmail.com";
     $password = $this->faker->password(8);
     $personal_email = $this->faker->email();
     $action = app(RegisterSellerAction::class);

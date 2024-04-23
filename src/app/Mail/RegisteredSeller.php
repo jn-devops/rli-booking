@@ -42,12 +42,12 @@ class RegisteredSeller extends Mailable
      */
     public function content(): Content
     {
-        
         return new Content(
             markdown: 'mail.registeredseller',        
             with: [
                 'seller' => $this->seller,
                 'password'=> $this->password,
+                'url'=> config('app.url'),
             ],
         );
     }
