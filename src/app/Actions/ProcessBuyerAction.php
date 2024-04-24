@@ -22,17 +22,20 @@ class ProcessBuyerAction
         $agent = $this->getSeller($validated);
         $fieldsExtracted = Arr::get($validated, 'body.data.fieldsExtracted');
         $email = Arr::get($validated, 'body.inputs.email');
+        $mobile = Arr::get($validated, 'body.inputs.mobile');
         $idType = Arr::get($validated, 'body.data.idType');
+        $idImageUrl = Arr::get($validated, 'body.data.idImageUrl');
+        $selfieImageUrl = Arr::get($validated, 'body.data.selfieImageUrl');
         $buyer = Buyer::create([
             'name' => Arr::get($fieldsExtracted, 'fullName'),
             'address' => Arr::get($fieldsExtracted, 'address'),
             'birthdate' => Arr::get($fieldsExtracted, 'dateOfBirth'),
             'email' => $email,
-//            'mobile' => '09173011987',
+            'mobile' => $mobile,
             'id_type' => $idType,
             'id_number' => Arr::get($fieldsExtracted, 'idNumber'),
-//            'id_image_url' => $this->faker->url(),
-//            'selfie_image_url' => $this->faker->url(),
+            'id_image_url' => $idImageUrl,
+            'selfie_image_url' => $selfieImageUrl,
 //            'id_mark_url' => $this->faker->url(),
         ]);
         $order = $voucher->getOrder();
@@ -62,6 +65,7 @@ class ProcessBuyerAction
             'body.inputs' => ['required', 'array'],
             'body.inputs.code' => ['required', 'string'],
             'body.inputs.email' => ['required', 'email'],
+            'body.inputs.mobile' => ['required', 'string', 'min:11'],
             'body.data' => ['required', 'array'],
             'body.data.idType' => ['required', 'string'],
             'body.data.fieldsExtracted' => ['required', 'array'],
@@ -69,6 +73,8 @@ class ProcessBuyerAction
             'body.data.fieldsExtracted.dateOfBirth' => ['required', 'date'],
             'body.data.fieldsExtracted.address' => ['required', 'string'],
             'body.data.fieldsExtracted.idNumber' => ['required', 'string'],
+            'body.data.idImageUrl' => ['required', 'string'],
+            'body.data.selfieImageUrl' => ['required', 'string'],
         ];
     }
 
