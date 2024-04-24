@@ -11,7 +11,7 @@ beforeEach(function() {
 });
 
 test('upload products action requires an excel file', function () {
-    $path = documents_path('agapeya_bulk_upload.xlsx');
+    $path = documents_path('bulk_uploader.xlsx');
     expect(file_exists($path))->toBeTrue();
     expect(Product::all()->count())->toBe(0);
     UploadProductsAction::run($path);
@@ -20,7 +20,7 @@ test('upload products action requires an excel file', function () {
 });
 
 test('upload products action is a command', function () {
-    $path = documents_path('agapeya_bulk_upload.xlsx');
+    $path = documents_path('bulk_uploader.xlsx');
     expect(Product::all()->count())->toBe(0);
     $this->artisan('upload:products', [
         'path' => $path,

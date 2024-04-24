@@ -23,6 +23,8 @@ use RLI\Booking\Traits\HasMeta;
  * @property string  $location
  * @property int     $floor_area
  * @property int     $lot_area
+ * @property array   $url_links
+ * @property array   $inventory
  *
  * @method   int     getKey()
  */
@@ -32,6 +34,8 @@ class Product extends Model implements AttributableData
     use HasMeta;
 
     protected $fillable = ['sku', 'name', 'processing_fee', 'category', 'status', 'unit_type', 'brand', 'price', 'location', 'floor_area', 'lot_area'];
+
+    protected $appends  = ['category', 'status', 'unit_type', 'brand', 'price', 'location', 'floor_area', 'lot_area', 'url_links', 'inventory'];
 
     public function toData(): array
     {
@@ -130,6 +134,30 @@ class Product extends Model implements AttributableData
     public function setLotAreaAttribute(int $value): static
     {
         $this->getAttribute('meta')->set('lot_area', $value);
+
+        return $this;
+    }
+
+    public function getUrlLinksAttribute(): ?array
+    {
+        return (array) $this->getAttribute('meta')->get('url_links');
+    }
+
+    public function setUrlLinksAttribute(array $value): static
+    {
+        $this->getAttribute('meta')->set('url_links', $value);
+
+        return $this;
+    }
+
+    public function getInventoryAttribute(): ?array
+    {
+        return (array) $this->getAttribute('meta')->get('inventory');
+    }
+
+    public function setInventoryAttribute(array $value): static
+    {
+        $this->getAttribute('meta')->set('inventory', $value);
 
         return $this;
     }

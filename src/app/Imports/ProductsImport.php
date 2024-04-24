@@ -9,7 +9,9 @@ class ProductsImport implements WithMultipleSheets
     public function sheets(): array
     {
         return [
-            new ProductSKUsSheetImport()
+            'Product SKUs' => new ProductSKUsSheetImport(),
+            'Inventory' => new InventorySheetImport(),
+            'Digital Assets' => new DigitalAssetsSheetImport()
         ];
     }
 }
