@@ -30,7 +30,8 @@ Route::middleware([
     'verified',
 ])->group(function () {
     Route::get('/reserve', function () {
-        return Inertia::render('Dashboard');
+        $products = \RLI\Booking\Models\Product::all();
+        return Inertia::render('Dashboard', ['products' => $products]);
     })->name('dashboard');
 
     Route::post('generate-voucher', \RLI\Booking\Actions\GenerateVoucherAction::class)->name('generate-voucher');

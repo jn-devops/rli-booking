@@ -2,6 +2,9 @@
 import SectionBorder from '@/Components/SectionBorder.vue';
 import Generate from "@/Pages/Voucher/Generate.vue";
 import AppLayout from '@/Layouts/AppLayout.vue';
+
+const props = defineProps({products: Object});
+
 </script>
 
 <template>
@@ -14,7 +17,7 @@ import AppLayout from '@/Layouts/AppLayout.vue';
 
         <div class="">
             <div class="max-w-full">
-                <Generate/>
+                <Generate :products="products"/>
                 <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-xl sm:rounded-lg">
 
                 </div>
