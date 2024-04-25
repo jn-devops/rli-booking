@@ -5,6 +5,7 @@ import FloorLogo from './FloorLogo.vue';
 import Collapsible from './Collapsible.vue';
 import CarparkLogo from './CarparkLogo.vue';
 import ToiletBathLogo from './ToiletBathLogo.vue';
+import UnitTypeLogo from './UnitTypeLogo.vue';
 import {ref} from 'vue';
 
 const props = defineProps({
@@ -31,14 +32,14 @@ const props = defineProps({
                     </div>
                 </div>
                 <div class="flex gap-2">
-                    <FloorLogo />
+                    <FloorAreaLogo />
                     <div>
                         <p class="text-gray-400">Floor Area</p>
                         <p>25SQM</p>
                     </div>
                 </div>
                 <div class="flex gap-2">
-                    <FloorAreaLogo />
+                    <UnitTypeLogo />
                     <div>
                         <p class="text-gray-400">Unit Type</p>
                         <p>1</p>
@@ -69,14 +70,14 @@ const props = defineProps({
                         </div>
                     </div>
                     <div class="flex gap-2">
-                        <FloorLogo />
+                        <FloorAreaLogo />
                         <div>
                             <p class="text-gray-400">Floor Area</p>
                             <p>25SQM</p>
                         </div>
                     </div>
                     <div class="flex gap-2">
-                        <FloorAreaLogo />
+                        <UnitTypeLogo />
                         <div>
                             <p class="text-gray-400">Unit Type</p>
                             <p>1</p>
@@ -192,14 +193,14 @@ const props = defineProps({
                             </div>
                         </div>
                         <div class="flex gap-2">
-                            <FloorLogo />
+                            <FloorAreaLogo />
                             <div>
                                 <p class="text-gray-400">Floor Area</p>
                                 <p>25SQM</p>
                             </div>
                         </div>
                         <div class="flex gap-2">
-                            <FloorAreaLogo />
+                            <UnitTypeLogo />
                             <div>
                                 <p class="text-gray-400">Unit Type</p>
                                 <p>1</p>
