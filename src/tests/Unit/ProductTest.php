@@ -13,6 +13,7 @@ beforeEach(function() {
 test('product has schema and schemaless attributes', function () {
     $product = Product::factory()->create();
     expect($product->sku)->toBeString();
+    expect($product->type)->toBeString();
     expect($product->name)->toBeString();
     expect($product->description)->toBeEmpty();
     expect($product->processing_fee)->toBeInt();

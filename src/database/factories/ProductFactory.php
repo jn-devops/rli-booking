@@ -16,6 +16,7 @@ class ProductFactory extends Factory
             'name' => $this->faker->sentence(),
             'processing_fee' => $this->faker->numberBetween(100,1000),
             'meta' => [
+                'type' => $this->faker->randomElement(['configurable', 'variant']),
                 'category' => $this->faker->word(),
                 'status' => (int) $this->faker->boolean(),
                 'unit_type' => $this->faker->word(),

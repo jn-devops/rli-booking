@@ -11,6 +11,7 @@ class ProductData extends Data implements CanHydrateFromModel
 
     public function __construct(
         public string $sku,
+        public string $type,
         public string $name,
         public int    $processing_fee,
         public string $category,

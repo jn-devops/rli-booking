@@ -12,6 +12,7 @@ use RLI\Booking\Traits\HasMeta;
  *
  * @property int     $id
  * @property string  $sku
+ * @property string  $type
  * @property string  $name
  * @property int     $processing_fee
  * @property string  $description
@@ -33,13 +34,25 @@ class Product extends Model implements AttributableData
     use HasFactory;
     use HasMeta;
 
-    protected $fillable = ['sku', 'name', 'processing_fee', 'category', 'status', 'unit_type', 'brand', 'price', 'location', 'floor_area', 'lot_area'];
+    protected $fillable = ['sku',  'type', 'name', 'processing_fee', 'category', 'status', 'unit_type', 'brand', 'price', 'location', 'floor_area', 'lot_area'];
 
-    protected $appends  = ['category', 'status', 'unit_type', 'brand', 'price', 'location', 'floor_area', 'lot_area', 'url_links', 'inventory'];
+    protected $appends  = ['type','category', 'status', 'unit_type', 'brand', 'price', 'location', 'floor_area', 'lot_area', 'url_links', 'inventory'];
 
     public function toData(): array
     {
         return $this->only(array_diff($this->getFillable(), $this->getHidden()));
+    }
+
+    public function getTypeAttribute(): ?string
+    {
+        return $this->getAttribute('meta')->get('type');
+    }
+
+    public function setTypeAttribute(string $value): static
+    {
+        $this->getAttribute('meta')->set('type', $value);
+
+        return $this;
     }
 
     public function getCategoryAttribute(): ?string
