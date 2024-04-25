@@ -14,6 +14,7 @@ class ProductSKUsSheetImport implements ToModel, WithHeadingRow, WithUpserts
     {
         return new Product([
             'sku' => $row['sku'],
+            'type' => $row['type'],
             'name' => $row['name'],
             'processing_fee' => $row['processing_fee'] ?: 0 ,
             'category' => $row['category'],
