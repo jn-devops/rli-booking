@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ContactController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -51,3 +52,4 @@ Route::post('/create-link/{sku}/{title}', \RLI\Booking\Actions\CreateLeadGenerat
     ->name('create-link');
 Route::post('update-bank', \RLI\Booking\Actions\UpdateSellerBankInformationAction::class)
     ->name('update-bank');
+Route::resource('contacts', \RLI\Booking\Http\Controllers\ContactController::class);
