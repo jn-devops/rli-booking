@@ -11,17 +11,18 @@ use Illuminate\Notifications\Notifiable;
 /**
  * Class Buyer
  *
- * @property int    $id
- * @property string $name
- * @property string $address
- * @property string $birthdate
- * @property string $email
- * @property string $mobile
- * @property string $id_type
- * @property string $id_number
- * @property string $id_image_url
- * @property string $selfie_image_url
- * @property string $id_mark_url
+ * @property int     $id
+ * @property string  $name
+ * @property string  $address
+ * @property string  $birthdate
+ * @property string  $email
+ * @property string  $mobile
+ * @property string  $id_type
+ * @property string  $id_number
+ * @property string  $id_image_url
+ * @property string  $selfie_image_url
+ * @property string  $id_mark_url
+ * @property Contact $contact
  *
  * @method   int    getKey()
  */
@@ -36,5 +37,10 @@ class Buyer extends Model implements AttributableData
     public function toData(): array
     {
         return $this->only(array_diff($this->getFillable(), $this->getHidden()));
+    }
+
+    public function contact(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    {
+        return $this->belongsTo(Contact::class);
     }
 }

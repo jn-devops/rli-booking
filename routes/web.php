@@ -53,3 +53,5 @@ Route::post('/create-link/{sku}/{title}', \RLI\Booking\Actions\CreateLeadGenerat
 Route::post('update-bank', \RLI\Booking\Actions\UpdateSellerBankInformationAction::class)
     ->name('update-bank');
 Route::resource('contacts', \RLI\Booking\Http\Controllers\ContactController::class);
+Route::post('associate-contact/{buyer}/{contact}', \RLI\Booking\Actions\AssociateContactAction::class)
+    ->name('associate-contact');

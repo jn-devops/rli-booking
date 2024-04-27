@@ -1,8 +1,8 @@
 <?php
 
 use Illuminate\Foundation\Testing\{RefreshDatabase, WithFaker};
+use RLI\Booking\Models\{Buyer, Contact};
 use RLI\Booking\Data\BuyerData;
-use RLI\Booking\Models\Buyer;
 
 uses(RefreshDatabase::class, WithFaker::class);
 
@@ -36,4 +36,15 @@ test('buyer has data', function () {
     expect($data->id_image_url)->toBe($buyer->id_image_url);
     expect($data->selfie_image_url)->toBe($buyer->selfie_image_url);
     expect($data->id_mark_url)->toBe($buyer->id_mark_url);
+});
+
+test('buyer has contact', function () {
+    $buyer = Buyer::factory()->forContact()->create();
+    expect($buyer->contact)->toBeInstanceOf(Contact::class);
+    $buyer = Buyer::factory()->create();
+    expect($buyer->contact)->toBeNull();
+    $contact = Contact::factory()->create();
+    $buyer->contact()->associate($contact);
+    $buyer->save();
+    expect($buyer->contact)->toBeInstanceOf(Contact::class);
 });

@@ -14,7 +14,7 @@ class ContactData extends Data
         public string $civil_status,
         public string $sex,
         public string $nationality,
-        public Carbon $date_of_birth,
+        public string $date_of_birth,
         public string $email,
         public string $mobile,
         public ?array $addresses,

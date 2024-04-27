@@ -2,6 +2,7 @@
 use Illuminate\Foundation\Testing\{RefreshDatabase, WithFaker};
 use RLI\Booking\Data\{ContactData, ContactOrderData};
 use RLI\Booking\Models\Contact;
+use Illuminate\Support\Carbon;
 
 uses(RefreshDatabase::class, WithFaker::class);
 
