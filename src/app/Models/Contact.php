@@ -5,6 +5,7 @@ namespace RLI\Booking\Models;
 use RLI\Booking\Traits\HasPackageFactory as HasFactory;
 use RLI\Booking\Interfaces\AttributableData;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Str;
 
 /**
@@ -18,7 +19,7 @@ use Illuminate\Support\Str;
  * @property string $civil_status
  * @property string $sex
  * @property string $nationality
- * @property string $date_of_birth
+ * @property Carbon $date_of_birth
  * @property string $email
  * @property string $mobile
  * @property array  $addresses
@@ -53,6 +54,10 @@ class Contact extends Model implements AttributableData
         'employment' => 'array',
         'co_borrowers' => 'array',
         'order' => 'array',
+    ];
+
+    protected array $dates = [
+        'date_of_birth'
     ];
 
     public function toData(): array

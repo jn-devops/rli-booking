@@ -49,5 +49,16 @@
         'property_code' => $this->faker->word(),
       ],
 ### Fixed
+#### Contact
+    /**
+    * Class Contact
+    *
+    * ...
+    * @property Carbon $date_of_birth
+    * ...
+
+      protected array $dates = [
+          'date_of_birth'
+      ];
 ### Notes
 

@@ -3,6 +3,7 @@
 namespace RLI\Booking\Data;
 
 use Spatie\LaravelData\{Data, Optional};
+use Illuminate\Support\Carbon;
 
 class ContactData extends Data
 {
@@ -13,7 +14,7 @@ class ContactData extends Data
         public string $civil_status,
         public string $sex,
         public string $nationality,
-        public string $date_of_birth,
+        public Carbon $date_of_birth,
         public string $email,
         public string $mobile,
         public ?array $addresses,

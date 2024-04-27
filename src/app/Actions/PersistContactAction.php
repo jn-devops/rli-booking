@@ -34,7 +34,7 @@ class PersistContactAction
             'civil_status' => ['required', 'string'],
             'sex' => ['required', 'string'],
             'nationality' => ['required', 'string'],
-            'date_of_birth' => ['required', 'string'],
+            'date_of_birth' => ['required', 'date'],
             'email' => ['required', 'string'],
             'mobile' => ['required', 'string'],
             'addresses' => ['required', 'array'],
