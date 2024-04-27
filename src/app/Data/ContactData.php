@@ -2,14 +2,10 @@
 
 namespace RLI\Booking\Data;
 
-use RLI\Booking\Interfaces\CanHydrateFromModel;
-use RLI\Booking\Traits\HydrateFromModel;
-use Spatie\LaravelData\Data;
+use Spatie\LaravelData\{Data, Optional};
 
-class ContactData extends Data implements CanHydrateFromModel
+class ContactData extends Data
 {
-    use HydrateFromModel;
-
     public function __construct(
         public string $first_name,
         public string $middle_name,
@@ -21,7 +17,36 @@ class ContactData extends Data implements CanHydrateFromModel
         public string $email,
         public string $mobile,
         public ?array $addresses,
-        public array $employment,
-        public array $co_borrowers,
+        public array  $employment,
+        public array  $co_borrowers,
+        public ContactOrderData|Optional $order,
+    ) {}
+
+    public static function fromModel(object $model): self
+    {
+        return new self(
+            first_name: $model->first_name,
+            middle_name: $model->middle_name,
+            last_name: $model->last_name,
+            civil_status: $model->civil_status,
+            sex: $model->sex,
+            nationality: $model->nationality,
+            date_of_birth: $model->date_of_birth,
+            email: $model->email,
+            mobile: $model->mobile,
+            addresses: $model->addresses,
+            employment: $model->employment,
+            co_borrowers: $model->co_borrowers,
+            order: ContactOrderData::from($model->order)
+        );
+    }
+}
+
+class ContactOrderData extends Data
+{
+    public function __construct(
+        public string $sku,
+        public string $seller_code,
+        public string $property_code,
     ) {}
 }

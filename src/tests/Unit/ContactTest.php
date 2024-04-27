@@ -1,6 +1,6 @@
 <?php
 use Illuminate\Foundation\Testing\{RefreshDatabase, WithFaker};
-use RLI\Booking\Data\ContactData;
+use RLI\Booking\Data\{ContactData, ContactOrderData};
 use RLI\Booking\Models\Contact;
 
 uses(RefreshDatabase::class, WithFaker::class);
@@ -10,7 +10,6 @@ beforeEach(function() {
 });
 
 test('contact has schema attributes', function () {
-    // dd($this->faker->city());
     $contact = Contact::factory()->create();
     expect($contact->first_name)->toBeString();
     expect($contact->middle_name)->toBeString();
@@ -24,6 +23,7 @@ test('contact has schema attributes', function () {
     expect($contact->addresses)->toBeArray();
     expect($contact->employment)->toBeArray();
     expect($contact->co_borrowers)->toBeArray();
+    expect($contact->order)->toBeArray();
 });
 
 test('contact has data', function () {
@@ -41,5 +41,6 @@ test('contact has data', function () {
     expect($data->addresses)->toBe($contact->addresses);
     expect($data->employment)->toBe($contact->employment);
     expect($data->co_borrowers)->toBe($contact->co_borrowers);
+    expect($data->order->toArray())->toBe(ContactOrderData::from($contact->order)->toArray());
 });
 

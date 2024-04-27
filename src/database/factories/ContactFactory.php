@@ -27,17 +27,21 @@ class ContactFactory extends Factory
             'mobile' => $this->faker->phoneNumber(),
             'addresses' => [
                 [
-                    "type"=>"primary",
-                    "city"=> $this->faker->city()
+                    'type' => 'primary',
+                    'city' => $this->faker->city()
                 ],
                 [
-                    "type"=>"secondary",
-                    "city"=> $this->faker->city()
+                    'type' => "secondary",
+                    'city'=> $this->faker->city()
                 ]
             ],
             'employment' => [],
             'co_borrowers' => [],
-            
+            'order' => [
+                'sku' => $this->faker->word(),
+                'seller_code' => $this->faker->word(),
+                'property_code' => $this->faker->word(),
+            ],
         ];
     }
 }
