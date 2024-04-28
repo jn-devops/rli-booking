@@ -16,6 +16,7 @@ use App\Models\User;
  * @property string $email
  * @property string $mobile
  * @property string $personal_email
+ * @property string $seller_code
  * @property string $bank_code
  * @property string $account_number
  * @property string $account_name
@@ -30,7 +31,7 @@ class Seller extends User implements AttributableData
     use HasParent;
     use HasMeta;
 
-    protected $fillable = ['name', 'email', 'mobile', 'personal_email', 'bank_code', 'account_number', 'account_name', 'accredited', 'mfiles_id'];
+    protected $fillable = ['name', 'email', 'mobile', 'personal_email', 'seller_code', 'bank_code', 'account_number', 'account_name', 'accredited', 'mfiles_id'];
 
     static public function from(User $user): self
     {
@@ -56,6 +57,18 @@ class Seller extends User implements AttributableData
     public function setPersonalEmailAttribute(string $value): static
     {
         $this->getAttribute('meta')->set('personal_email', $value);
+
+        return $this;
+    }
+
+    public function getSellerCodeAttribute(): ?string
+    {
+        return $this->getAttribute('meta')->get('seller_code', $this->getAttribute('email'));
+    }
+
+    public function setSellerCodeAttribute(?string $value): static
+    {
+        $this->getAttribute('meta')->set('seller_code', $value);
 
         return $this;
     }
@@ -110,5 +123,5 @@ class Seller extends User implements AttributableData
     public function routeNotificationForEngageSpark()
     {
         return $this->mobile;
-    } 
+    }
 }

@@ -13,6 +13,7 @@ class SellerFactory extends UserFactory
     {
         return array_merge([
             'mobile' => $this->faker->phoneNumber(),
+            'seller_code' => $this->faker->word(),
             'bank_code' => $this->faker->word(),
             'account_number' => $this->faker->word(),
             'account_name' => $this->faker->name(),

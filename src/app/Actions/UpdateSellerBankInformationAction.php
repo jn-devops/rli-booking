@@ -29,6 +29,7 @@ class UpdateSellerBankInformationAction
     public function rules(): array
     {
         return [
+            'seller_code' => ['required', 'string', 'unique:users,meta->seller_code'],
             'bank_code' => ['required', 'string'],
             'account_number' => ['required', 'string'],
             'account_name' => ['required', 'string'],
