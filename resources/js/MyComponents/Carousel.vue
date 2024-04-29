@@ -182,8 +182,8 @@ const props = defineProps({
 
 const items = ref({});
 items.value = props.products;
-console.log('Items:', items);
-console.log('property: ', props.property);
+// console.log('Items:', items);
+// console.log('property: ', props.property);
 
 
 // console.log("property", props.property);
@@ -217,7 +217,7 @@ const emit = defineEmits(['view-details']);
 
 const vDetails = ref(null);
 const viewDetails = (parameter) =>{
-  console.log('params: ', parameter);
+  // console.log('params: ', parameter);
   vDetails.value = parameter;
   emit('view-details', parameter);
 }

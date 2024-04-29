@@ -15,7 +15,7 @@
                     </h1>
                 </div>
                 <div class="pt-4 pr-4 text-left">
-                    <p>Unlock Your Dream Home: Reserve with Ease</p>
+                    <p>Unlock the buyer’s dream home: Find their perfect property today!</p>
                 </div>
             </template>
             <template #buttons>

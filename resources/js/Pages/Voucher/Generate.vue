@@ -43,12 +43,29 @@ const props = defineProps({
         default: true,
     }
 })
+const productDetails = ref({
+  brand: props.products[2].brand,
+  category: props.products[2].category,
+  floor_area: props.products[2].floor_area,
+  lot_area: props.products[2].lot_area,
+  name: props.products[2].name,
+  price: props.products[2].price,
+  processing_fee: props.products[2].processing_fee,
+  sku: props.products[2].sku,
+  type: props.products[2].type,
+  unit_type: props.products[2].unit_type,
+  url_links: props.products[2].url_links
+});
+// const defaultSKU = ref(props.products[1].sku);
 const form = useForm({
   email: seller,
   discount: '0',
   sku: sku
 });
 
+form.sku = productDetails.value.sku;
+// console.log('productDetails:', productDetails.value);
+// console.log('sku:', form.sku);
 const showingProductDetails = ref(false);
 
 const closeModal = () => {
@@ -58,11 +75,17 @@ const closeModal = () => {
 const validSKU = ref(false);
 const product = ref(null);
 const leadGenerationLink = ref(null);
+const showingInfoDetails = ref(false);
 
 const createLink = () => {
+  
   leadGenerationLink.value = null;
   let title = 'Lead Generation: ' + seller + ' (' + form.sku + ')';
   router.post(route('create-link', { sku: form.sku, title: title }));
+  setTimeout(function(){
+    showingInfoDetails.value = true
+  },1500);
+  
 };
 
 const showProductDetails = () => {
@@ -70,15 +93,17 @@ const showProductDetails = () => {
     showingProductDetails.value = true;
 }
 
-watch (() => form.sku, () => {
+watch (() => form.sku, (newValue) => {
+ // console.log('form.sku changed:', newValue); // Log the new value
   leadGenerationLink.value = null;
   if (form.sku.length>0) {
-    // console.log(form.sku);
-    axios.get(route('products-show', {sku: form.sku})).then( response => {
+    // console.log('newValue: ', newValue);
+    axios.get(route('products-show', {sku: newValue})).then( response => {
       if (200 === response.status) {
         validSKU.value = true;
         product.value = response.data;
-        console.log(validSKU.value);
+        // console.log('response data:', response.data);
+        // console.log(validSKU.value);
       }
     }).catch(error => {
       validSKU.value = false;
@@ -86,7 +111,7 @@ watch (() => form.sku, () => {
       console.log(error.response.status);
     });
   }
-});
+},{ immediate: true });
 watch (
     () => usePage().props.flash.event,
     (event) => {
@@ -117,10 +142,9 @@ const generateVoucher = () => {
 //   console.log('jsonDetails: ', details);
 // });
 
-const showingInfoDetails = ref(false);
 
 const closeModalInfo = () =>{
-  showingInfoDetails.value = false;
+  showingInfoDetails.value = !true;
 }
 
 const showInfoDetail = () =>{
@@ -132,20 +156,32 @@ const copyToClipboard = (leadParams) =>{
 }
 
 
-const selectedProperty = ref('');
+const handleCopyClick = (event) => {
+    event.stopPropagation(); // Prevent event propagation to parent elements
+    copyToClipboard(leadGenerationLink); // Call the copyToClipboard function
+  };
+
+// const selectedProperty = ref('');
 const displayValue = ref('');
+const property = ref('');
 
 const updateDisplayValue = () => {
   if (form.sku && form.sku.includes('AGM')) {
     displayValue.value = 'Agapeya';
+    property.value = 'Agapeya';
   } else if (form.sku && form.sku.includes('ZYA')) {
     displayValue.value = 'Zaya';
+    property.value = 'Zaya';
   } else {
     displayValue.value = '';
   }
 };
-const productDetails = ref({});
-watch(() => form.sku, updateDisplayValue);
+
+// console.log('productDetails:', productDetails.value);
+watch(() => form.sku, updateDisplayValue, updateDisplayValue());
+
+// console.log('Initial form.sku:', form.sku);
+// console.log('Initial displayVal:', displayValue.value);
 // const displayValue = computed(() => {
 //   if (form.sku && form.sku.includes('AGM')) { 
 //     return 'Agapeya';
@@ -157,13 +193,16 @@ watch(() => form.sku, updateDisplayValue);
 // });
 
 // Watch for changes in displayValue and update selectedProperty
-watch(displayValue, () => {
-  if (displayValue.value === 'Agapeya') {
+watch(displayValue, (newVal, oldVal) => {
+  // console.log('New Value:', newVal);
+  // console.log('Old Value:', oldVal);
+  if (newVal === 'Agapeya') {
     property.value = 'Agapeya';
-  } else if (displayValue.value === 'Zaya') {
+  } else if (newVal === 'Zaya') {
     property.value = 'Zaya';
   }
 });
+
 
 // Handle change event for dropdown
 const onChange = (e) => {
@@ -189,9 +228,11 @@ const dropDown = () =>{
 
 const dropDownItem = (skuParams, index) =>{
   // console.log('sku:', newDetails.value);
+  productDetails.value = {}
   showingDropdown.value = !showingDropdown.value;
   form.sku = skuParams.sku;
   productDetails.value = skuParams;
+
   // console.log('index: ',index, 'skuParams:', productDetails.value);
 
   // console.log('index: ',index, 'skuParams:', productDetails.value.brand);
@@ -204,14 +245,26 @@ const handleClickOutside = (event) => {
   }
 };
 
+const handleClickOutsideDiv = (event) => {
+    if (event.target.classList.contains('bg-opacity-30')) { // Assuming 'bg-opacity-30' is the class of the black area
+    closeModalInfo();
+    console.log("you've clicked me");
+    }
+  };
+
+
+
 onMounted(() => {
   document.addEventListener('click', handleClickOutside);
+  document.addEventListener('click', handleClickOutsideDiv);
+
 });
 
 onUnmounted(() => {
   document.removeEventListener('click', handleClickOutside);
+  document.removeEventListener('click', handleClickOutsideDiv);
 });
-const property = ref('');
+
 // const displayValue = ref('');
 
 // const onChange = (e) =>{
@@ -220,24 +273,24 @@ const property = ref('');
 // }
 
 // Property options array
-const propertyOptions = ref([
-  { label: 'Agapeya', value: 'Agapeya' },
-  { label: 'Zaya', value: 'Zaya' },
-]);
+// const propertyOptions = ref([
+//   { label: 'Agapeya', value: 'Agapeya' },
+//   { label: 'Zaya', value: 'Zaya' },
+// ]);
 
-const newDetails = ref({});
-// let details = {};
-let vDetails = ref({});
+// const newDetails = ref({});
+// // let details = {};
+// let vDetails = ref({});
 
-let details = reactive({
-  name: '',
-  sku: '',
-  location: '',
-  category: '',
-  price: '',
-  processing_fee: '',
-  image: ''
-});
+// let details = reactive({
+//   name: '',
+//   sku: '',
+//   location: '',
+//   category: '',
+//   price: '',
+//   processing_fee: '',
+//   image: ''
+// });
 
 
 const handleDetails = (newParameter) =>{
@@ -257,7 +310,7 @@ const handleDetails = (newParameter) =>{
   // details.image = newDetails.value.url_links.facade;
 
   // details = Object.assign({}, newDetails.value);
-  console.log('new Parameter: ', newParameter);
+  // console.log('new Parameter: ', newParameter);
   productDetails.value = newParameter;
   form.sku = newParameter.sku;
   // form.sku = '';
@@ -286,9 +339,11 @@ const uniqueBrands = [...new Set(props.products.map(product => product.brand))];
 const uniqueProductsBrand = uniqueBrands.map(brand => {
   return props.products.find(product => product.brand === brand);
 });
-
-
-console.log("brand:", property.value);
+// console.log('unique', uniqueProductsBrand);
+const enterFunction = (skuParam) =>{
+  console.log('parameter SKU:', skuParam);
+}
+// console.log("brand:", property.value);
 // console.log("sku:", props.products.sku);
 </script>
 
@@ -325,6 +380,7 @@ console.log("brand:", property.value);
                 @click="dropDown()"
                 id="sku"
                 v-model="form.sku"
+                v-on:keyup.enter="enterFunction(form.sku)"
                 type="text"
                 class="mt-1 block w-full rounded-full"
                 placeholder="Enter value"
@@ -337,13 +393,13 @@ console.log("brand:", property.value);
             <InputError :message="form.errors.sku" class="mt-2" />
             <div v-show="showingDropdown"
             @click.outside="() => { showingDropdown = false; }"
-            class="bg-white shadow-2xl border rounded-lg py-2 px-3 absolute h-40 z-30 w-1/4 overflow-y-auto"
+            class="bg-white shadow-2xl border rounded-lg py-2 px-3 absolute h-40 z-30 w-5/12 overflow-y-auto"
             >
                 <div 
                 @click="dropDownItem(skuItem, index)"
                 v-for="(skuItem, index) in products"
                 class="text-md my-1 hover:bg-gray-100 hover:font-bold py-1">
-                 {{ skuItem.sku }}
+                 {{ skuItem.sku }} - {{ skuItem.name }}
                 </div>
             </div>
           </div>
@@ -500,9 +556,11 @@ console.log("brand:", property.value);
           </div>
         </div>
       </div>
-      <div v-else-if="form && form.sku && form.sku.length >= 19" class="dark:text-white light:text-black">
+      <div v-else-if="form && form.sku && form.sku.length >= 19 || productDetails" class="dark:text-white light:text-black">
         <div>
-            <img :src="productDetails.url_links.facade" alt="Item Image1" />
+            <div class=" bg-gray-100 h-2/4 w-full">
+              <img :src="productDetails.url_links.facade" alt="Item Image1" class="h-full w-2/4 mx-auto"/>
+            </div>
             <div  class="mt-3">
               <h1 class="font-bold text-3xl">{{ productDetails.name }}</h1>
             </div>
@@ -588,7 +646,7 @@ console.log("brand:", property.value);
         </form>
         
         </div>
-        <div v-if="leadGenerationLink" class="text-gray-700 dark:text-gray-300 text-md bg-gray-200 py-2 px-6 rounded-full">
+        <!-- <div v-if="leadGenerationLink" class="text-gray-700 dark:text-gray-300 text-md bg-gray-100 py-2 px-6 rounded-full">
             <div class="flex justify-between items-center">
               <div>
                 <p class="font-bold">Generated Link: 
@@ -608,11 +666,10 @@ console.log("brand:", property.value);
                 </CopyButton>
               </div>
             </div>
-        </div>
+        </div> -->
       </div>
       <!-- Modal -->
       <div v-show="showingInfoDetails"
-      :closeable="closeable"
       @click.prevent="closeModalInfo()"
       class="fixed inset-0 bg-black bg-opacity-30 top-0 left-0 flex justify-center px-6 py-1 z-10  overflow-y-auto"
       >
@@ -636,7 +693,7 @@ console.log("brand:", property.value);
                     <div>
                       <span class="text-sky-600">{{ leadGenerationLink }}</span>
                     </div>
-                    <CopyButton @click.prevent="copyToClipboard(leadGenerationLink)">
+                    <CopyButton @click.prevent="handleCopyClick">
                       <template #icon>
                         <CopyLogo class="w-4 h-4 mx-auto"/>
                       </template>
