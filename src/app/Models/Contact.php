@@ -3,10 +3,18 @@
 namespace RLI\Booking\Models;
 
 use RLI\Booking\Traits\HasPackageFactory as HasFactory;
+use Spatie\MediaLibrary\MediaCollections\Exceptions\FileCannotBeAdded;
+use Spatie\MediaLibrary\MediaCollections\Exceptions\FileDoesNotExist;
+use Spatie\MediaLibrary\MediaCollections\Exceptions\FileIsTooBig;
+use Spatie\MediaLibrary\MediaCollections\Models\Media;
+use Spatie\MediaLibrary\MediaCollections\File;
 use RLI\Booking\Interfaces\AttributableData;
+use Spatie\MediaLibrary\InteractsWithMedia;
 use Illuminate\Database\Eloquent\Model;
+use Spatie\MediaLibrary\HasMedia;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Str;
+use Spatie\Image\Enums\Fit;
 
 /**
  * Class Contact
@@ -26,12 +34,16 @@ use Illuminate\Support\Str;
  * @property array  $employment
  * @property array  $co_borrowers
  * @property array  $order
+ * @property Media  $idImage
+ * @property Media  $selfieImage
+ * @property Media  $payslipImage
  *
  * @method   int    getKey()
  */
 
-class Contact extends Model implements AttributableData
+class Contact extends Model implements AttributableData, HasMedia
 {
+    use InteractsWithMedia;
     use HasFactory;
     protected $fillable = [
         'first_name',
@@ -46,7 +58,10 @@ class Contact extends Model implements AttributableData
         'addresses',
         'employment',
         'co_borrowers',
-        'order'
+        'order',
+        'idImage',
+        'selfieImage',
+        'payslipImage'
     ];
 
     protected $casts = [
@@ -72,5 +87,106 @@ class Contact extends Model implements AttributableData
         static::creating(function ($model) {
             $model->uid = Str::ulid();
         });
+    }
+
+    /**
+     * @return Media|null
+     */
+    public function getIdImageAttribute(): ?Media
+    {
+        return $this->getFirstMedia('id-images');
+    }
+
+    /**
+     * @param string|null $url
+     * @return $this
+     * @throws FileCannotBeAdded
+     * @throws FileDoesNotExist
+     * @throws FileIsTooBig
+     */
+    public function setIdImageAttribute(?string $url): static
+    {
+        if ($url)
+            $this->addMediaFromUrl($url)->toMediaCollection('id-images');
+
+        return $this;
+    }
+
+    /**
+     * @return Media|null
+     */
+    public function getSelfieImageAttribute(): ?Media
+    {
+        return $this->getFirstMedia('selfie-images');
+    }
+
+    /**
+     * @param string|null $url
+     * @return $this
+     * @throws FileCannotBeAdded
+     * @throws FileDoesNotExist
+     * @throws FileIsTooBig
+     */
+    public function setSelfieImageAttribute(?string $url): static
+    {
+        if ($url)
+            $this->addMediaFromUrl($url)->toMediaCollection('selfie-images');
+
+        return $this;
+    }
+
+    /**
+     * @return Media|null
+     */
+    public function getPayslipImageAttribute(): ?Media
+    {
+        return $this->getFirstMedia('payslip-images');
+    }
+
+    /**
+     * @param string|null $url
+     * @return $this
+     * @throws FileCannotBeAdded
+     * @throws FileDoesNotExist
+     * @throws FileIsTooBig
+     */
+    public function setPayslipImageAttribute(?string $url): static
+    {
+        if ($url)
+            $this->addMediaFromUrl($url)->toMediaCollection('payslip-images');
+
+        return $this;
+    }
+
+    /**
+     * @return void
+     */
+    public function registerMediaCollections(): void
+    {
+        $collections = [
+            'id-images' => 'image/jpeg',
+            'selfie-images' => 'image/jpeg',
+            'payslip-images' => 'image/jpeg',
+        ];
+
+        foreach ($collections as $collection => $mimeType) {
+            $this->addMediaCollection($collection)
+                ->singleFile()
+                ->acceptsFile(function (File $file) use ($mimeType) {
+                    return $file->mimeType === $mimeType;
+                });
+        }
+    }
+
+    /**
+     * @param Media|null $media
+     * @return void
+     */
+    public function registerMediaConversions(Media $media = null): void
+    {
+        $this
+            ->addMediaConversion('preview')
+            ->fit(Fit::Contain, 300, 300)
+            ->nonQueued();
     }
 }

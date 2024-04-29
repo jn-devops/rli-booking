@@ -42,5 +42,8 @@ Route::post('/accredit-seller/{email}/{accredit?}', \RLI\Booking\Actions\Accredi
 Route::post('/update-seller-mfiles_id/{email}/{mfiles_id}', \RLI\Booking\Actions\UpdateSellerMFilesIdAction::class)
     ->name('update-seller-mfiles_id');
 
-Route::post('/persist-contact/', \RLI\Booking\Actions\PersistContactAction::class)
+Route::post('persist-contact', \RLI\Booking\Actions\PersistContactAction::class)
     ->name('persist-contact');
+
+Route::post('attach-contact-media/{uid}', \RLI\Booking\Actions\AttachContactMediaAction::class)
+    ->name('attach-contact-media');

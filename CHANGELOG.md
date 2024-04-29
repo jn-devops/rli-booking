@@ -7,6 +7,8 @@
 #### src/tests/Feature/PersistContactActionTest.php
 #### src/app/Actions/AssociateContactAction.php
 #### src/tests/Feature/AssociateContactActionTest.php
+#### src/app/Actions/AttachContactMediaAction.php
+#### src/tests/Feature/AttachContactMediaActionTest.php
 #### src/database/migrations/2024_04_27_080825_add_uid_and_order_to_contacts_table.php
     $table->uuid('uid')->after('id'); 
     $table->json('order')->after('co_borrowers')->nullable();
@@ -20,22 +22,143 @@
 ### Changed
 #### routes/api.php
     Route::post('/persist-contact/', \RLI\Booking\Actions\PersistContactAction::class)->name('persist-contact');
+    Route::post('attach-contact-media/{uid}', \RLI\Booking\Actions\AttachContactMediaAction::class)->name('attach-contact-media');
 #### routes/web.php
     Route::post('associate-contact/{buyer}/{contact}', \RLI\Booking\Actions\AssociateContactAction::class)->name('associate-contact');
 #### src/app/Models/Contact.php
-    protected $casts = [
+    /**
+    * Class Contact
+      * ...
+      * @property array  $order
+      * @property Media  $idImage
+      * @property Media  $selfieImage
+      * @property Media  $payslipImage
+      * ...
+    */
+
+    protected $fillable = [
         ...
-        'order' => 'array',
+        'order',
+        'idImage',
+        'selfieImage',
+        'payslipImage'
+    ];
+
+    protected $casts = [
+      ...
+      'order' => 'array',
     ];
     
     protected static function boot(): void
     {
-        parent::boot();
-
-        static::creating(function ($model) {
-            $model->uid = Str::ulid();
-        });
+      parent::boot();
+    
+      static::creating(function ($model) {
+          $model->uid = Str::ulid();
+      });
     }
+
+    /**
+    * @return Media|null
+    */
+    public function getIdImageAttribute(): ?Media
+    {
+        return $this->getFirstMedia('id-images');
+    }
+    
+    /**
+     * @param string|null $url
+     * @return $this
+     * @throws FileCannotBeAdded
+     * @throws FileDoesNotExist
+     * @throws FileIsTooBig
+     */
+    public function setIdImageAttribute(?string $url): static
+    {
+        if ($url)
+            $this->addMediaFromUrl($url)->toMediaCollection('id-images');
+
+        return $this;
+    }
+    
+    /**
+     * @return Media|null
+     */
+    public function getSelfieImageAttribute(): ?Media
+    {
+        return $this->getFirstMedia('selfie-images');
+    }
+    
+    /**
+     * @param string|null $url
+     * @return $this
+     * @throws FileCannotBeAdded
+     * @throws FileDoesNotExist
+     * @throws FileIsTooBig
+     */
+    public function setSelfieImageAttribute(?string $url): static
+    {
+        if ($url)
+            $this->addMediaFromUrl($url)->toMediaCollection('selfie-images');
+
+        return $this;
+    }
+    
+    /**
+     * @return Media|null
+     */
+    public function getPayslipImageAttribute(): ?Media
+    {
+        return $this->getFirstMedia('payslip-images');
+    }
+    
+    /**
+     * @param string|null $url
+     * @return $this
+     * @throws FileCannotBeAdded
+     * @throws FileDoesNotExist
+     * @throws FileIsTooBig
+     */
+    public function setPayslipImageAttribute(?string $url): static
+    {
+        if ($url)
+            $this->addMediaFromUrl($url)->toMediaCollection('payslip-images');
+
+        return $this;
+    }
+    
+    /**
+     * @return void
+     */
+    public function registerMediaCollections(): void
+    {
+        $collections = [
+            'id-images' => 'image/jpeg',
+            'selfie-images' => 'image/jpeg',
+            'payslip-images' => 'image/jpeg',
+        ];
+
+        foreach ($collections as $collection => $mimeType) {
+            $this->addMediaCollection($collection)
+                ->singleFile()
+                ->acceptsFile(function (File $file) use ($mimeType) {
+                    return $file->mimeType === $mimeType;
+                });
+        }
+    }
+    
+    /**
+     * @param Media|null $media
+     * @return void
+     */
+    public function registerMediaConversions(Media $media = null): void
+    {
+        $this
+            ->addMediaConversion('preview')
+            ->fit(Fit::Contain, 300, 300)
+            ->nonQueued();
+    }
+
 #### src/app/Models/Buyer.php
     public function contact(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
@@ -81,7 +204,32 @@
 #### src/app/Data/ContactData.php
     public function __construct(
         ...
-        public ?array $order
+        public ContactOrderData|Optional $order,
+        public ?string $idImage,
+        public ?string $selfieImage,
+        public ?string $payslipImage,
+    }
+
+    public static function fromModel(object $model): self
+    {
+        return new self(
+            first_name: $model->first_name,
+            middle_name: $model->middle_name,
+            last_name: $model->last_name,
+            civil_status: $model->civil_status,
+            sex: $model->sex,
+            nationality: $model->nationality,
+            date_of_birth: $model->date_of_birth,
+            email: $model->email,
+            mobile: $model->mobile,
+            addresses: $model->addresses,
+            employment: $model->employment,
+            co_borrowers: $model->co_borrowers,
+            order: ContactOrderData::from($model->order),
+            idImage: $model->idImage->getUrl(),
+            selfieImage: $model->selfieImage->getUrl(),
+            payslipImage: $model->payslipImage->getUrl()
+        );
     }
 
     class ContactOrderData extends Data
@@ -95,8 +243,57 @@
 #### src/app/Data/SellerData.php
     public ?string $seller_code,
 #### src/tests/Unit/ContactTest.php
-    expect($contact->order)->toBeArray();
-    expect($data->order)->toBe($contact->order);
+    test('contact has schema attributes', function () {
+        ...
+        expect($contact->order)->toBeArray();
+        expect($contact->idImage)->toBeInstanceOf(Media::class);
+        expect($contact->selfieImage)->toBeInstanceOf(Media::class);
+        expect($contact->payslipImage)->toBeInstanceOf(Media::class);
+    });
+
+    test('contact has data', function () {
+        ...
+        expect($data->order->toArray())->toBe(ContactOrderData::from($contact->order)->toArray());
+        expect($data->idImage)->toBe($contact->idImage->getUrl());
+        expect($data->selfieImage)->toBe($contact->selfieImage->getUrl());
+        expect($data->payslipImage)->toBe($contact->payslipImage->getUrl());
+    });
+
+    test('contact can attach media', function () {
+        $idImageUrl = 'https://jn-img.enclaves.ph/Test/idImage.jpg';
+        $selfieImageUrl = 'https://jn-img.enclaves.ph/Test/selfieImage.jpg';
+        $payslipImageUrl = 'https://jn-img.enclaves.ph/Test/payslipImage.jpg';
+        $contact = Contact::factory()->create(['idImage' => null, 'selfieImage' => null, 'payslipImage' => null]);
+        $contact->idImage = $idImageUrl;
+        $contact->selfieImage = $selfieImageUrl;
+        $contact->payslipImage = $payslipImageUrl;
+        $contact->save();
+    
+        expect($contact->idImage)->toBeInstanceOf(Media::class);
+        expect($contact->selfieImage)->toBeInstanceOf(Media::class);
+        expect($contact->payslipImage)->toBeInstanceOf(Media::class);
+        expect($contact->idImage->name)->toBe('idImage');
+        expect($contact->idImage->file_name)->toBe('idImage.jpg');
+        expect($contact->payslipImage->file_name)->toBe('payslipImage.jpg');
+        expect($contact->idImage->name)->toBe('idImage');
+        expect($contact->selfieImage->name)->toBe('selfieImage');
+        expect($contact->payslipImage->name)->toBe('payslipImage');
+        expect($contact->idImage->file_name)->toBe('idImage.jpg');
+        expect($contact->selfieImage->file_name)->toBe('selfieImage.jpg');
+        expect($contact->payslipImage->file_name)->toBe('payslipImage.jpg');
+        tap(config('app.url'), function ($host) use ($contact) {
+            expect($contact->idImage->getUrl())->toBe(__(':host/storage/:path', ['host' => $host, 'path' => $contact->idImage->getPathRelativeToRoot()]));
+            expect($contact->selfieImage->getUrl())->toBe(__(':host/storage/:path', ['host' => $host, 'path' => $contact->selfieImage->getPathRelativeToRoot()]));
+            expect($contact->payslipImage->getUrl())->toBe(__(':host/storage/:path', ['host' => $host, 'path' => $contact->payslipImage->getPathRelativeToRoot()]));
+            $contact->idImage->delete();
+        });
+        $contact->selfieImage->delete();
+        $contact->payslipImage->delete();
+        $contact->clearMediaCollection('id-images');
+        $contact->clearMediaCollection('selfie-images');
+        $contact->clearMediaCollection('payslip-images');
+    });
+
 #### src/tests/Unit/BuyerTest.php
     test('buyer has contact', function () {
         $buyer = Buyer::factory()->forContact()->create();
@@ -131,6 +328,9 @@
         'seller_code' => $this->faker->word(),
         'property_code' => $this->faker->word(),
       ],
+    'idImage' => $this->faker->imageUrl(format: 'jpeg'),
+    'selfieImage' => $this->faker->imageUrl(format: 'jpeg'),
+    'payslipImage' => $this->faker->imageUrl(format: 'jpeg')
 #### src/database/factories/SellerFactory.php
     'seller_code' => $this->faker->word(),
 #### resources/js/Pages/Profile/Partials/UpdateBankInformationForm.vue

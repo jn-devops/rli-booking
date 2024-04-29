@@ -39,14 +39,17 @@ dataset('attribs', function () {
                 'sku' => $this->faker->word(),
                 'seller_code' => $this->faker->word(),
                 'property_code' => $this->faker->word(),
-            ]
+            ],
+            'idImage' => null,
+            'selfieImage' => null,
+            'payslipImage' => null
         ]
     ];
 });
 
 test('persist contact action', function (array $attribs) {
     expect(Contact::count())->toBe(0);
-    \Pest\Laravel\expectsDatabaseQueryCount(2);
+    \Pest\Laravel\expectsDatabaseQueryCount(3);
     $action = app(PersistContactAction::class);
     $contact = $action->run($attribs);
     expect(Contact::count())->toBe(1);

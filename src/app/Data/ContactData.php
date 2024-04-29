@@ -21,6 +21,9 @@ class ContactData extends Data
         public array  $employment,
         public array  $co_borrowers,
         public ContactOrderData|Optional $order,
+        public ?string $idImage,
+        public ?string $selfieImage,
+        public ?string $payslipImage,
     ) {}
 
     public static function fromModel(object $model): self
@@ -38,7 +41,10 @@ class ContactData extends Data
             addresses: $model->addresses,
             employment: $model->employment,
             co_borrowers: $model->co_borrowers,
-            order: ContactOrderData::from($model->order)
+            order: ContactOrderData::from($model->order),
+            idImage: $model->idImage->getUrl(),
+            selfieImage: $model->selfieImage->getUrl(),
+            payslipImage: $model->payslipImage->getUrl()
         );
     }
 }
