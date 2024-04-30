@@ -18,7 +18,7 @@ class ContactData extends Data
         public string $email,
         public string $mobile,
         public ?array $addresses,
-        public array  $employment,
+        public ContactEmploymentData|Optional $employment,
         public array  $co_borrowers,
         public ContactOrderData|Optional $order,
         public ?string $idImage,
@@ -39,7 +39,7 @@ class ContactData extends Data
             email: $model->email,
             mobile: $model->mobile,
             addresses: $model->addresses,
-            employment: $model->employment,
+            employment: ContactEmploymentData::from($model->employment),
             co_borrowers: $model->co_borrowers,
             order: ContactOrderData::from($model->order),
             idImage: $model->idImage->getUrl(),
@@ -55,5 +55,28 @@ class ContactOrderData extends Data
         public string $sku,
         public string $seller_code,
         public string $property_code,
+    ) {}
+}
+
+class ContactEmploymentData extends Data
+{
+    public function __construct(
+        public string $status,
+        public string $industry,
+        public string $gross_income,
+        public string $nationality,
+        public string $type,
+        public string $current_position,
+        public string $name,
+        public string $contact_number,
+        public string $address,
+        public string $block_lot,
+        public string $street_line2,
+        public string $city,
+        public string $province,
+        public string $zip_code_postal_code,
+        public string $tin_number,
+        public string $pagibig_number,
+        public string $sss_number,
     ) {}
 }

@@ -1,7 +1,7 @@
 <?php
 use Illuminate\Foundation\Testing\{RefreshDatabase, WithFaker};
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
-use RLI\Booking\Data\{ContactData, ContactOrderData};
+use RLI\Booking\Data\{ContactData, ContactEmploymentData, ContactOrderData};
 use RLI\Booking\Models\Contact;
 
 uses(RefreshDatabase::class, WithFaker::class);
@@ -43,7 +43,7 @@ test('contact has data', function () {
     expect($data->email)->toBe($contact->email);
     expect($data->mobile)->toBe($contact->mobile);
     expect($data->addresses)->toBe($contact->addresses);
-    expect($data->employment)->toBe($contact->employment);
+    expect($data->employment->toArray())->toBe(ContactEmploymentData::from($contact->employment)->toArray());
     expect($data->co_borrowers)->toBe($contact->co_borrowers);
     expect($data->order->toArray())->toBe(ContactOrderData::from($contact->order)->toArray());
     expect($data->idImage)->toBe($contact->idImage->getUrl());

@@ -33,7 +33,25 @@ dataset('attribs', function () {
                     "city"=> $this->faker->city()
                 ]
             ],
-            'employment' => [],
+            'employment' => [
+                'status' => $this->faker->word(),
+                'industry' => $this->faker->word(),
+                'gross_income' => $this->faker->word(),
+                'nationality' => $this->faker->word(),
+                'type' => $this->faker->word(),
+                'current_position' => $this->faker->word(),
+                'name' => $this->faker->word(),
+                'contact_number' => $this->faker->word(),
+                'address' => $this->faker->word(),
+                'block_lot' => $this->faker->word(),
+                'street_line2' => $this->faker->word(),
+                'city' => $this->faker->word(),
+                'province' => $this->faker->word(),
+                'zip_code_postal_code' => $this->faker->word(),
+                'tin_number' => $this->faker->word(),
+                'pagibig_number' => $this->faker->word(),
+                'sss_number' => $this->faker->word(),
+            ],
             'co_borrowers' => [],
             'order' => [
                 'sku' => $this->faker->word(),

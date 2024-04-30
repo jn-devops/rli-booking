@@ -20,9 +20,9 @@ return new class extends Migration
             $table->string('mobile')->nullable();
             $table->string('id_type');
             $table->string('id_number');
-            $table->string('id_image_url')->nullable();
-            $table->string('selfie_image_url')->nullable();
-            $table->string('id_mark_url')->nullable();
+            $table->text('id_image_url')->nullable();
+            $table->text('selfie_image_url')->nullable();
+            $table->text('id_mark_url')->nullable();
             $table->timestamps();
         });
     }
