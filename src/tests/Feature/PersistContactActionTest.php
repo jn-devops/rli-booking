@@ -2,6 +2,7 @@
 
 use Illuminate\Foundation\Testing\{RefreshDatabase, WithFaker};
 use RLI\Booking\Actions\PersistContactAction;
+use RLI\Booking\Data\ContactData;
 use RLI\Booking\Models\Contact;
 use Illuminate\Support\Arr;
 
@@ -23,36 +24,85 @@ dataset('attribs', function () {
             'date_of_birth' => $this->faker->date(),
             'email' => $this->faker->email(),
             'mobile' => $this->faker->phoneNumber(),
+            'spouse' => [
+                'first_name' => $this->faker->firstName(),
+                'middle_name' => $this->faker->lastName(),
+                'last_name' => $this->faker->lastName(),
+                'civil_status' => $this->faker->randomElement(['Single','Married','Annuled/Divorced','Legally Seperated','Widow/er']),
+                'sex' => $this->faker->randomElement(['Male','Female']),
+                'nationality' => "Filipino",
+                'date_of_birth' => $this->faker->date(),
+                'email' => $this->faker->email(),
+                'mobile' => $this->faker->phoneNumber(),
+            ],
             'addresses' => [
                 [
-                    "type"=>"primary",
-                    "city"=> $this->faker->city()
+                    'type' => 'primary',
+                    'ownership' => $this->faker->word(),
+                    'address1' => $this->faker->address(),
+                    'locality' => $this->faker->city(),
+                    'postal_code' => $this->faker->postcode(),
+                    'country' => 'PH'
                 ],
                 [
-                    "type"=>"secondary",
-                    "city"=> $this->faker->city()
+                    'type' => "secondary",
+                    'ownership' => $this->faker->word(),
+                    'address1' => $this->faker->address(),
+                    'locality' => $this->faker->city(),
+                    'postal_code' => $this->faker->postcode(),
+                    'country' => 'PH'
                 ]
             ],
             'employment' => [
-                'status' => $this->faker->word(),
-                'industry' => $this->faker->word(),
-                'gross_income' => $this->faker->word(),
-                'nationality' => $this->faker->word(),
-                'type' => $this->faker->word(),
+                'employment_status' => $this->faker->word(),
+                'monthly_gross_income' => $this->faker->word(),
                 'current_position' => $this->faker->word(),
-                'name' => $this->faker->word(),
-                'contact_number' => $this->faker->word(),
-                'address' => $this->faker->word(),
-                'block_lot' => $this->faker->word(),
-                'street_line2' => $this->faker->word(),
-                'city' => $this->faker->word(),
-                'province' => $this->faker->word(),
-                'zip_code_postal_code' => $this->faker->word(),
-                'tin_number' => $this->faker->word(),
-                'pagibig_number' => $this->faker->word(),
-                'sss_number' => $this->faker->word(),
+                'employment_type' => 'regular',
+                'employer' => [
+                    'name' => $this->faker->word(),
+                    'industry' => $this->faker->word(),
+                    'nationality' => $this->faker->word(),
+                    'address' => [
+                        'type' => 'work',
+                        'ownership' => $this->faker->word(),
+                        'address1' => $this->faker->address(),
+                        'locality' => $this->faker->city(),
+                        'postal_code' => $this->faker->postcode(),
+                        'country' => 'PH'
+                    ],
+                    'contact_no' => $this->faker->word(),
+                ],
+                'id' => [
+                    'tin' => $this->faker->word(),
+                    'pag-ibig' => $this->faker->word(),
+                    'sss' => $this->faker->word(),
+                    'gsis' => $this->faker->word(),
+                ],
             ],
-            'co_borrowers' => [],
+            'co_borrowers' => [
+                [
+                    'first_name' => $this->faker->firstName(),
+                    'middle_name' => $this->faker->lastName(),
+                    'last_name' => $this->faker->lastName(),
+                    'civil_status' => $this->faker->randomElement(['Single','Married','Annulled/Divorced','Legally Seperated','Widow/er']),
+                    'sex' => $this->faker->randomElement(['Male','Female']),
+                    'nationality' => "Filipino",
+                    'date_of_birth' => $this->faker->date(),
+                    'email' => $this->faker->email(),
+                    'mobile' => $this->faker->phoneNumber(),
+                ],
+                [
+                    'first_name' => $this->faker->firstName(),
+                    'middle_name' => $this->faker->lastName(),
+                    'last_name' => $this->faker->lastName(),
+                    'civil_status' => $this->faker->randomElement(['Single','Married','Annulled/Divorced','Legally Seperated','Widow/er']),
+                    'sex' => $this->faker->randomElement(['Male','Female']),
+                    'nationality' => "Filipino",
+                    'date_of_birth' => $this->faker->date(),
+                    'email' => $this->faker->email(),
+                    'mobile' => $this->faker->phoneNumber(),
+                ]
+            ],
             'order' => [
                 'sku' => $this->faker->word(),
                 'seller_code' => $this->faker->word(),
@@ -72,7 +122,7 @@ test('persist contact action', function (array $attribs) {
     $contact = $action->run($attribs);
     expect(Contact::count())->toBe(1);
     expect($contact)->toBeInstanceOf(Contact::class);
-    expect($contact->toData())->toBe($attribs);
+    expect($contact->toData())->toBe(ContactData::from($attribs)->toArray());
 })->with('attribs');
 
 test('persist contact action has an end point', function (array $attribs) {

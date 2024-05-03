@@ -2,10 +2,11 @@
 
 namespace RLI\Booking\Models;
 
-use RLI\Booking\Traits\HasPackageFactory as HasFactory;
+use RLI\Booking\Data\ContactData;
 use Spatie\MediaLibrary\MediaCollections\Exceptions\FileCannotBeAdded;
 use Spatie\MediaLibrary\MediaCollections\Exceptions\FileDoesNotExist;
 use Spatie\MediaLibrary\MediaCollections\Exceptions\FileIsTooBig;
+use RLI\Booking\Traits\HasPackageFactory as HasFactory;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
 use Spatie\MediaLibrary\MediaCollections\File;
 use RLI\Booking\Interfaces\AttributableData;
@@ -30,10 +31,12 @@ use Spatie\Image\Enums\Fit;
  * @property Carbon $date_of_birth
  * @property string $email
  * @property string $mobile
+ * @property array  $spouse
  * @property array  $addresses
  * @property array  $employment
  * @property array  $co_borrowers
  * @property array  $order
+ * @property array  $media
  * @property Media  $idImage
  * @property Media  $selfieImage
  * @property Media  $payslipImage
@@ -55,6 +58,7 @@ class Contact extends Model implements AttributableData, HasMedia
         'date_of_birth',
         'email',
         'mobile',
+        'spouse',
         'addresses',
         'employment',
         'co_borrowers',
@@ -65,6 +69,7 @@ class Contact extends Model implements AttributableData, HasMedia
     ];
 
     protected $casts = [
+        'spouse' => 'array',
         'addresses' => 'array',
         'employment' => 'array',
         'co_borrowers' => 'array',
@@ -77,7 +82,7 @@ class Contact extends Model implements AttributableData, HasMedia
 
     public function toData(): array
     {
-        return $this->only(array_diff($this->getFillable(), $this->getHidden()));
+        return ContactData::fromModel($this)->toArray();
     }
 
     protected static function boot(): void

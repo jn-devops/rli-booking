@@ -13,7 +13,13 @@ class PersistContactAction
 
     protected function persist(array $validated): Contact
     {
+        logger('***************************');
+        logger('persist');
+        logger($validated);
+
         return tap(new Contact($validated), function ($contact) {
+            logger('$contact->toData()');
+            logger($contact->toData());
             $contact->save();
         });
     }
@@ -37,26 +43,60 @@ class PersistContactAction
             'date_of_birth' => ['required', 'date'],
             'email' => ['required', 'string'],
             'mobile' => ['required', 'string'],
+
             'addresses' => ['required', 'array'],
+            'addresses.*.type' => ['required', 'string'],
+            'addresses.*.ownership' => ['required', 'string'],
+            'addresses.*.address1' => ['required', 'string'],
+            'addresses.*.locality' => ['required', 'string'],
+            'addresses.*.postal_code' => ['required', 'string'],
+            'addresses.*.country' => ['required', 'string'],
+
+            'spouse' => ['nullable', 'array'],
+            'spouse.first_name' => ['required_with:spouse', 'string'],
+            'spouse.middle_name' => ['required_with:spouse', 'string'],
+            'spouse.last_name' => ['required_with:spouse', 'string'],
+            'spouse.civil_status' => ['required_with:spouse', 'string'],
+            'spouse.sex' => ['required_with:spouse', 'string'],
+            'spouse.nationality' => ['required_with:spouse', 'string'],
+            'spouse.date_of_birth' => ['required_with:spouse', 'string'],
+            'spouse.email' => ['required_with:spouse', 'string'],
+            'spouse.mobile' => ['required_with:spouse', 'string'],
+
             'employment' => ['nullable', 'array'],
-            'employment.status' => ['nullable', 'string'],
-            'employment.industry' => ['nullable', 'string'],
-            'employment.gross_income' => ['nullable', 'string'],
-            'employment.nationality' => ['nullable', 'string'],
-            'employment.type' => ['nullable', 'string'],
-            'employment.current_position' => ['nullable', 'string'],
-            'employment.name' => ['nullable', 'string'],
-            'employment.contact_number' => ['nullable', 'string'],
-            'employment.address' => ['nullable', 'string'],
-            'employment.block_lot' => ['nullable', 'string'],
-            'employment.street_line2' => ['nullable', 'string'],
-            'employment.city' => ['nullable', 'string'],
-            'employment.province' => ['nullable', 'string'],
-            'employment.zip_code_postal_code' => ['nullable', 'string'],
-            'employment.tin_number' => ['nullable', 'string'],
-            'employment.pagibig_number' => ['nullable', 'string'],
-            'employment.sss_number' => ['nullable', 'string'],
+            'employment.employment_status' => ['required_with:employment', 'string'],
+            'employment.monthly_gross_income' => ['required_with:employment', 'string'],
+            'employment.current_position' => ['required_with:employment', 'string'],
+            'employment.employment_type' => ['required_with:employment', 'string'],
+            'employment.employer' => ['required_with:employment', 'array'],
+            'employment.employer.name' => ['required_with:employment.employer', 'string'],
+            'employment.employer.industry' => ['required_with:employment.employer', 'string'],
+            'employment.employer.nationality' => ['required_with:employment.employer', 'string'],
+            'employment.employer.address' => ['required_with:employment.employer', 'array'],
+            'employment.employer.address.type' => ['required_with:employment.employer.address', 'string'],
+            'employment.employer.address.ownership' => ['required_with:employment.employer.address', 'string'],
+            'employment.employer.address.address1' => ['required_with:employment.employer.address', 'string'],
+            'employment.employer.address.locality' => ['required_with:employment.employer.address', 'string'],
+            'employment.employer.address.postal_code' => ['required_with:employment.employer.address', 'string'],
+            'employment.employer.address.country' => ['required_with:employment.employer.address', 'string'],
+            'employment.employer.contact_no' => ['required_with:employment.employer', 'string'],
+            'employment.id' => ['required', 'array'],
+            'employment.id.tin' => ['required_without_all:employment.id.pag-ibig,employment.id.sss,employment.id.gsis', 'string'],
+            'employment.id.pag-ibig' => ['required_without_all:employment.id.tin,employment.id.sss,employment.id.gsis', 'string'],
+            'employment.id.sss' => ['required_without_all:employment.id.tin,employment.id.pag-ibig,employment.id.gsis', 'string'],
+            'employment.id.gsis' => ['required_without_all:employment.id.tin,employment.id.pag-ibig,employment.id.sss', 'string'],
+
             'co_borrowers' => ['nullable', 'array'],
+            'co_borrowers.*.first_name' => ['required_with:co_borrowers', 'string'],
+            'co_borrowers.*.middle_name' => ['required_with:co_borrowers', 'string'],
+            'co_borrowers.*.last_name' => ['required_with:co_borrowers', 'string'],
+            'co_borrowers.*.civil_status' => ['required_with:co_borrowers', 'string'],
+            'co_borrowers.*.sex' => ['required_with:co_borrowers', 'string'],
+            'co_borrowers.*.nationality' => ['required_with:co_borrowers', 'string'],
+            'co_borrowers.*.date_of_birth' => ['required_with:co_borrowers', 'string'],
+            'co_borrowers.*.email' => ['required_with:co_borrowers', 'string'],
+            'co_borrowers.*.mobile' => ['required_with:co_borrowers', 'string'],
+
             'order' => ['nullable', 'array'],
             'order.sku' => ['nullable', 'string'],
             'order.seller_code' => ['nullable', 'string'],
@@ -64,7 +104,7 @@ class PersistContactAction
         ];
     }
 
-    public function asController(ActionRequest $request): \Illuminate\Http\JsonResponse
+    public function asController(ActionRequest $request)
     {
         $contact = $this->persist($request->validated());
 
