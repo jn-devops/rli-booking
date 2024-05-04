@@ -2,7 +2,6 @@
 
 namespace RLI\Booking\Models;
 
-use RLI\Booking\Data\ContactData;
 use Spatie\MediaLibrary\MediaCollections\Exceptions\FileCannotBeAdded;
 use Spatie\MediaLibrary\MediaCollections\Exceptions\FileDoesNotExist;
 use Spatie\MediaLibrary\MediaCollections\Exceptions\FileIsTooBig;
@@ -12,9 +11,10 @@ use Spatie\MediaLibrary\MediaCollections\File;
 use RLI\Booking\Interfaces\AttributableData;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\{Arr, Str};
 use Spatie\MediaLibrary\HasMedia;
+use RLI\Booking\Data\ContactData;
 use Illuminate\Support\Carbon;
-use Illuminate\Support\Str;
 use Spatie\Image\Enums\Fit;
 
 /**
@@ -35,6 +35,7 @@ use Spatie\Image\Enums\Fit;
  * @property array  $addresses
  * @property array  $employment
  * @property array  $co_borrowers
+ * @property array  $uploads
  * @property array  $order
  * @property array  $media
  * @property Media  $idImage
@@ -193,5 +194,22 @@ class Contact extends Model implements AttributableData, HasMedia
             ->addMediaConversion('preview')
             ->fit(Fit::Contain, 300, 300)
             ->nonQueued();
+    }
+
+    public function getUploadsAttribute(): array
+    {
+        return collect($this->media)
+            ->mapWithKeys(function ($item, $key) {
+                $collection_name = $item['collection_name'];
+                $name = Str::camel(Str::singular($collection_name));
+                $url = $item['original_url'];
+                return [
+                    $key => [
+                        'name' => $name,
+                        'url' => $url
+                    ]
+                ];
+            })
+            ->toArray();
     }
 }

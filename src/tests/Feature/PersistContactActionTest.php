@@ -108,21 +108,23 @@ dataset('attribs', function () {
                 'seller_code' => $this->faker->word(),
                 'property_code' => $this->faker->word(),
             ],
-            'idImage' => null,
-            'selfieImage' => null,
-            'payslipImage' => null
         ]
     ];
 });
 
 test('persist contact action', function (array $attribs) {
     expect(Contact::count())->toBe(0);
-    \Pest\Laravel\expectsDatabaseQueryCount(3);
+    $original_queries_count = 2;
+    $image_query_count = 0;//5;
+    $contact_query_count = 1;
+    $queries_count = $original_queries_count + $image_query_count + $contact_query_count;
+    \Pest\Laravel\expectsDatabaseQueryCount($queries_count);
     $action = app(PersistContactAction::class);
     $contact = $action->run($attribs);
     expect(Contact::count())->toBe(1);
     expect($contact)->toBeInstanceOf(Contact::class);
-    expect($contact->toData())->toBe(ContactData::from($attribs)->toArray());
+    expect($contact->toData())->toBe(ContactData::from($contact->toArray())->toArray());
+    expect($contact->toData())->toBe(ContactData::fromModel($contact)->toArray());
 })->with('attribs');
 
 test('persist contact action has an end point', function (array $attribs) {

@@ -109,7 +109,7 @@ class ContactFactory extends Factory
                 'seller_code' => $this->faker->word(),
                 'property_code' => $this->faker->word(),
             ],
-            'idImage' => $this->faker->imageUrl(format: 'jpeg'),
+            'idImage' => $this->faker->imageUrl(word: 'idImage', format: 'jpeg'),
             'selfieImage' => $this->faker->imageUrl(format: 'jpeg'),
             'payslipImage' => $this->faker->imageUrl(format: 'jpeg')
         ];

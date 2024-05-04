@@ -2,6 +2,8 @@
 
 namespace RLI\Booking\Http\Controllers;
 
+use Spatie\LaravelData\DataCollection;
+use RLI\Booking\Data\ContactData;
 use RLI\Booking\Models\Contact;
 use Illuminate\Http\Request;
 
@@ -12,7 +14,7 @@ class ContactController extends Controller
      */
     public function index()
     {
-        $contacts = Contact::all();
+        $contacts = new DataCollection(ContactData::class, Contact::all());
 
         return inertia()->render('Contacts/Index',['xxx' => $contacts]);
     }

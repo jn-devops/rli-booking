@@ -62,9 +62,12 @@ test('contact has data', function () {
         expect(array_filter($co_borrower))->toBe(array_filter($contact->co_borrowers[$index]));
     };
     expect($data->order->toArray())->toBe(ContactOrderData::from($contact->order)->toArray());
-    foreach (array_filter($data->media->toArray()) as $index => $url) {
-        expect($contact->$index->getUrl())->toBe($url);
+    foreach (array_filter($data->uploads->toArray()) as $upload) {
+        $name = $upload['name'];
+        $url = $upload['url'];
+        expect($contact->$name->getUrl())->toBe($url);
     };
+    expect($data->uploads->toArray())->toBe($contact->uploads);
 });
 
 test('contact can attach media', function () {

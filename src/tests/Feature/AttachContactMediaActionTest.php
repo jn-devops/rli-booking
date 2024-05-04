@@ -30,6 +30,20 @@ test('attach contact media action works', function (Contact $contact) {
     expect($contact->selfieImage->file_name)->toBe('selfieImage.jpg');
     expect($contact->payslipImage->name)->toBe('payslipImage');
     expect($contact->payslipImage->file_name)->toBe('payslipImage.jpg');
+    expect($contact->uploads)->toBe([
+        [
+            'name' => $contact->idImage->name,
+            'url' => $contact->idImage->getUrl()
+        ],
+        [
+            'name' => $contact->selfieImage->name,
+            'url' => $contact->selfieImage->getUrl()
+        ],
+        [
+            'name' => $contact->payslipImage->name,
+            'url' => $contact->payslipImage->getUrl()
+        ],
+    ]);
     $contact->idImage->delete();
     $contact->selfieImage->delete();
     $contact->payslipImage->delete();
@@ -56,6 +70,20 @@ test('attach contact media action has an endpoint', function (Contact $contact) 
     expect($contact->selfieImage->file_name)->toBe('selfieImage.jpg');
     expect($contact->payslipImage->name)->toBe('payslipImage');
     expect($contact->payslipImage->file_name)->toBe('payslipImage.jpg');
+    expect($contact->uploads)->toBe([
+        [
+            'name' => $contact->idImage->name,
+            'url' => $contact->idImage->getUrl()
+        ],
+        [
+            'name' => $contact->selfieImage->name,
+            'url' => $contact->selfieImage->getUrl()
+        ],
+        [
+            'name' => $contact->payslipImage->name,
+            'url' => $contact->payslipImage->getUrl()
+        ],
+    ]);
     $contact->idImage->delete();
     $contact->selfieImage->delete();
     $contact->payslipImage->delete();

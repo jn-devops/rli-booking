@@ -13,13 +13,7 @@ class PersistContactAction
 
     protected function persist(array $validated): Contact
     {
-        logger('***************************');
-        logger('persist');
-        logger($validated);
-
         return tap(new Contact($validated), function ($contact) {
-            logger('$contact->toData()');
-            logger($contact->toData());
             $contact->save();
         });
     }
@@ -48,8 +42,12 @@ class PersistContactAction
             'addresses.*.type' => ['required', 'string'],
             'addresses.*.ownership' => ['required', 'string'],
             'addresses.*.address1' => ['required', 'string'],
+            'addresses.*.address2' => ['nullable', 'string'],
+            'addresses.*.sublocality' => ['nullable', 'string'],
             'addresses.*.locality' => ['required', 'string'],
-            'addresses.*.postal_code' => ['required', 'string'],
+            'addresses.*.administrative_area' => ['nullable', 'string'],
+            'addresses.*.postal_code' => ['nullable', 'string'],
+            'addresses.*.sorting_code' => ['nullable', 'string'],
             'addresses.*.country' => ['required', 'string'],
 
             'spouse' => ['nullable', 'array'],
