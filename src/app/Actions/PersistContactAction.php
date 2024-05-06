@@ -97,7 +97,7 @@ class PersistContactAction
 
             'order' => ['nullable', 'array'],
             'order.sku' => ['nullable', 'string'],
-            'order.seller_code' => ['nullable', 'string'],
+            'order.seller_commission_code' => ['nullable', 'string'],
             'order.property_code' => ['nullable', 'string'],
         ];
     }

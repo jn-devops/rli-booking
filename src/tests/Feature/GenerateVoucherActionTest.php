@@ -1,8 +1,8 @@
 <?php
 
+use RLI\Booking\Models\{Contact, Order, Product, Seller, Voucher};
 use Illuminate\Foundation\Testing\{RefreshDatabase, WithFaker};
 use RLI\Booking\Classes\State\InternallyCreatedPendingUpdate;
-use RLI\Booking\Models\{Order, Product, Seller, Voucher};
 use RLI\Booking\Actions\GenerateVoucherAction;
 use RLI\Booking\Seeders\UserSeeder;
 
@@ -68,4 +68,17 @@ test('generate voucher action accepts property code', function (Product $product
     });
 })->with([
     [ fn() => Product::factory()->create() ]
+]);
+
+test('generate voucher action accepts contact uid', function (Product $product, Contact $contact) {
+    $contact_uid = (string) $contact->uid;
+    $voucher = GenerateVoucherAction::run([
+        'sku' => $product->sku,
+        'contact_uid' => $contact_uid,
+    ]);
+    tap($voucher->getContact(), function ($voucher_contact) use ($contact) {
+        expect($voucher_contact->is($contact))->toBeTrue();
+    });
+})->with([
+    [ fn() => Product::factory()->create(), fn() => Contact::factory()->create() ]
 ]);

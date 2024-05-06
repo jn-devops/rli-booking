@@ -1,6 +1,6 @@
 <?php
 
-use RLI\Booking\Models\{Buyer, Order, Product, Seller, Voucher};
+use RLI\Booking\Models\{Buyer, Contact, Order, Product, Seller, Voucher};
 use Illuminate\Foundation\Testing\{RefreshDatabase, WithFaker};
 use RLI\Booking\Data\{OrderData, PayloadData, VoucherData};
 use RLI\Booking\Actions\GenerateVoucherAction;
@@ -52,13 +52,17 @@ test('voucher has a prefix, mask, owner, related entity, metadata and expiry', f
     $expiry = CarbonInterval::create('P30D');
     $seller = Seller::factory()->create();
     $order = Order::factory()->create();
+    $contact = Contact::factory()->create();
     $metadata = [
         'discount' => 10
     ];
+    $entities = array_filter(compact('order', 'contact'));
     $voucher = Vouchers::withPrefix($prefix)
         ->withMask($mask)
         ->withOwner($seller)
-        ->withEntities($order)
+        ->withEntities(...$entities)
+//        ->withEntities($order, $contact)
+//        ->withEntities($order)
         ->withMetadata($metadata)
         ->withExpireDateIn($expiry)
         ->create();
@@ -75,9 +79,19 @@ test('voucher has a prefix, mask, owner, related entity, metadata and expiry', f
     }
     expect($success)->toBeTrue();
     expect($voucher->owner)->toBe($seller);
-    expect($voucher->voucherEntities->first()->entity)->toBeInstanceOf(Order::class);
+
+    if (isset($contact))
+        expect($voucher->getEntities(Contact::class)->first())->toBeInstanceOf(Contact::class);
+    if (isset($order))
+        expect($voucher->getEntities(Order::class)->first())->toBeInstanceOf(Order::class);
     expect($voucher->voucherEntities->first()->entity->id)->toBe($order->id);
     expect($voucher->metadata)->toBe($metadata);
+
+    $v = Voucher::from($voucher);
+    expect($v->owner->is($seller))->toBeTrue();
+    expect($v->getOrder()->is($order))->toBeTrue();
+    expect($v->getContact()->is($contact))->toBeTrue();
+    expect($v->metadata)->toBe($metadata);
 
     $success = false;
     try {

@@ -2,7 +2,7 @@
 
 namespace RLI\Booking\Actions;
 
-use RLI\Booking\Models\{Order, Product, Seller, Voucher};
+use RLI\Booking\Models\{Contact, Order, Product, Seller, Voucher};
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\{Arr, Facades\Validator};
 use FrittenKeeZ\Vouchers\Facades\Vouchers;
@@ -23,8 +23,9 @@ class GenerateVoucherAction
     protected function createVoucherOrder(array $validated): Voucher
     {
         $order = $this->createOrder($validated);
+        $contact = $this->getContact($validated);
 
-        return $this->generateVoucher($order);
+        return $this->generateVoucher($order, $contact);
     }
 
     /**
@@ -50,6 +51,7 @@ class GenerateVoucherAction
             'sku' => ['required', 'exists:products'],
             'transaction_id' => ['nullable', 'string', 'min:2'],
             'property_code' => ['nullable', 'string', 'min:2'],
+            'contact_uid' => ['nullable', 'string', 'min:2'],
         ];
     }
 
@@ -59,7 +61,8 @@ class GenerateVoucherAction
      */
     public function asController(ActionRequest $request): \Illuminate\Http\RedirectResponse
     {
-        $voucher = $this->handle($request->validated());
+//        $voucher = $this->handle($request->validated());
+        $voucher = $this->createVoucherOrder($request->validated());
         $order = $voucher->getOrder();
 
         return redirect()->route('edit-order', [
@@ -70,24 +73,32 @@ class GenerateVoucherAction
 
     /**
      * @param Order $order
+     * @param Contact|null $contact
      * @return Voucher
      */
-    protected function generateVoucher(Order $order): Voucher
+    protected function generateVoucher(Order $order, Contact $contact = null): Voucher
     {
         $metadata = [
             'author' => 'RLI'
         ];
 
+        $entities = array_filter(compact('order', 'contact'));
+
          $voucher = Vouchers::withPrefix(self::VOUCHER_PREFIX)
              ->withMask(self::VOUCHER_MASK)
              ->withOwner($order->seller)
-             ->withEntities($order)
+//             ->withEntities($order)
+             ->withEntities(...$entities)
              ->withMetadata($metadata)
              ->create();
 
          return Voucher::from($voucher);
     }
 
+    /**
+     * @param array $validated
+     * @return Order
+     */
     protected function createOrder(array $validated): Order
     {
         try {
@@ -108,5 +119,18 @@ class GenerateVoucherAction
             $order->transaction_id = $transaction_id;
             $order->save();
         });
+    }
+
+
+    /**
+     * @param array $validated
+     * @return Contact|null
+     */
+    public function getContact(array $validated): ?Contact
+    {
+        $contact = null;
+        if ($contact_uid = Arr::get($validated, 'contact_uid'))
+            $contact = Contact::where('uid', $contact_uid)->first();
+        return $contact;
     }
 }

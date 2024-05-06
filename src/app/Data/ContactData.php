@@ -84,7 +84,7 @@ class ContactOrderData extends Data
 {
     public function __construct(
         public string $sku,
-        public string $seller_code,
+        public string $seller_commission_code,
         public string $property_code,
     ) {}
 }

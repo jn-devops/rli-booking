@@ -48,6 +48,16 @@ class Voucher extends BaseVoucher implements AttributableData
         return $this->getEntities(Order::class)->first();
     }
 
+    /**
+     * Helper function to retrieve order from voucher.
+     *
+     * @return Contact
+     */
+    public function getContact(): Contact
+    {
+        return $this->getEntities(Contact::class)->first();
+    }
+
     public function toData(): array
     {
         return array_merge(

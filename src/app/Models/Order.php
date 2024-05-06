@@ -16,20 +16,21 @@ use RLI\Booking\Traits\HasMeta;
 /**
  * Class Order
  *
- * @property integer    $id
- * @property string     $sku
- * @property string     $property_code
- * @property int        $dp_percent
- * @property int        $dp_months
- * @property Product    $product
- * @property Buyer      $buyer
- * @property Seller     $seller
- * @property string     $transaction_id
- * @property OrderState $state
- * @property string     $code_url
- * @property string     $code_img_url
- * @property string     $expiration_date
- * @property string     $payment_id
+ * @property integer          $id
+ * @property string           $sku
+ * @property string           $property_code
+ * @property int              $dp_percent
+ * @property int              $dp_months
+ * @property Product          $product
+ * @property Buyer            $buyer
+ * @property Seller           $seller
+ * @property string           $transaction_id
+ * @property OrderState       $state
+ * @property string           $code_url
+ * @property string           $code_img_url
+ * @property string           $expiration_date
+ * @property string           $payment_id
+ * @property SellerCommission $sellerCommission
  *
  * @method   int        getKey()
  */
@@ -126,5 +127,10 @@ class Order extends Model implements AttributableData
         $this->getAttribute('meta')->set('receipt.payment_id', $value);
 
         return $this;
+    }
+
+    public function sellerCommission(): BelongsTo
+    {
+        return $this->belongsTo(SellerCommission::class, 'seller_commission_code', 'code');
     }
 }

@@ -3,6 +3,7 @@
 namespace RLI\Booking\Actions;
 
 use Lorisleiva\Actions\Concerns\AsAction;
+use RLI\Booking\Events\ContactAssociated;
 use RLI\Booking\Models\{Buyer, Contact};
 
 class AssociateContactAction
@@ -13,6 +14,7 @@ class AssociateContactAction
     {
         $buyer->contact()->associate($contact);
         $buyer->save();
+        ContactAssociated::dispatch($buyer);
 
         return $buyer;
     }

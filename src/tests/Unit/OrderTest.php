@@ -183,3 +183,13 @@ test('order has data schemaless payment attribute', function (Order $order) {
 })->with([
     [ fn() => Order::factory()->create([ 'transaction_id' => null ]) ]
 ]);
+
+test('order has seller commission', function (Order $order) {
+    expect($order->sellerCommission)->toBeNull();
+    $seller_commission = \RLI\Booking\Models\SellerCommission::factory()->create();
+    $order->sellerCommission()->associate($seller_commission);
+    $order->save();
+    expect($order->sellerCommission)->toBe($seller_commission);
+})->with([
+    [ fn() => Order::factory()->create([ 'transaction_id' => null ]) ]
+]);

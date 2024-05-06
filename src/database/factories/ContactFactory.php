@@ -106,7 +106,7 @@ class ContactFactory extends Factory
             ],
             'order' => [
                 'sku' => $this->faker->word(),
-                'seller_code' => $this->faker->word(),
+                'seller_commission_code' => $this->faker->word(),
                 'property_code' => $this->faker->word(),
             ],
             'idImage' => $this->faker->imageUrl(word: 'idImage', format: 'jpeg'),

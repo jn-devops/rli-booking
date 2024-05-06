@@ -4,9 +4,9 @@ namespace RLI\Booking\Models;
 
 use RLI\Booking\Traits\HasPackageFactory as HasFactory;
 use RLI\Booking\Interfaces\AttributableData;
+use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Model;
 use RLI\Booking\Traits\HasMeta;
-use Illuminate\Notifications\Notifiable;
 
 /**
  * Class Buyer
