@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('seller_commissions', function (Blueprint $table) {
             $table->id();
             $table->string('code')->index();
-            $table->json('rate');
+            $table->json('scheme');
             $table->text('remarks')->nullable();
             $table->timestamps();
         });

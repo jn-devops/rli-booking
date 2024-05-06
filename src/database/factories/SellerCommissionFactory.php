@@ -4,6 +4,7 @@ namespace RLI\Booking\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
 use RLI\Booking\Models\SellerCommission;
+use RLI\Booking\Models\Seller;
 
 class SellerCommissionFactory extends Factory
 {
@@ -13,8 +14,19 @@ class SellerCommissionFactory extends Factory
     {
         return [
             'code' => $this->faker->word(),
-            'rate' => [
-                'percent' => $this->faker->numberBetween(1, 10)/100
+            'scheme' => [
+                0 => [
+                    'seller_code' => Seller::factory()->create()->seller_code,
+                    'percent' => $this->faker->numberBetween(1, 10)/100
+                ],
+                1 => [
+                    'seller_code' => Seller::factory()->create()->seller_code,
+                    'percent' => $this->faker->numberBetween(1, 10)/100
+                ],
+                2 => [
+                    'seller_code' => Seller::factory()->create()->seller_code,
+                    'percent' => $this->faker->numberBetween(1, 10)/100
+                ],
             ],
             'remarks' => $this->faker->sentence()
         ];

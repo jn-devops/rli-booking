@@ -31,6 +31,7 @@ class Seller extends User implements AttributableData
     use HasParent;
     use HasMeta;
 
+    //TODO: Either change the seller_code to code or default_seller_commission_code
     protected $fillable = ['name', 'email', 'mobile', 'personal_email', 'seller_code', 'bank_code', 'account_number', 'account_name', 'accredited', 'mfiles_id'];
 
     static public function from(User $user): self

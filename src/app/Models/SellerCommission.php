@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\Model;
  *
  * @property int     $id
  * @property string  $code
- * @property array   $rate
+ * @property array   $scheme
  * @property string  $remarks
  *
  * @method   int    getKey()
@@ -20,10 +20,10 @@ class SellerCommission extends Model implements AttributableData
 {
     use HasFactory;
 
-    protected $fillable = ['code', 'rate', 'remarks'];
+    protected $fillable = ['code', 'scheme', 'remarks'];
 
     protected $casts = [
-        'rate' => 'array'
+        'scheme' => 'array'
     ];
 
     public function toData(): array
