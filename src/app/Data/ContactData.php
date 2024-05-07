@@ -119,7 +119,7 @@ class ContactEmploymentIdData extends Data
 {
     public function __construct(
         public ?string $tin,
-        public ?string $pag_ibig,
+        public ?string $pagibig,
         public ?string $sss,
         public ?string $gsis,
     ) {}

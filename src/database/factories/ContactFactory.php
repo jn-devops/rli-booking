@@ -75,7 +75,7 @@ class ContactFactory extends Factory
                 ],
                 'id' => [
                     'tin' => $this->faker->word(),
-                    'pag-ibig' => $this->faker->word(),
+                    'pagibig' => $this->faker->word(),
                     'sss' => $this->faker->word(),
                     'gsis' => $this->faker->word(),
                 ],
