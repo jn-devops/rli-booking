@@ -11,7 +11,9 @@ import ButtonPrimary from '@/MyComponents/ButtonPrimary.vue';
 
 const form = useForm({
     name: '',
+    code: '',
     email: '',
+    mobile: '',
     password: '',
     password_confirmation: '',
     terms: false,
@@ -53,6 +55,17 @@ const submit = () => {
             </div>
 
             <div class="mt-4">
+                <InputLabel for="code" value="Code" />
+                <TextInput
+                    id="code"
+                    v-model="form.code"
+                    type="text"
+                    class="mt-1 block w-full"
+                />
+                <InputError class="mt-2" :message="form.errors.code" />
+            </div>
+
+            <div class="mt-4">
                 <InputLabel for="email" value="Email Address" />
                 <TextInput
                     id="email"
@@ -63,6 +76,18 @@ const submit = () => {
                     autocomplete="username"
                 />
                 <InputError class="mt-2" :message="form.errors.email" />
+            </div>
+
+            <div class="mt-4">
+                <InputLabel for="mobile" value="Mobile" />
+                <TextInput
+                    id="mobile"
+                    v-model="form.mobile"
+                    type="text"
+                    class="mt-1 block w-full"
+                    required
+                />
+                <InputError class="mt-2" :message="form.errors.mobile" />
             </div>
 
             <div class="mt-4">

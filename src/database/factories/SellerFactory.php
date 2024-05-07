@@ -12,8 +12,9 @@ class SellerFactory extends UserFactory
     public function definition(): array
     {
         return array_merge([
+            'code' => $this->faker->word(),
             'mobile' => $this->faker->phoneNumber(),
-            'seller_code' => $this->faker->word(),
+            'default_seller_commission_code' => $this->faker->word(),
             'bank_code' => $this->faker->word(),
             'account_number' => $this->faker->word(),
             'account_name' => $this->faker->name(),

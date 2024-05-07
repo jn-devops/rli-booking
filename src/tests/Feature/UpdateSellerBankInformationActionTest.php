@@ -22,14 +22,14 @@ test('update seller bank information action requires bank_code, account_number, 
     expect($seller->account_number)->toBeEmpty();
     expect($seller->account_name)->toBeEmpty();
     $attribs = [
-        'seller_code' => $this->faker->email(),
+        'default_seller_commission_code' => $this->faker->uuid(),
         'bank_code' => $this->faker->word(),
         'account_number' => $this->faker->word(),
         'account_name' => $this->faker->name()
     ];
     $data = UpdateSellerBankInformationAction::run($seller, $attribs);
     $seller = $seller->fresh();
-    expect($seller->seller_code)->toBe($attribs['seller_code']);
+    expect($seller->default_seller_commission_code)->toBe($attribs['default_seller_commission_code']);
     expect($seller->bank_code)->toBe($attribs['bank_code']);
     expect($seller->account_number)->toBe($attribs['account_number']);
     expect($seller->account_name)->toBe($attribs['account_name']);

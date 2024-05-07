@@ -16,15 +16,15 @@ class SellerCommissionFactory extends Factory
             'code' => $this->faker->word(),
             'scheme' => [
                 0 => [
-                    'seller_code' => Seller::factory()->create()->seller_code,
+                    'seller_code' => Seller::factory()->create()->code,
                     'percent' => $this->faker->numberBetween(1, 10)/100
                 ],
                 1 => [
-                    'seller_code' => Seller::factory()->create()->seller_code,
+                    'seller_code' => Seller::factory()->create()->code,
                     'percent' => $this->faker->numberBetween(1, 10)/100
                 ],
                 2 => [
-                    'seller_code' => Seller::factory()->create()->seller_code,
+                    'seller_code' => Seller::factory()->create()->code,
                     'percent' => $this->faker->numberBetween(1, 10)/100
                 ],
             ],

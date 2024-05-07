@@ -15,8 +15,10 @@ const props = defineProps({
 
 const form = useForm({
     _method: 'PUT',
+    code: props.user.code,
     name: props.user.name,
     email: props.user.email,
+    mobile: props.user.mobile,
     photo: null,
 });
 
@@ -142,6 +144,19 @@ const clearPhotoFileInput = () => {
                 <InputError :message="form.errors.name" class="mt-2" />
             </div>
 
+            <!-- Code -->
+            <div class="col-span-6 sm:col-span-4">
+                <InputLabel for="code" value="Code" />
+                <TextInput
+                    id="code"
+                    v-model="form.code"
+                    type="text"
+                    class="mt-1 block w-full"
+                    required
+                />
+                <InputError :message="form.errors.code" class="mt-2" />
+            </div>
+
             <!-- Email -->
             <div class="col-span-6 sm:col-span-4">
                 <InputLabel for="email" value="Email" />
@@ -174,6 +189,19 @@ const clearPhotoFileInput = () => {
                         A new verification link has been sent to your email address.
                     </div>
                 </div>
+            </div>
+
+            <!-- Mobile -->
+            <div class="col-span-6 sm:col-span-4">
+                <InputLabel for="mobile" value="Mobile" />
+                <TextInput
+                    id="mobile"
+                    v-model="form.mobile"
+                    type="text"
+                    class="mt-1 block w-full"
+                    required
+                />
+                <InputError :message="form.errors.mobile" class="mt-2" />
             </div>
         </template>
 

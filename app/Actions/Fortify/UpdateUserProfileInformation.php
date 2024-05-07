@@ -2,23 +2,27 @@
 
 namespace App\Actions\Fortify;
 
-use App\Models\User;
+use Laravel\Fortify\Contracts\UpdatesUserProfileInformation;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Validation\ValidationException;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
-use Laravel\Fortify\Contracts\UpdatesUserProfileInformation;
+use App\Models\User;
 
 class UpdateUserProfileInformation implements UpdatesUserProfileInformation
 {
     /**
      * Validate and update the given user's profile information.
      *
-     * @param  array<string, mixed>  $input
+     * @param array<string, mixed> $input
+     * @throws ValidationException
      */
     public function update(User $user, array $input): void
     {
         Validator::make($input, [
             'name' => ['required', 'string', 'max:255'],
+            'code' => ['required', 'string', 'max:100', Rule::unique('users')->ignore($user->id)],
+            'mobile' => ['required', 'string', 'max:13', Rule::unique('users')->ignore($user->id)],
             'email' => ['required', 'email', 'max:255', Rule::unique('users')->ignore($user->id)],
             'photo' => ['nullable', 'mimes:jpg,jpeg,png', 'max:1024'],
         ])->validateWithBag('updateProfileInformation');
@@ -33,7 +37,9 @@ class UpdateUserProfileInformation implements UpdatesUserProfileInformation
         } else {
             $user->forceFill([
                 'name' => $input['name'],
+                'code' => $input['code'],
                 'email' => $input['email'],
+                'mobile' => $input['mobile'],
             ])->save();
         }
     }

@@ -17,19 +17,20 @@ class RegisterSellerAction
     use AsAction;
 
     protected function registerSeller(array $validated): Seller
-    {                
+    {
         $user = app(CreateNewUser::class)->create([
             'name' => Arr::get($validated, 'name'),
             'email' => Arr::get($validated, 'email'),
+            'mobile' => Arr::get($validated, 'mobile'),
             'password' => Arr::get($validated, 'password'),
             'password_confirmation' => Arr::get($validated, 'password'),
         ]);
         $password = Arr::get($validated, 'password');
-        $seller = Seller::from($user);        
-        $seller->mobile = Arr::get($validated, 'mobile');
+        $seller = Seller::from($user);
+//        $seller->mobile = Arr::get($validated, 'mobile');
         $seller->personal_email = Arr::get($validated, 'personal_email');
-        $seller->save();        
-        $seller->notify(new RegisteredSellerNotification($seller, $password));  
+        $seller->save();
+        $seller->notify(new RegisteredSellerNotification($seller, $password));
         return $seller;
     }
 

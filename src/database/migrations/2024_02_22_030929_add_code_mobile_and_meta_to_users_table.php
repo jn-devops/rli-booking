@@ -12,7 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->string('mobile')->nullable();
+            $table->string('code')->after('id')->nullable()->unique();
+            $table->string('mobile')->after('email')->nullable()->unique();
             $table->schemalessAttributes('meta');
         });
     }

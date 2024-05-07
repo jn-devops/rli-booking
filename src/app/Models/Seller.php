@@ -12,17 +12,19 @@ use App\Models\User;
  * Class Seller
  *
  * @property int    $id
+ * @property string $code
  * @property string $name
  * @property string $email
  * @property string $mobile
  * @property string $personal_email
- * @property string $seller_code
+ * @property string $default_seller_commission_code
  * @property string $bank_code
  * @property string $account_number
  * @property string $account_name
  * @property bool   $accredited
  * @property int    $mfiles_id
  *
+ * @method   Seller create()
  * @method   int    getKey()
  */
 class Seller extends User implements AttributableData
@@ -32,7 +34,7 @@ class Seller extends User implements AttributableData
     use HasMeta;
 
     //TODO: Either change the seller_code to code or default_seller_commission_code
-    protected $fillable = ['name', 'email', 'mobile', 'personal_email', 'seller_code', 'bank_code', 'account_number', 'account_name', 'accredited', 'mfiles_id'];
+    protected $fillable = ['name', 'code', 'email', 'mobile', 'personal_email', 'default_seller_commission_code', 'bank_code', 'account_number', 'account_name', 'accredited', 'mfiles_id'];
 
     static public function from(User $user): self
     {
@@ -62,14 +64,14 @@ class Seller extends User implements AttributableData
         return $this;
     }
 
-    public function getSellerCodeAttribute(): ?string
+    public function getDefaultSellerCommissionCodeAttribute(): ?string
     {
-        return $this->getAttribute('meta')->get('seller_code', $this->getAttribute('email'));
+        return $this->getAttribute('meta')->get('default_seller_commission_code');
     }
 
-    public function setSellerCodeAttribute(?string $value): static
+    public function setDefaultSellerCommissionCodeAttribute(?string $value): static
     {
-        $this->getAttribute('meta')->set('seller_code', $value);
+        $this->getAttribute('meta')->set('default_seller_commission_code', $value);
 
         return $this;
     }

@@ -3,6 +3,7 @@
 namespace RLI\Booking\Observers;
 
 use RLI\Booking\Models\Seller;
+use Illuminate\Support\Str;
 
 class SellerObserver
 {
@@ -11,7 +12,7 @@ class SellerObserver
      */
     public function creating(Seller $seller): void
     {
-        $seller->seller_code = $seller->email;
+        $seller->code = Str::orderedUuid()->toString();
     }
 
     /**

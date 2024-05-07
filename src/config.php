@@ -3,7 +3,8 @@
 return [
     'defaults' => [
         'seller' => [
-            'email' => env('BOOKING_DEFAULT_SELLER_EMAIL')
+            'email' => env('BOOKING_DEFAULT_SELLER_EMAIL', 'lbhurtado@gmail.com'),
+            'mobile' => env('BOOKING_DEFAULT_SELLER_MOBILE', '09178251991')
         ],
         'order' => [
             'webhook' => env('BOOKING_DEFAULT_ORDER_WEBHOOK')

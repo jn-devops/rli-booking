@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('orders', function (Blueprint $table) {
-            $table->string('seller_commission_code')->nullable();
+            $table->string('seller_commission_code')->after('buyer_id')->nullable();
             $table->foreign('seller_commission_code')
                 ->references('code')
                 ->on('seller_commissions')

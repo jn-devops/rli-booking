@@ -29,10 +29,10 @@ class UpdateSellerBankInformationAction
     public function rules(): array
     {
         return [
-            'seller_code' => ['required', 'string', 'unique:users,meta->seller_code'],
-            'bank_code' => ['required', 'string'],
-            'account_number' => ['required', 'string'],
-            'account_name' => ['required', 'string'],
+            'default_seller_commission_code' => ['nullable', 'string'],
+            'bank_code' => ['nullable', 'string'],
+            'account_number' => ['nullable', 'required_with:bank_code', 'string'],
+            'account_name' => ['nullable', 'required_with:bank_code', 'string'],
         ];
     }
 

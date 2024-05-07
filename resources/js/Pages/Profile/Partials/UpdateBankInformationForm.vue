@@ -15,7 +15,7 @@ const props = defineProps({
 });
 
 const form = useForm({
-    seller_code: props.seller.seller_code,
+    default_seller_commission_code: props.seller.default_seller_commission_code,
     bank_code: props.seller.bank_code,
     account_number: props.seller.account_number,
     account_name: props.seller.account_name,
@@ -42,13 +42,12 @@ const update = () => {
       <template #form>
           <!-- Seller Code -->
           <div class="col-span-6 sm:col-span-4">
-              <InputLabel for="seller_code" value="Seller Code" />
+              <InputLabel for="default_seller_commission_code" value="Default Sales Force Code" />
               <TextInput
-                  id="seller_code"
-                  v-model="form.seller_code"
+                  id="default_seller_commission_code"
+                  v-model="form.default_seller_commission_code"
                   type="text"
                   class="mt-1 block w-full"
-                  required
               />
               <InputError :message="form.errors.seller_code" class="mt-2" />
           </div>
@@ -61,7 +60,6 @@ const update = () => {
                   v-model="form.bank_code"
                   type="text"
                   class="mt-1 block w-full"
-                  required
                   autocomplete="bank"
               />
               <InputError :message="form.errors.bank_code" class="mt-2" />
@@ -75,7 +73,6 @@ const update = () => {
                   v-model="form.account_number"
                   type="text"
                   class="mt-1 block w-full"
-                  required
               />
               <InputError :message="form.errors.account_number" class="mt-2" />
           </div>
