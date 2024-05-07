@@ -12,7 +12,7 @@ class ContactController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(): \Inertia\Response
     {
         $contacts = new DataCollection(ContactData::class, Contact::all());
 
@@ -38,9 +38,9 @@ class ContactController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Contact $contact)
+    public function show(Contact $contact): \Inertia\Response
     {
-        return inertia()->render('Contacts/Show',['contact' => $contact]);
+        return inertia()->render('Contacts/Show',['contact' => $contact->toData()]);
     }
 
     /**
