@@ -3,8 +3,10 @@
 namespace RLI\Booking\Models;
 
 use RLI\Booking\Traits\HasPackageFactory as HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use RLI\Booking\Interfaces\AttributableData;
 use Illuminate\Database\Eloquent\Model;
+use RLI\Booking\Data\ProductData;
 use RLI\Booking\Traits\HasMeta;
 
 /**
@@ -26,6 +28,7 @@ use RLI\Booking\Traits\HasMeta;
  * @property int     $lot_area
  * @property array   $url_links
  * @property array   $inventory
+ * @property HasMany $inventories
  *
  * @method   int     getKey()
  */
@@ -40,7 +43,12 @@ class Product extends Model implements AttributableData
 
     public function toData(): array
     {
-        return $this->only(array_diff($this->getFillable(), $this->getHidden()));
+        return ProductData::fromModel($this)->toArray();
+    }
+
+    public function inventories(): HasMany
+    {
+        return $this->hasMany(Inventory::class);
     }
 
     public function getTypeAttribute(): ?string

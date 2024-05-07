@@ -33,7 +33,7 @@ test('associate contact action works', function (Buyer $buyer, Contact $contact)
 
 test('associate contact action end-point works', function (Buyer $buyer, Contact $contact) {
     expect($buyer->contact)->toBeNull();
-    $response = $this->post(route('associate-contact', ['buyer' => $buyer->id, 'contact' => $contact->id]));
+    $response = $this->post(route('associate-contact', ['buyer' => $buyer->id, 'contact' => $contact->uid]));
     $response->assertStatus(302);
     expect($buyer->fresh()->contact->is($contact))->toBeTrue();
 })->with('buyer', 'contact');

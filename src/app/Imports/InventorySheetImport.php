@@ -3,9 +3,9 @@
 namespace RLI\Booking\Imports;
 
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
+use RLI\Booking\Models\{Inventory, Product};
 use Maatwebsite\Excel\Concerns\WithUpserts;
 use Maatwebsite\Excel\Concerns\ToModel;
-use RLI\Booking\Models\Product;
 
 class InventorySheetImport implements ToModel, WithHeadingRow, WithUpserts
 {
@@ -16,6 +16,20 @@ class InventorySheetImport implements ToModel, WithHeadingRow, WithUpserts
             $inventory_json = $row['product_codes'];
             $inventory = json_decode($inventory_json, false);
             $product->inventory = $inventory;
+
+            $inv = [];
+            foreach (array_unique($inventory) as $value) {
+//                $inv [] = ['property_code' => $value];
+                try {
+                    $product->inventories()->updateOrCreate(['property_code' => $value]);
+                }
+                catch (\Exception $exception) {
+
+                }
+
+            }
+
+//            $product->inventories()->createMany($inv);
             $product->save();
         });
     }

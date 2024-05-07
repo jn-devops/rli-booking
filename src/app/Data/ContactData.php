@@ -12,10 +12,10 @@ class ContactData extends Data
         public ?PersonData $spouse,
         /** @var AddressData[] */
         public DataCollection $addresses,
-        public ContactEmploymentData|Optional $employment,
+        public ?ContactEmploymentData $employment,
         /** @var PersonData[] */
         public DataCollection|Optional $co_borrowers,
-        public ContactOrderData|Optional $order,
+        public ?ContactOrderData $order,
         /** @var UploadData[] */
         public DataCollection|Optional $uploads,
     ) {}
@@ -39,9 +39,9 @@ class ContactData extends Data
             ),
             spouse: $attribs->spouse ? PersonData::from($attribs->spouse) : null,
             addresses: new DataCollection(AddressData::class, $attribs->addresses),
-            employment: ContactEmploymentData::from($attribs->employment),
+            employment: $attribs->employment ? ContactEmploymentData::from($attribs->employment) : null,
             co_borrowers: new DataCollection(PersonData::class, $attribs->co_borrowers),
-            order: ContactOrderData::from($attribs->order),
+            order: $attribs->order ? ContactOrderData::from($attribs->order) : null,
             uploads: new DataCollection(
                 dataClass: UploadData::class,
                 items: collect($attribs->media)
@@ -75,9 +75,9 @@ class ContactData extends Data
             ),
             spouse: $model->spouse ? PersonData::from($model->spouse) : null,
             addresses: new DataCollection(AddressData::class, $model->addresses),
-            employment: ContactEmploymentData::from($model->employment),
+            employment: $model->employment ? ContactEmploymentData::from($model->employment) : null,
             co_borrowers: new DataCollection(PersonData::class, $model->co_borrowers),
-            order: ContactOrderData::from($model->order),
+            order: $model->order ? ContactOrderData::from($model->order) : null,
             uploads: new DataCollection(UploadData::class, $model->uploads)
         );
     }
