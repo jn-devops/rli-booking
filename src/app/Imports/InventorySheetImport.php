@@ -14,23 +14,25 @@ class InventorySheetImport implements ToModel, WithHeadingRow, WithUpserts
         $sku = $row['sku'];
         return tap(Product::where('sku', $sku)->first(), function (Product $product) use ($row) {
             $inventory_json = $row['product_codes'];
-            $inventory = json_decode($inventory_json, false);
-            $product->inventory = $inventory;
+            $inventory_array = json_decode($inventory_json, false);
 
-            $inv = [];
-            foreach (array_unique($inventory) as $value) {
-//                $inv [] = ['property_code' => $value];
+            $product->inventory = $inventory_array;//TODO: deprecate
+
+            $non_unique_property_codes = [];
+            foreach (array_unique($inventory_array) as $property_code) {
+                $inventory =  new Inventory(['property_code' => $property_code]);
                 try {
-                    $product->inventories()->updateOrCreate(['property_code' => $value]);
+                    $product->inventories()->save($inventory);
                 }
                 catch (\Exception $exception) {
-
+                    $non_unique_property_codes [] = $property_code;
                 }
-
             }
-
-//            $product->inventories()->createMany($inv);
             $product->save();
+            if (count($non_unique_property_codes)>0) {
+                logger('InventorySheetImport non-unique property codes');
+                logger($non_unique_property_codes);
+            }
         });
     }
 

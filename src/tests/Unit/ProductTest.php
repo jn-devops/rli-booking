@@ -1,8 +1,10 @@
 <?php
 
 use Illuminate\Foundation\Testing\{RefreshDatabase, WithFaker};
+use RLI\Booking\Models\{Inventory, Product};
+use Spatie\LaravelData\DataCollection;
+use RLI\Booking\Data\InventoryData;
 use RLI\Booking\Data\ProductData;
-use RLI\Booking\Models\Product;
 
 uses(RefreshDatabase::class, WithFaker::class);
 
@@ -35,8 +37,22 @@ test('product can be referenced', function (Product $product) {
     [ fn() => Product::factory()->create() ]
 ]);
 
+test('product has inventories', function (Product $product) {
+    $inventory = new Inventory(['property_code' => $this->faker->word()]);
+    $product->inventories()->save($inventory);
+    $product->inventories()->saveMany([
+        new Inventory(['property_code' => $this->faker->word()]),
+        new Inventory(['property_code' => $this->faker->word()]),
+        new Inventory(['property_code' => $this->faker->word()]),
+        new Inventory(['property_code' => $this->faker->word()])
+    ]);
+    expect($product->inventories)->toHaveCount(5);
+})->with([
+    [ fn() => Product::factory()->create() ]
+]);
+
 test('product has data', function () {
-    $product = Product::factory()->create();
+    $product = Product::factory()->has(Inventory::factory()->count(3))->create();
     $data = ProductData::fromModel($product);
     expect($data->sku)->toBe($product->sku);
     expect($data->name)->toBe($product->name);
@@ -49,4 +65,7 @@ test('product has data', function () {
     expect($data->location)->toBe($product->location);
     expect($data->floor_area)->toBe($product->floor_area);
     expect($data->lot_area)->toBe($product->lot_area);
+    expect($data->inventories)->toBeInstanceOf(DataCollection::class);
+    expect($data->inventories)->toHaveCount(3);
+    expect($data->inventories->first())->toBeInstanceOf(InventoryData::class);
 });

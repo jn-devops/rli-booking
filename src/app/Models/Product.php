@@ -46,7 +46,7 @@ class Product extends Model implements AttributableData
         return ProductData::fromModel($this)->toArray();
     }
 
-    public function inventories(): HasMany
+    public function inventories()
     {
         return $this->hasMany(Inventory::class);
     }
