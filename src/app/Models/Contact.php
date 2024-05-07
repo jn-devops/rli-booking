@@ -91,7 +91,7 @@ class Contact extends Model implements AttributableData, HasMedia
         parent::boot();
 
         static::creating(function ($model) {
-            $model->uid = Str::ulid();
+            $model->uid = Str::orderedUuid()->toString();
         });
     }
 

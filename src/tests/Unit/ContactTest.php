@@ -34,6 +34,7 @@ test('contact has schema attributes', function () {
 test('contact has data', function () {
     $contact = Contact::factory()->create();
     $data = ContactData::fromModel($contact);
+    expect($data->uid)->toBe($contact->uid);
     expect($data->profile->first_name)->toBe($contact->first_name);
     expect($data->profile->middle_name)->toBe($contact->middle_name);
     expect($data->profile->last_name)->toBe($contact->last_name);

@@ -21,6 +21,7 @@ class ProductData extends Data implements CanHydrateFromModel
         public int    $price,
         public string $location,
         public int    $floor_area,
-        public int    $lot_area
+        public int    $lot_area,
+        public array  $inventory
     ) {}
 }
