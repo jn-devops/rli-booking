@@ -1,6 +1,7 @@
 <script setup>
     const props = defineProps({
-        contact: Object
+        contact: Object,
+        products: Object
     })
 </script>
 
@@ -9,6 +10,10 @@
     <h3>Show Contact</h3> <br>
 
     {{ props.contact }}
+
+    ***********************************************************
+
+    {{ props.products }}
 </div>
 </template>
 

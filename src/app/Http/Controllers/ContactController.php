@@ -2,9 +2,9 @@
 
 namespace RLI\Booking\Http\Controllers;
 
+use RLI\Booking\Data\{ContactData, ProductData};
+use RLI\Booking\Models\{Contact, Product};
 use Spatie\LaravelData\DataCollection;
-use RLI\Booking\Data\ContactData;
-use RLI\Booking\Models\Contact;
 use Illuminate\Http\Request;
 
 class ContactController extends Controller
@@ -40,7 +40,12 @@ class ContactController extends Controller
      */
     public function show(Contact $contact): \Inertia\Response
     {
-        return inertia()->render('Contacts/Show',['contact' => $contact->toData()]);
+        $products = new DataCollection(ProductData::class, Product::all());
+
+        return inertia()->render('Contacts/Show',[
+            'contact' => $contact->toData(),
+            'products' => $products
+        ]);
     }
 
     /**
