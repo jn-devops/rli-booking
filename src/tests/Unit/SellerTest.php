@@ -1,8 +1,8 @@
 <?php
 
 use Illuminate\Foundation\Testing\{RefreshDatabase, WithFaker};
+use RLI\Booking\Models\{Seller, SellerCommission};
 use RLI\Booking\Data\SellerData;
-use RLI\Booking\Models\Seller;
 use App\Models\User;
 
 uses(RefreshDatabase::class, WithFaker::class);
@@ -31,8 +31,55 @@ test('seller has schema attributes', function () {
     expect($seller->accredited)->toBeFalse();
 });
 
+test('seller has seller commissions', function () {
+    $manager = Seller::factory()->create();
+    $supervisor = Seller::factory()->create();
+    $seller = Seller::factory()->has(SellerCommission::factory()->count(5))->create();
+    expect($seller->sellerCommissions)->toHaveCount(5);
+    $seller = Seller::factory()->create();
+    $seller->sellerCommissions()->saveMany([
+        new SellerCommission([
+            'code' => 'ABC-123', 'scheme' => $scheme = [
+                [
+                    'seller_code' => $manager->code,
+                    'percent' => 0.02
+                ],
+                [
+                    'seller_code' => $supervisor->code,
+                    'percent' => 0.03
+                ],
+                [
+                    'seller_code' => $seller->code,
+                    'percent' => 0.04
+                ],
+            ],
+            'remarks' => $this->faker->sentence()]),
+        new SellerCommission(['code' => 'DEF-456', 'scheme' => [], 'remarks' => $this->faker->sentence()]),
+        new SellerCommission(['code' => 'GHI-789', 'scheme' => [], 'remarks' => $this->faker->sentence()]),
+    ]);
+    expect($seller->sellerCommissions)->toHaveCount(3);
+    $seller_commission = $seller->sellerCommissions->where('code', 'ABC-123')->first();
+    expect($seller_commission->scheme)->toBe($scheme);
+});
+
+test('seller default code is uuid', function () {
+    $seller = Seller::factory()->create(['code'=> null]);
+    expect($seller->code)->toBeUuid();
+});
+
+test('seller default seller commission code is null', function () {
+    $seller = Seller::factory()->create(['default_seller_commission_code'=> null]);
+    expect($seller->default_seller_commission_code)->toBeNull();
+});
+
 test('seller has data', function () {
     $seller = Seller::factory()->create();
+    $seller->sellerCommissions()->saveMany([
+        new SellerCommission(['code' => $this->faker->word(), 'scheme' => [], 'remarks' => $this->faker->sentence()]),
+        new SellerCommission(['code' => $this->faker->word(), 'scheme' => [], 'remarks' => $this->faker->sentence()]),
+        new SellerCommission(['code' => $this->faker->word(), 'scheme' => [], 'remarks' => $this->faker->sentence()]),
+    ]);
+//    $seller = Seller::factory()->has(SellerCommission::factory()->count(2))->create();
     $data = SellerData::fromModel($seller);
     expect($data->code)->toBe($seller->code);
     expect($data->name)->toBe($seller->name);
@@ -44,14 +91,6 @@ test('seller has data', function () {
     expect($data->account_name)->toBe($seller->account_name);
     expect($data->mfiles_id)->toBe($seller->mfiles_id);
     expect($data->accredited)->toBe($seller->accredited);
-});
-
-test('seller default code is uuid', function () {
-    $seller = Seller::factory()->create(['code'=> null]);
-    expect($seller->code)->toBeUuid();
-});
-
-test('seller default seller commission code is null', function () {
-    $seller = Seller::factory()->create(['default_seller_commission_code'=> null]);
-    expect($seller->default_seller_commission_code)->toBeNull();
+    expect($data->seller_commissions)->toBeInstanceOf(\Spatie\LaravelData\DataCollection::class);
+    expect($data->seller_commissions)->toHaveCount(3);
 });

@@ -7,7 +7,6 @@ use RLI\Booking\Models\Product;
 
 class ProductData extends Data
 {
-
     public function __construct(
         public string $sku,
         public string $type,

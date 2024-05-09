@@ -41,10 +41,10 @@ test('product has inventories', function (Product $product) {
     $inventory = new Inventory(['property_code' => $this->faker->word()]);
     $product->inventories()->save($inventory);
     $product->inventories()->saveMany([
-        new Inventory(['property_code' => $this->faker->word()]),
-        new Inventory(['property_code' => $this->faker->word()]),
-        new Inventory(['property_code' => $this->faker->word()]),
-        new Inventory(['property_code' => $this->faker->word()])
+        new Inventory(['property_code' => $this->faker->word() . '-01-02-03']),
+        new Inventory(['property_code' => $this->faker->word() . '-02-03-04']),
+        new Inventory(['property_code' => $this->faker->word() . '-03-04-05']),
+        new Inventory(['property_code' => $this->faker->word() . '-04-05-06'])
     ]);
     expect($product->inventories)->toHaveCount(5);
 })->with([

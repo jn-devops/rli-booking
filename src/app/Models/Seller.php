@@ -2,6 +2,7 @@
 
 namespace RLI\Booking\Models;
 
+use RLI\Booking\Data\SellerData;
 use RLI\Booking\Traits\HasPackageFactory as HasFactory;
 use RLI\Booking\Interfaces\AttributableData;
 use RLI\Booking\Traits\HasMeta;
@@ -49,7 +50,8 @@ class Seller extends User implements AttributableData
 
     public function toData(): array
     {
-        return $this->only(array_diff($this->getFillable(), $this->getHidden()));
+        return SellerData::fromModel($this)->toArray();
+//        return $this->only(array_diff($this->getFillable(), $this->getHidden()));
     }
 
     public function getPersonalEmailAttribute(): ?string
@@ -126,5 +128,10 @@ class Seller extends User implements AttributableData
     public function routeNotificationForEngageSpark()
     {
         return $this->mobile;
+    }
+
+    public function sellerCommissions(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(SellerCommission::class, 'seller_id');
     }
 }

@@ -3,11 +3,10 @@
 namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
-use Illuminate\Database\Seeder;
-use RLI\Booking\Seeders\BuyerSeeder;
-use RLI\Booking\Seeders\ContactSeeder;
+use RLI\Booking\Seeders\SellerCommissionSeeder;
 use RLI\Booking\Seeders\ProductSeeder;
 use RLI\Booking\Seeders\UserSeeder;
+use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
 {
@@ -18,5 +17,6 @@ class DatabaseSeeder extends Seeder
     {
         $this->call(UserSeeder::class);
         $this->call(ProductSeeder::class);
+        $this->call( SellerCommissionSeeder::class);
     }
 }

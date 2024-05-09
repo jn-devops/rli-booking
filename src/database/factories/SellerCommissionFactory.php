@@ -13,6 +13,7 @@ class SellerCommissionFactory extends Factory
     public function definition(): array
     {
         return [
+            'seller_id' => Seller::factory()->create(),
             'code' => $this->faker->word(),
             'scheme' => [
                 0 => [

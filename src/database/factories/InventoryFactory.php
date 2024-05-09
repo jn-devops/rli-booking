@@ -18,6 +18,9 @@ class InventoryFactory extends Factory
         return [
             'product_id' => Product::factory()->create(),
             'property_code' => $this->faker->word()
+                . '-0' . $this->faker->numberBetween(1,4)
+                . '-0' . $this->faker->numberBetween(1,20)
+                . '-0' . $this->faker->numberBetween(1,40)
         ];
     }
 }

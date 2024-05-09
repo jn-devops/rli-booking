@@ -1,8 +1,9 @@
 <?php
 
 use Illuminate\Foundation\Testing\{RefreshDatabase, WithFaker};
-use RLI\Booking\Models\SellerCommission;
 use RLI\Booking\Data\SellerCommissionData;
+use RLI\Booking\Models\SellerCommission;
+use RLI\Booking\Models\Seller;
 
 uses(RefreshDatabase::class, WithFaker::class);
 
@@ -12,6 +13,7 @@ beforeEach(function() {
 
 test('seller commission has schema attributes', function () {
     $seller_commission = SellerCommission::factory()->create();
+    expect($seller_commission->seller)->toBeInstanceOf(Seller::class);
     expect($seller_commission->code)->toBeString();
     expect($seller_commission->scheme)->toBeArray();
     expect($seller_commission->remarks)->toBeString();

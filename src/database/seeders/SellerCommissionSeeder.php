@@ -2,6 +2,7 @@
 
 namespace RLI\Booking\Seeders;
 
+use RLI\Booking\Models\{Seller, SellerCommission};
 use Illuminate\Database\Seeder;
 
 class SellerCommissionSeeder extends Seeder
@@ -11,6 +12,6 @@ class SellerCommissionSeeder extends Seeder
      */
     public function run(): void
     {
-        //
+
     }
 }
