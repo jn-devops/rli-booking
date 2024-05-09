@@ -1,9 +1,11 @@
 <?php
 
 use Illuminate\Foundation\Testing\{RefreshDatabase, WithFaker};
+use RLI\Booking\Seeders\{PermissionSeeder, RoleSeeder};
 use RLI\Booking\Models\{Seller, SellerCommission};
 use RLI\Booking\Data\SellerData;
 use App\Models\User;
+use RLI\Booking\Enums\{PermissionsEnum, SellerRolesEnum};
 
 uses(RefreshDatabase::class, WithFaker::class);
 
@@ -93,4 +95,20 @@ test('seller has data', function () {
     expect($data->accredited)->toBe($seller->accredited);
     expect($data->seller_commissions)->toBeInstanceOf(\Spatie\LaravelData\DataCollection::class);
     expect($data->seller_commissions)->toHaveCount(3);
+});
+
+test('seller has roles', function () {
+    $this->seed(PermissionSeeder::class);
+    $this->seed(RoleSeeder::class);
+    $seller = Seller::factory()->create();
+    $seller->assignRole(SellerRolesEnum::BROKER);
+    expect($seller->hasRole(SellerRolesEnum::BROKER))->toBeTrue();
+    expect($seller->can([
+        PermissionsEnum::CREATE_CONTACTS->value,
+        PermissionsEnum::VIEW_CONTACTS->value,
+        PermissionsEnum::EDIT_CONTACTS->value,
+        PermissionsEnum::ASSIGN_CONTACTS->value,
+        PermissionsEnum::DELETE_CONTACTS->value
+        ])
+    )->toBeTrue();
 });

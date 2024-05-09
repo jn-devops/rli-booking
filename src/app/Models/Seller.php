@@ -2,9 +2,10 @@
 
 namespace RLI\Booking\Models;
 
-use RLI\Booking\Data\SellerData;
 use RLI\Booking\Traits\HasPackageFactory as HasFactory;
 use RLI\Booking\Interfaces\AttributableData;
+use Spatie\Permission\Traits\HasRoles;
+use RLI\Booking\Data\SellerData;
 use RLI\Booking\Traits\HasMeta;
 use Parental\HasParent;
 use App\Models\User;
@@ -32,10 +33,13 @@ class Seller extends User implements AttributableData
 {
     use HasFactory;
     use HasParent;
+    use HasRoles;
     use HasMeta;
 
     //TODO: Either change the seller_code to code or default_seller_commission_code
     protected $fillable = ['name', 'code', 'email', 'mobile', 'personal_email', 'default_seller_commission_code', 'bank_code', 'account_number', 'account_name', 'accredited', 'mfiles_id'];
+
+    protected $guard_name = 'web';
 
     static public function from(User $user): self
     {
