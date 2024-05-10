@@ -24,6 +24,9 @@ class AttachContactMediaAction
             'idImage' => ['nullable', 'url'],
             'selfieImage' => ['nullable', 'url'],
             'payslipImage' => ['nullable', 'url'],
+            'voluntarySurrenderFormDocument' => ['nullable', 'url'],
+            'usufructAgreementDocument' => ['nullable', 'url'],
+            'contractToSellDocument' => ['nullable', 'url'],
         ];
     }
 
