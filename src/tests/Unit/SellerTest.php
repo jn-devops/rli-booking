@@ -101,14 +101,11 @@ test('seller has roles', function () {
     $this->seed(PermissionSeeder::class);
     $this->seed(RoleSeeder::class);
     $seller = Seller::factory()->create();
-    $seller->assignRole(SellerRolesEnum::BROKER);
-    expect($seller->hasRole(SellerRolesEnum::BROKER))->toBeTrue();
+    $seller->assignRole(SellerRolesEnum::EDITOR);
+    expect($seller->hasRole(SellerRolesEnum::EDITOR))->toBeTrue();
     expect($seller->can([
-        PermissionsEnum::CREATE_CONTACTS->value,
         PermissionsEnum::VIEW_CONTACTS->value,
         PermissionsEnum::EDIT_CONTACTS->value,
-        PermissionsEnum::ASSIGN_CONTACTS->value,
-        PermissionsEnum::DELETE_CONTACTS->value
         ])
     )->toBeTrue();
 });

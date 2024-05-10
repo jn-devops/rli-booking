@@ -10,6 +10,20 @@ return [
             'webhook' => env('BOOKING_DEFAULT_ORDER_WEBHOOK')
         ],
     ],
+    'seeds' => [
+        'sellers' => [
+            'admin' => [
+                'name' => config('app.name') . ' Admin',
+                'email' => env('BOOKING_ADMIN_EMAIL', 'devops@joy-nostalg.com'),
+                'mobile' => env('BOOKING_ADMIN_MOBILE', '09173011987'),
+                'password' => env('BOOKING_ADMIN_PASSWORD', '#Password1'),
+                'password_confirmation' => env('BOOKING_ADMIN_PASSWORD', '#Password1'),
+            ],
+            'broker' => [],
+            'manager' => [],
+            'agent' => []
+        ],
+    ],
     'webhook' => [
         'client_secret' => env('WEBHOOK_CLIENT_SECRET'),
         'customer_header' => env('WEBHOOK_CUSTOMER_HEADER'),

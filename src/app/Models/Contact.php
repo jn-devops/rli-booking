@@ -41,6 +41,9 @@ use Spatie\Image\Enums\Fit;
  * @property Media  $idImage
  * @property Media  $selfieImage
  * @property Media  $payslipImage
+ * @property Media  $voluntarySurrenderFormDocument
+ * @property Media  $usufructAgreementDocument
+ * @property Media  $contractToSellDocument
  *
  * @method   int    getKey()
  */
@@ -66,7 +69,10 @@ class Contact extends Model implements AttributableData, HasMedia
         'order',
         'idImage',
         'selfieImage',
-        'payslipImage'
+        'payslipImage',
+        'voluntarySurrenderFormDocument',
+        'usufructAgreementDocument',
+        'contractToSellDocument'
     ];
 
     protected $casts = [
@@ -170,6 +176,75 @@ class Contact extends Model implements AttributableData, HasMedia
     }
 
     /**
+     * @return Media|null
+     */
+    public function getVoluntarySurrenderFormDocumentAttribute(): ?Media
+    {
+        return $this->getFirstMedia('voluntary_surrender_form-documents');
+    }
+
+    /**
+     * @param string|null $url
+     * @return $this
+     * @throws FileCannotBeAdded
+     * @throws FileDoesNotExist
+     * @throws FileIsTooBig
+     */
+    public function setVoluntarySurrenderFormDocumentAttribute(?string $url): static
+    {
+        if ($url)
+            $this->addMediaFromUrl($url)->toMediaCollection('voluntary_surrender_form-documents');
+
+        return $this;
+    }
+
+    /**
+     * @return Media|null
+     */
+    public function getUsufructAgreementDocumentAttribute(): ?Media
+    {
+        return $this->getFirstMedia('usufruct_agreement-documents');
+    }
+
+    /**
+     * @param string|null $url
+     * @return $this
+     * @throws FileCannotBeAdded
+     * @throws FileDoesNotExist
+     * @throws FileIsTooBig
+     */
+    public function setUsufructAgreementDocumentAttribute(?string $url): static
+    {
+        if ($url)
+            $this->addMediaFromUrl($url)->toMediaCollection('usufruct_agreement-documents');
+
+        return $this;
+    }
+
+    /**
+     * @return Media|null
+     */
+    public function getContractToSellDocumentAttribute(): ?Media
+    {
+        return $this->getFirstMedia('contract_to_sell-documents');
+    }
+
+    /**
+     * @param string|null $url
+     * @return $this
+     * @throws FileCannotBeAdded
+     * @throws FileDoesNotExist
+     * @throws FileIsTooBig
+     */
+    public function setContractToSellDocumentAttribute(?string $url): static
+    {
+        if ($url)
+            $this->addMediaFromUrl($url)->toMediaCollection('contract_to_sell-documents');
+
+        return $this;
+    }
+
+    /**
      * @return void
      */
     public function registerMediaCollections(): void
@@ -178,6 +253,9 @@ class Contact extends Model implements AttributableData, HasMedia
             'id-images' => 'image/jpeg',
             'selfie-images' => 'image/jpeg',
             'payslip-images' => 'image/jpeg',
+            'voluntary_surrender_form-documents' => 'application/pdf',
+            'usufruct_agreement-documents' => 'application/pdf',
+            'contract_to_sell-documents' => 'application/pdf',
         ];
 
         foreach ($collections as $collection => $mimeType) {
