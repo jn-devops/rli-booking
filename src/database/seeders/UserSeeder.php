@@ -15,7 +15,7 @@ class UserSeeder extends Seeder
     public function run(): void
     {
         tap(app(CreateNewUser::class)->create(config('booking.seeds.sellers.admin')), function (Seller $admin) {
-            if (app(Role::class)->find(SellerRolesEnum::ADMIN->value, 'web'))
+            if (app(Role::class)->find(SellerRolesEnum::ADMIN->value))
                 $admin->assignRole(SellerRolesEnum::ADMIN);
         });
 //        app(CreateNewUser::class)->create([
