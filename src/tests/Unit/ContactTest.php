@@ -11,8 +11,13 @@ beforeEach(function() {
     $this->faker = $this->makeFaker('en_PH');
 });
 
-test('contact has schema attributes', function () {
-    $contact = Contact::factory()->create();
+dataset('contact', function () {
+    return [
+        [ fn () => Contact::factory()->create() ]
+    ];
+});
+
+test('contact has schema attributes', function (Contact $contact) {
     expect($contact->first_name)->toBeString();
     expect($contact->middle_name)->toBeString();
     expect($contact->last_name)->toBeString();
@@ -29,10 +34,12 @@ test('contact has schema attributes', function () {
     expect($contact->idImage)->toBeInstanceOf(Media::class);
     expect($contact->selfieImage)->toBeInstanceOf(Media::class);
     expect($contact->payslipImage)->toBeInstanceOf(Media::class);
-});
+    expect($contact->voluntarySurrenderFormDocument)->toBeInstanceOf(Media::class);
+    expect($contact->usufructAgreementDocument)->toBeInstanceOf(Media::class);
+    expect($contact->contractToSellDocument)->toBeInstanceOf(Media::class);
+})->with('contact');
 
-test('contact has data', function () {
-    $contact = Contact::factory()->create();
+test('contact has data', function (Contact $contact) {
     $data = ContactData::fromModel($contact);
     expect($data->uid)->toBe($contact->uid);
     expect($data->profile->first_name)->toBe($contact->first_name);
@@ -69,7 +76,7 @@ test('contact has data', function () {
         expect($contact->$name->getUrl())->toBe($url);
     };
     expect($data->uploads->toArray())->toBe($contact->uploads);
-});
+})->with('contact');
 
 test('contact can attach media', function () {
     $idImageUrl = 'https://jn-img.enclaves.ph/Test/idImage.jpg';
@@ -96,8 +103,8 @@ test('contact can attach media', function () {
         expect($contact->idImage->getUrl())->toBe(__(':host/storage/:path', ['host' => $host, 'path' => $contact->idImage->getPathRelativeToRoot()]));
         expect($contact->selfieImage->getUrl())->toBe(__(':host/storage/:path', ['host' => $host, 'path' => $contact->selfieImage->getPathRelativeToRoot()]));
         expect($contact->payslipImage->getUrl())->toBe(__(':host/storage/:path', ['host' => $host, 'path' => $contact->payslipImage->getPathRelativeToRoot()]));
-        $contact->idImage->delete();
     });
+    $contact->idImage->delete();
     $contact->selfieImage->delete();
     $contact->payslipImage->delete();
     $contact->clearMediaCollection('id-images');

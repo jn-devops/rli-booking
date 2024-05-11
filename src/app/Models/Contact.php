@@ -52,6 +52,7 @@ class Contact extends Model implements AttributableData, HasMedia
 {
     use InteractsWithMedia;
     use HasFactory;
+
     protected $fillable = [
         'first_name',
         'middle_name',
@@ -250,19 +251,22 @@ class Contact extends Model implements AttributableData, HasMedia
     public function registerMediaCollections(): void
     {
         $collections = [
-            'id-images' => 'image/jpeg',
-            'selfie-images' => 'image/jpeg',
-            'payslip-images' => 'image/jpeg',
+            'id-images' => ['image/jpeg', 'image/png', 'image/webp'],
+            'selfie-images' => ['image/jpeg', 'image/png', 'image/webp'],
+            'payslip-images' => ['image/jpeg', 'image/png', 'image/webp'],
             'voluntary_surrender_form-documents' => 'application/pdf',
             'usufruct_agreement-documents' => 'application/pdf',
             'contract_to_sell-documents' => 'application/pdf',
         ];
 
-        foreach ($collections as $collection => $mimeType) {
+        foreach ($collections as $collection => $mimeTypes) {
             $this->addMediaCollection($collection)
                 ->singleFile()
-                ->acceptsFile(function (File $file) use ($mimeType) {
-                    return $file->mimeType === $mimeType;
+                ->acceptsFile(function (File $file) use ($mimeTypes) {
+                    return in_array(
+                        needle: $file->mimeType,
+                        haystack: (array) $mimeTypes
+                    );
                 });
         }
     }
@@ -286,6 +290,7 @@ class Contact extends Model implements AttributableData, HasMedia
                 $collection_name = $item['collection_name'];
                 $name = Str::camel(Str::singular($collection_name));
                 $url = $item['original_url'];
+
                 return [
                     $key => [
                         'name' => $name,
