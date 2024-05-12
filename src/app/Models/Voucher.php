@@ -41,9 +41,9 @@ class Voucher extends BaseVoucher implements AttributableData
     /**
      * Helper function to retrieve order from voucher.
      *
-     * @return Order
+     * @return Order|null
      */
-    public function getOrder(): Order
+    public function getOrder(): ?Order
     {
         return $this->getEntities(Order::class)->first();
     }
@@ -51,9 +51,9 @@ class Voucher extends BaseVoucher implements AttributableData
     /**
      * Helper function to retrieve order from voucher.
      *
-     * @return Contact
+     * @return Contact|null
      */
-    public function getContact(): Contact
+    public function getContact(): ?Contact
     {
         return $this->getEntities(Contact::class)->first();
     }

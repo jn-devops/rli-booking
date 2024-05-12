@@ -1,6 +1,6 @@
 <?php
 
-namespace Feature;
+namespace RLI\Booking\Actions;
 
 use RLI\Booking\Models\{Contact, Inventory, Seller, SellerCommission};
 use RLI\Booking\Data\FinancialSchemeData;

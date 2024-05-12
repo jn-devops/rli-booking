@@ -61,14 +61,16 @@ class GenerateVoucherAction
      */
     public function asController(ActionRequest $request): \Illuminate\Http\RedirectResponse
     {
-//        $voucher = $this->handle($request->validated());
         $voucher = $this->createVoucherOrder($request->validated());
         $order = $voucher->getOrder();
 
-        return redirect()->route('edit-order', [
+        $params = [
             'voucher' => $voucher->code,
             'order' => $order->id
-        ]);
+        ];
+
+        return redirect()->route('edit-order', $params)
+            ->with('params', $params);
     }
 
     /**
