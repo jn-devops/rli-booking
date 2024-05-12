@@ -18,5 +18,10 @@ class PermissionSeeder extends Seeder
         app(Permission::class)->findOrCreate(PermissionsEnum::EDIT_CONTACTS->value, 'web');
         app(Permission::class)->findOrCreate(PermissionsEnum::ASSIGN_CONTACTS->value, 'web');
         app(Permission::class)->findOrCreate(PermissionsEnum::DELETE_CONTACTS->value, 'web');
+        app(Permission::class)->findOrCreate(PermissionsEnum::CREATE_INVENTORY->value, 'web');
+        app(Permission::class)->findOrCreate(PermissionsEnum::VIEW_INVENTORY->value, 'web');
+        app(Permission::class)->findOrCreate(PermissionsEnum::EDIT_INVENTORY->value, 'web');
+        app(Permission::class)->findOrCreate(PermissionsEnum::ASSIGN_INVENTORY->value, 'web');
+        app(Permission::class)->findOrCreate(PermissionsEnum::DELETE_INVENTORY->value, 'web');
     }
 }

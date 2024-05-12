@@ -125,7 +125,9 @@ class Contact extends Model implements AttributableData, HasMedia
     public function setIdImageAttribute(?string $url): static
     {
         if ($url)
-            $this->addMediaFromUrl($url)->toMediaCollection('id-images');
+            $this->addMediaFromUrl($url)
+                ->usingName('idImage')
+                ->toMediaCollection('id-images');
 
         return $this;
     }
@@ -148,7 +150,9 @@ class Contact extends Model implements AttributableData, HasMedia
     public function setSelfieImageAttribute(?string $url): static
     {
         if ($url)
-            $this->addMediaFromUrl($url)->toMediaCollection('selfie-images');
+            $this->addMediaFromUrl($url)
+                ->usingName('selfieImage')
+                ->toMediaCollection('selfie-images');
 
         return $this;
     }
@@ -171,7 +175,9 @@ class Contact extends Model implements AttributableData, HasMedia
     public function setPayslipImageAttribute(?string $url): static
     {
         if ($url)
-            $this->addMediaFromUrl($url)->toMediaCollection('payslip-images');
+            $this->addMediaFromUrl($url)
+                ->usingName('payslipImage')
+                ->toMediaCollection('payslip-images');
 
         return $this;
     }
@@ -194,7 +200,9 @@ class Contact extends Model implements AttributableData, HasMedia
     public function setVoluntarySurrenderFormDocumentAttribute(?string $url): static
     {
         if ($url)
-            $this->addMediaFromUrl($url)->toMediaCollection('voluntary_surrender_form-documents');
+            $this->addMediaFromUrl($url)
+                ->usingName('voluntarySurrenderFormDocument')
+                ->toMediaCollection('voluntary_surrender_form-documents');
 
         return $this;
     }
@@ -217,7 +225,9 @@ class Contact extends Model implements AttributableData, HasMedia
     public function setUsufructAgreementDocumentAttribute(?string $url): static
     {
         if ($url)
-            $this->addMediaFromUrl($url)->toMediaCollection('usufruct_agreement-documents');
+            $this->addMediaFromUrl($url)
+                ->usingName('usufructAgreementDocument')
+                ->toMediaCollection('usufruct_agreement-documents');
 
         return $this;
     }
@@ -240,7 +250,9 @@ class Contact extends Model implements AttributableData, HasMedia
     public function setContractToSellDocumentAttribute(?string $url): static
     {
         if ($url)
-            $this->addMediaFromUrl($url)->toMediaCollection('contract_to_sell-documents');
+            $this->addMediaFromUrl($url)
+                ->usingName('contractToSellDocument')
+                ->toMediaCollection('contract_to_sell-documents');
 
         return $this;
     }

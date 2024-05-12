@@ -24,10 +24,18 @@ class RoleSeeder extends Seeder
             PermissionsEnum::EDIT_CONTACTS,
             PermissionsEnum::DELETE_CONTACTS,
             PermissionsEnum::ASSIGN_CONTACTS,
+            PermissionsEnum::CREATE_INVENTORY,
+            PermissionsEnum::VIEW_INVENTORY,
+            PermissionsEnum::EDIT_INVENTORY,
+            PermissionsEnum::DELETE_INVENTORY,
+
         ]);
         $editorRole->givePermissionTo([
             PermissionsEnum::VIEW_CONTACTS,
             PermissionsEnum::EDIT_CONTACTS,
+            PermissionsEnum::ASSIGN_CONTACTS,
+            PermissionsEnum::VIEW_INVENTORY,
+            PermissionsEnum::EDIT_INVENTORY,
         ]);
     }
 }

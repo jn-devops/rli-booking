@@ -17,7 +17,10 @@ test('attach contact media action works', function (Contact $contact) {
     $attribs = [
         'idImage' => 'https://jn-img.enclaves.ph/Test/idImage.jpg',
         'selfieImage' => 'https://jn-img.enclaves.ph/Test/selfieImage.jpg',
-        'payslipImage' => 'https://jn-img.enclaves.ph/Test/payslipImage.jpg'
+        'payslipImage' => 'https://jn-img.enclaves.ph/Test/payslipImage.jpg',
+        'voluntarySurrenderFormDocument' => 'https://unec.edu.az/application/uploads/2014/12/pdf-sample.pdf',
+        'usufructAgreementDocument' => 'https://file-examples.com/storage/fe92070d83663e82d92ecf7/2017/10/file-sample_150kB.pdf',
+        'contractToSellDocument' => 'https://s29.q4cdn.com/175625835/files/doc_downloads/test.pdf'
     ];
 
     $contact = app(AttachContactMediaAction::class)->run($contact, $attribs);
@@ -43,6 +46,18 @@ test('attach contact media action works', function (Contact $contact) {
             'name' => $contact->payslipImage->name,
             'url' => $contact->payslipImage->getUrl()
         ],
+        [
+            'name' => $contact->voluntarySurrenderFormDocument->name,
+            'url' => $contact->voluntarySurrenderFormDocument->getUrl()
+        ],
+        [
+            'name' => $contact->usufructAgreementDocument->name,
+            'url' => $contact->usufructAgreementDocument->getUrl()
+        ],
+        [
+            'name' => $contact->contractToSellDocument->name,
+            'url' => $contact->contractToSellDocument->getUrl()
+        ],
     ]);
     $contact->idImage->delete();
     $contact->selfieImage->delete();
@@ -56,7 +71,10 @@ test('attach contact media action has an endpoint', function (Contact $contact) 
     $attribs = [
         'idImage' => 'https://jn-img.enclaves.ph/Test/idImage.jpg',
         'selfieImage' => 'https://jn-img.enclaves.ph/Test/selfieImage.jpg',
-        'payslipImage' => 'https://jn-img.enclaves.ph/Test/payslipImage.jpg'
+        'payslipImage' => 'https://jn-img.enclaves.ph/Test/payslipImage.jpg',
+        'voluntarySurrenderFormDocument' => 'https://unec.edu.az/application/uploads/2014/12/pdf-sample.pdf',
+        'usufructAgreementDocument' => 'https://file-examples.com/storage/fe92070d83663e82d92ecf7/2017/10/file-sample_150kB.pdf',
+        'contractToSellDocument' => 'https://s29.q4cdn.com/175625835/files/doc_downloads/test.pdf'
     ];
     $response = $this->post(route('attach-contact-media', ['uid' => $contact->uid]), $attribs);
     $response->assertStatus(200);
@@ -70,20 +88,35 @@ test('attach contact media action has an endpoint', function (Contact $contact) 
     expect($contact->selfieImage->file_name)->toBe('selfieImage.jpg');
     expect($contact->payslipImage->name)->toBe('payslipImage');
     expect($contact->payslipImage->file_name)->toBe('payslipImage.jpg');
-    expect($contact->uploads)->toBe([
+
+    expect($contact->uploads)->toBe(
         [
-            'name' => $contact->idImage->name,
-            'url' => $contact->idImage->getUrl()
-        ],
-        [
-            'name' => $contact->selfieImage->name,
-            'url' => $contact->selfieImage->getUrl()
-        ],
-        [
-            'name' => $contact->payslipImage->name,
-            'url' => $contact->payslipImage->getUrl()
-        ],
-    ]);
+            [
+                'name' => $contact->idImage->name,
+                'url' => $contact->idImage->getUrl()
+            ],
+            [
+                'name' => $contact->selfieImage->name,
+                'url' => $contact->selfieImage->getUrl()
+            ],
+            [
+                'name' => $contact->payslipImage->name,
+                'url' => $contact->payslipImage->getUrl()
+            ],
+            [
+                'name' => $contact->voluntarySurrenderFormDocument->name,
+                'url' => $contact->voluntarySurrenderFormDocument->getUrl()
+            ],
+            [
+                'name' => $contact->usufructAgreementDocument->name,
+                'url' => $contact->usufructAgreementDocument->getUrl()
+            ],
+            [
+                'name' => $contact->contractToSellDocument->name,
+                'url' => $contact->contractToSellDocument->getUrl()
+            ],
+        ]
+    );
     $contact->idImage->delete();
     $contact->selfieImage->delete();
     $contact->payslipImage->delete();

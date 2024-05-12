@@ -2,6 +2,7 @@
 
 namespace RLI\Booking\Models;
 
+use Illuminate\Support\Collection;
 use RLI\Booking\Traits\HasPackageFactory as HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use RLI\Booking\Interfaces\AttributableData;
@@ -28,7 +29,7 @@ use RLI\Booking\Traits\HasMeta;
  * @property int     $lot_area
  * @property array   $url_links
  * @property array   $inventory
- * @property HasMany $inventories
+ * @property Collection $inventories
  *
  * @method   int     getKey()
  */

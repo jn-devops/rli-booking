@@ -6,7 +6,6 @@ enum SellerRolesEnum: string
 {
     case ADMIN = 'admin';
     case EDITOR = 'editor';
-    case MANAGER = 'manager';
 
     public function label(): string
     {

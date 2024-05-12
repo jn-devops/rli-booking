@@ -55,3 +55,5 @@ Route::post('update-bank', \RLI\Booking\Actions\UpdateSellerBankInformationActio
 Route::resource('contacts', \RLI\Booking\Http\Controllers\ContactController::class);
 Route::post('associate-contact/{buyer}/{contact}', \RLI\Booking\Actions\AssociateContactAction::class)
     ->name('associate-contact');
+Route::post('subtract-inventory/{inventory}', \RLI\Booking\Actions\SubtractInventoryAction::class)
+    ->name('subtract-inventory');
