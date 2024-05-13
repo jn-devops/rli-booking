@@ -3,6 +3,8 @@
 namespace RLI\Booking\Actions;
 
 use RLI\Booking\Models\{Contact, Inventory, Order, Seller, SellerCommission, Voucher};
+use Spatie\ModelStates\Exceptions\CouldNotPerformTransition;
+use RLI\Booking\Classes\State\UpdatedPendingProcessing;
 use RLI\Booking\Data\FinancialSchemeData;
 use Lorisleiva\Actions\Concerns\AsAction;
 use Lorisleiva\Actions\ActionRequest;
@@ -12,7 +14,10 @@ class OnboardContactAction
 {
     use AsAction;
 
-    public function handle(Contact $contact, Inventory $inventory, Seller $seller, SellerCommission $sellerCommission, FinancialSchemeData $financialSchemeData)
+    /**
+     * @throws CouldNotPerformTransition
+     */
+    public function handle(Contact $contact, Inventory $inventory, Seller $seller, SellerCommission $sellerCommission, FinancialSchemeData $financialSchemeData): ?Voucher
     {
         $product = $inventory->product;
         $attribs = [
@@ -29,6 +34,7 @@ class OnboardContactAction
         $order->dp_months = $financialSchemeData->dp_months;
         $order->seller()->associate($seller);
         $order->sellerCommission()->associate($sellerCommission);
+        $order->state->transitionTo(UpdatedPendingProcessing::class);
         $order->save();
         $contact->reference_code = $voucher->code;
         $contact->save();

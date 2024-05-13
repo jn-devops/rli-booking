@@ -31,6 +31,7 @@ use RLI\Booking\Traits\HasMeta;
  * @property string           $expiration_date
  * @property string           $payment_id
  * @property SellerCommission $sellerCommission
+ * @property Inventory        $inventory
  *
  * @method   int        getKey()
  */
@@ -60,6 +61,11 @@ class Order extends Model implements AttributableData
     public function seller(): BelongsTo
     {
         return $this->belongsTo(Seller::class, 'seller_id', 'id', 'users');
+    }
+
+    public function inventory(): BelongsTo
+    {
+        return $this->belongsTo(Inventory::class, 'property_code', 'property_code',);
     }
 
     public function routeNotificationForWebhook(): string

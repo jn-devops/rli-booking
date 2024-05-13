@@ -5,7 +5,7 @@ use Carbon\Carbon;
 use RLI\Booking\Classes\State\{ProcessedPendingConfirmation, ConfirmedPendingInvoice};
 use RLI\Booking\Classes\State\{InvoicedPendingPayment, PaidPendingFulfillment};
 use Illuminate\Foundation\Testing\{RefreshDatabase, WithFaker};
-use RLI\Booking\Models\{Buyer, Order, Product, Seller};
+use RLI\Booking\Models\{Buyer, Inventory, Order, Product, Seller};
 use Illuminate\Database\QueryException;
 use RLI\Booking\Data\OrderData;
 
@@ -192,4 +192,16 @@ test('order has seller commission', function (Order $order) {
     expect($order->sellerCommission)->toBe($seller_commission);
 })->with([
     [ fn() => Order::factory()->create([ 'transaction_id' => null ]) ]
+]);
+
+test('order has inventory', function (Order $order) {
+    expect($order->inventory)->toBeNull();
+    expect($order->property_code)->toBeNull();
+    $inventory = Inventory::factory()->create();
+    $order->inventory()->associate($inventory);
+    $order->save();
+    expect($order->inventory)->toBe($inventory);
+    expect($order->property_code)->toBe($inventory->property_code);
+})->with([
+    [ fn() => Order::factory()->create([ 'transaction_id' => null, 'property_code' => null]) ]
 ]);

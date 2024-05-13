@@ -3,11 +3,11 @@
 namespace RLI\Booking\Actions;
 
 use RLI\Booking\Classes\State\ProcessedPendingConfirmation;
+use RLI\Booking\Models\{Buyer, Contact, Voucher};
 use Illuminate\Support\Facades\Validator;
 use Lorisleiva\Actions\Concerns\AsAction;
-use RLI\Booking\Models\{Buyer, Voucher};
-use Lorisleiva\Actions\ActionRequest;
 use RLI\Booking\Events\BuyerProcessed;
+use Lorisleiva\Actions\ActionRequest;
 use Illuminate\Support\Arr;
 use App\Models\User;
 
@@ -38,6 +38,9 @@ class ProcessBuyerAction
             'selfie_image_url' => $selfieImageUrl,
 //            'id_mark_url' => $this->faker->url(),
         ]);
+        if ($contact = Contact::where('reference_code', $voucher->code)->first()) {
+            AssociateContactAction::run($buyer, $contact);
+        }
         $order = $voucher->getOrder();
         $order->buyer()->associate($buyer);
         $order->state->transitionTo(ProcessedPendingConfirmation::class);

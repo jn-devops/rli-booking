@@ -1,12 +1,10 @@
 <?php
 
-use Illuminate\Foundation\Testing\{RefreshDatabase, WithFaker};
-use RLI\Booking\Actions\PersistContactAction;
-use RLI\Booking\Data\ContactData;
 use RLI\Booking\Models\{Contact, Inventory, Order, Seller, SellerCommission, Voucher};
-use RLI\Booking\Data\FinancialSchemeData;
-use Illuminate\Support\Arr;
+use Illuminate\Foundation\Testing\{RefreshDatabase, WithFaker};
+use RLI\Booking\Classes\State\UpdatedPendingProcessing;
 use RLI\Booking\Actions\OnboardContactAction;
+use RLI\Booking\Data\FinancialSchemeData;
 
 uses(RefreshDatabase::class, WithFaker::class);
 
@@ -55,6 +53,7 @@ test('onboard contact action', function (Contact $contact, Inventory $inventory,
     $voucher = OnboardContactAction::run(...func_get_args());
     expect($voucher)->toBeInstanceOf(Voucher::class);
     tap($voucher->getOrder(), function (Order $order) use ($inventory, $seller, $sellerCommission, $financialSchemeData) {
+        expect($order->state)->toBeInstanceOf(UpdatedPendingProcessing::class);
         expect($order->property_code)->toBe($inventory->property_code);
         expect((int) ($order->dp_percent - $financialSchemeData->dp_percent))->toBe(0 );
         expect((int) ($order->dp_months - $financialSchemeData->dp_months))->toBe(0);
@@ -81,6 +80,7 @@ test('onboard contact end points', function (Contact $contact, Inventory $invent
     $params = $response->getSession()->get('params');
     $voucher = Voucher::where('code', $params['voucher'])->first();
     tap($voucher->getOrder(), function (Order $order) use ($inventory, $seller, $sellerCommission, $financialSchemeData) {
+        expect($order->state)->toBeInstanceOf(UpdatedPendingProcessing::class);
         expect($order->property_code)->toBe($inventory->property_code);
         expect((int) ($order->dp_percent - $financialSchemeData->dp_percent))->toBe(0 );
         expect((int) ($order->dp_months - $financialSchemeData->dp_months))->toBe(0);
