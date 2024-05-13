@@ -37,6 +37,7 @@ test('contact has schema attributes', function (Contact $contact) {
     expect($contact->voluntarySurrenderFormDocument)->toBeInstanceOf(Media::class);
     expect($contact->usufructAgreementDocument)->toBeInstanceOf(Media::class);
     expect($contact->contractToSellDocument)->toBeInstanceOf(Media::class);
+    expect($contact->reference_code)->toBeString();
 })->with('contact');
 
 test('contact has data', function (Contact $contact) {
@@ -76,38 +77,67 @@ test('contact has data', function (Contact $contact) {
         expect($contact->$name->getUrl())->toBe($url);
     };
     expect($data->uploads->toArray())->toBe($contact->uploads);
+    expect($data->reference_code)->toBe($contact->reference_code);
 })->with('contact');
 
 test('contact can attach media', function () {
     $idImageUrl = 'https://jn-img.enclaves.ph/Test/idImage.jpg';
     $selfieImageUrl = 'https://jn-img.enclaves.ph/Test/selfieImage.jpg';
     $payslipImageUrl = 'https://jn-img.enclaves.ph/Test/payslipImage.jpg';
-    $contact = Contact::factory()->create(['idImage' => null, 'selfieImage' => null, 'payslipImage' => null]);
+    $voluntarySurrenderFormDocument = 'https://unec.edu.az/application/uploads/2014/12/pdf-sample.pdf';
+    $usufructAgreementDocument = 'https://file-examples.com/storage/fe92070d83663e82d92ecf7/2017/10/file-sample_150kB.pdf';
+    $contractToSellDocument = 'https://s29.q4cdn.com/175625835/files/doc_downloads/test.pdf';
+    $contact = Contact::factory()->create([
+        'idImage' => null,
+        'selfieImage' => null,
+        'payslipImage' => null,
+        'voluntarySurrenderFormDocument' => null,
+        'usufructAgreementDocument' => null,
+        'contractToSellDocument' => null,
+    ]);
     $contact->idImage = $idImageUrl;
     $contact->selfieImage = $selfieImageUrl;
     $contact->payslipImage = $payslipImageUrl;
+    $contact->voluntarySurrenderFormDocument = $voluntarySurrenderFormDocument;
+    $contact->usufructAgreementDocument = $usufructAgreementDocument;
+    $contact->contractToSellDocument = $contractToSellDocument;
     $contact->save();
     expect($contact->idImage)->toBeInstanceOf(Media::class);
     expect($contact->selfieImage)->toBeInstanceOf(Media::class);
     expect($contact->payslipImage)->toBeInstanceOf(Media::class);
-    expect($contact->idImage->name)->toBe('idImage');
-    expect($contact->idImage->file_name)->toBe('idImage.jpg');
-    expect($contact->payslipImage->file_name)->toBe('payslipImage.jpg');
+    expect($contact->voluntarySurrenderFormDocument)->toBeInstanceOf(Media::class);
+    expect($contact->usufructAgreementDocument)->toBeInstanceOf(Media::class);
+    expect($contact->contractToSellDocument)->toBeInstanceOf(Media::class);
     expect($contact->idImage->name)->toBe('idImage');
     expect($contact->selfieImage->name)->toBe('selfieImage');
     expect($contact->payslipImage->name)->toBe('payslipImage');
+    expect($contact->voluntarySurrenderFormDocument->name)->toBe('voluntarySurrenderFormDocument');
+    expect($contact->usufructAgreementDocument->name)->toBe('usufructAgreementDocument');
+    expect($contact->contractToSellDocument->name)->toBe('contractToSellDocument');
     expect($contact->idImage->file_name)->toBe('idImage.jpg');
     expect($contact->selfieImage->file_name)->toBe('selfieImage.jpg');
     expect($contact->payslipImage->file_name)->toBe('payslipImage.jpg');
+    expect($contact->voluntarySurrenderFormDocument->file_name)->toBe('pdf-sample.pdf');
+    expect($contact->usufructAgreementDocument->file_name)->toBe('file-sample_150kB.pdf');
+    expect($contact->contractToSellDocument->file_name)->toBe('test.pdf');
     tap(config('app.url'), function ($host) use ($contact) {
         expect($contact->idImage->getUrl())->toBe(__(':host/storage/:path', ['host' => $host, 'path' => $contact->idImage->getPathRelativeToRoot()]));
         expect($contact->selfieImage->getUrl())->toBe(__(':host/storage/:path', ['host' => $host, 'path' => $contact->selfieImage->getPathRelativeToRoot()]));
         expect($contact->payslipImage->getUrl())->toBe(__(':host/storage/:path', ['host' => $host, 'path' => $contact->payslipImage->getPathRelativeToRoot()]));
+        expect($contact->voluntarySurrenderFormDocument->getUrl())->toBe(__(':host/storage/:path', ['host' => $host, 'path' => $contact->voluntarySurrenderFormDocument->getPathRelativeToRoot()]));
+        expect($contact->usufructAgreementDocument->getUrl())->toBe(__(':host/storage/:path', ['host' => $host, 'path' => $contact->usufructAgreementDocument->getPathRelativeToRoot()]));
+        expect($contact->contractToSellDocument->getUrl())->toBe(__(':host/storage/:path', ['host' => $host, 'path' => $contact->contractToSellDocument->getPathRelativeToRoot()]));
     });
     $contact->idImage->delete();
     $contact->selfieImage->delete();
     $contact->payslipImage->delete();
+    $contact->voluntarySurrenderFormDocument->delete();
+    $contact->usufructAgreementDocument->delete();
+    $contact->contractToSellDocument->delete();
     $contact->clearMediaCollection('id-images');
     $contact->clearMediaCollection('selfie-images');
     $contact->clearMediaCollection('payslip-images');
+    $contact->clearMediaCollection('voluntary_surrender_form-documents');
+    $contact->clearMediaCollection('usufruct_agreement-documents');
+    $contact->clearMediaCollection('contract_to_sell-documents');
 });

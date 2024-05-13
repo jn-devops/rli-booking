@@ -18,6 +18,7 @@ class ContactData extends Data
         public ?ContactOrderData $order,
         /** @var UploadData[] */
         public DataCollection|Optional $uploads,
+        public ?string $reference_code,
     ) {}
 
     public static function from(...$payloads): static
@@ -54,7 +55,8 @@ class ContactData extends Data
                         ];
                     })
                     ->toArray()
-            )
+            ),
+            reference_code: $attribs->reference_code ?: null
         );
     }
 
@@ -78,7 +80,8 @@ class ContactData extends Data
             employment: $model->employment ? ContactEmploymentData::from($model->employment) : null,
             co_borrowers: new DataCollection(PersonData::class, $model->co_borrowers),
             order: $model->order ? ContactOrderData::from($model->order) : null,
-            uploads: new DataCollection(UploadData::class, $model->uploads)
+            uploads: new DataCollection(UploadData::class, $model->uploads),
+            reference_code: $model->reference_code ?: null
         );
     }
 }

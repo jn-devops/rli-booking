@@ -44,6 +44,7 @@ use Spatie\Image\Enums\Fit;
  * @property Media  $voluntarySurrenderFormDocument
  * @property Media  $usufructAgreementDocument
  * @property Media  $contractToSellDocument
+ * @property string $reference_code
  *
  * @method   int    getKey()
  */
@@ -73,7 +74,8 @@ class Contact extends Model implements AttributableData, HasMedia
         'payslipImage',
         'voluntarySurrenderFormDocument',
         'usufructAgreementDocument',
-        'contractToSellDocument'
+        'contractToSellDocument',
+        'reference_code'
     ];
 
     protected $casts = [

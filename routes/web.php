@@ -36,7 +36,7 @@ Route::middleware([
     })->name('dashboard');
 
     Route::post('generate-voucher', \RLI\Booking\Actions\GenerateVoucherAction::class)->name('generate-voucher');
-
+    Route::post('onboard-contact', \RLI\Booking\Actions\OnboardContactAction::class)->name('onboard-contact');
 });
 Route::post('update-order/{voucher}', \RLI\Booking\Actions\UpdateOrderAction::class)->name('update-order');
 Route::get('references/{voucher}', [\RLI\Booking\Http\Controllers\VoucherController::class, 'show'])->name('references.show');

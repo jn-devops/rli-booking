@@ -108,6 +108,7 @@ dataset('attribs', function () {
                 'seller_commission_code' => $this->faker->word(),
                 'property_code' => $this->faker->word(),
             ],
+            'reference_code' => $this->faker->word()
         ]
     ];
 });

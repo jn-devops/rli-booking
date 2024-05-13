@@ -114,7 +114,8 @@ class ContactFactory extends Factory
             'payslipImage' => $this->faker->imageUrl(word: 'payslipImage',format: 'jpeg'),
             'voluntarySurrenderFormDocument' => 'https://unec.edu.az/application/uploads/2014/12/pdf-sample.pdf',
             'usufructAgreementDocument' => 'https://file-examples.com/storage/fe92070d83663e82d92ecf7/2017/10/file-sample_150kB.pdf',
-            'contractToSellDocument' => 'https://s29.q4cdn.com/175625835/files/doc_downloads/test.pdf'
+            'contractToSellDocument' => 'https://s29.q4cdn.com/175625835/files/doc_downloads/test.pdf',
+            'reference_code' => $this->faker->word()
         ];
     }
 }

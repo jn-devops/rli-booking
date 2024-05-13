@@ -10,8 +10,9 @@ use Illuminate\Database\Eloquent\Model;
 /**
  * Class Inventory
  *
- * @property int    $id
- * @property string $property_code
+ * @property int     $id
+ * @property string  $property_code
+ * @property Product $product
  *
  * @method   int    getKey()
  */
