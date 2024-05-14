@@ -50,6 +50,8 @@ class UpdateOrderAction
 
         return redirect()->route('references.show', [
             'voucher' => $voucher->code
-        ])->with();
+        ])->with([
+            'voucher' => $voucher->toData()
+        ]);
     }
 }

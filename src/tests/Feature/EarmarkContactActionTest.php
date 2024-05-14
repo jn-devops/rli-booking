@@ -3,7 +3,7 @@
 use RLI\Booking\Models\{Contact, Inventory, Order, Seller, SellerCommission, Voucher};
 use Illuminate\Foundation\Testing\{RefreshDatabase, WithFaker};
 use RLI\Booking\Classes\State\UpdatedPendingProcessing;
-use RLI\Booking\Actions\OnboardContactAction;
+use RLI\Booking\Actions\EarmarkContactAction;
 use RLI\Booking\Data\FinancialSchemeData;
 
 uses(RefreshDatabase::class, WithFaker::class);
@@ -50,7 +50,7 @@ dataset('financial scheme', function () {
 });
 
 test('onboard contact action', function (Contact $contact, Inventory $inventory, Seller $seller, SellerCommission $sellerCommission, FinancialSchemeData $financialSchemeData) {
-    $voucher = OnboardContactAction::run(...func_get_args());
+    $voucher = EarmarkContactAction::run(...func_get_args());
     expect($voucher)->toBeInstanceOf(Voucher::class);
     tap($voucher->getOrder(), function (Order $order) use ($inventory, $seller, $sellerCommission, $financialSchemeData) {
         expect($order->state)->toBeInstanceOf(UpdatedPendingProcessing::class);

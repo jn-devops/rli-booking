@@ -39,11 +39,16 @@ test('buyer has data', function () {
 });
 
 test('buyer has contact', function () {
-    $buyer = Buyer::factory()->forContact()->create();
-    expect($buyer->contact)->toBeInstanceOf(Contact::class);
     $buyer = Buyer::factory()->create();
     expect($buyer->contact)->toBeNull();
-    $contact = Contact::factory()->create();
+    $contact = Contact::factory()->create([
+        'idImage' => null,
+        'selfieImage' => null,
+        'payslipImage' => null,
+        'voluntarySurrenderFormDocument' => null,
+        'usufructAgreementDocument' => null,
+        'contractToSellDocument' => null,
+    ]);
     $buyer->contact()->associate($contact);
     $buyer->save();
     expect($buyer->contact)->toBeInstanceOf(Contact::class);

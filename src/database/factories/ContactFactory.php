@@ -109,12 +109,12 @@ class ContactFactory extends Factory
                 'seller_commission_code' => $this->faker->word(),
                 'property_code' => $this->faker->word(),
             ],
-            'idImage' => $this->faker->imageUrl(word: 'idImage', format: 'jpeg'),
-            'selfieImage' => $this->faker->imageUrl(word: 'selfieImage', format: 'png'),
-            'payslipImage' => $this->faker->imageUrl(word: 'payslipImage',format: 'jpeg'),
-            'voluntarySurrenderFormDocument' => 'https://unec.edu.az/application/uploads/2014/12/pdf-sample.pdf',
-            'usufructAgreementDocument' => 'https://file-examples.com/storage/fe92070d83663e82d92ecf7/2017/10/file-sample_150kB.pdf',
-            'contractToSellDocument' => 'https://s29.q4cdn.com/175625835/files/doc_downloads/test.pdf',
+            'idImage' => null,
+            'selfieImage' => null,
+            'payslipImage' => null,
+            'voluntarySurrenderFormDocument' => null,
+            'usufructAgreementDocument' => null,
+            'contractToSellDocument' => null,
             'reference_code' => $this->faker->word()
         ];
     }

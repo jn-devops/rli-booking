@@ -2,61 +2,49 @@
 
 namespace RLI\Booking\Actions;
 
+use Spatie\ModelStates\Exceptions\CouldNotPerformTransition;
 use RLI\Booking\Classes\State\ProcessedPendingConfirmation;
-use RLI\Booking\Models\{Buyer, Contact, Voucher};
+use RLI\Booking\Models\{Buyer, Contact, Seller, Voucher};
 use Illuminate\Support\Facades\Validator;
 use Lorisleiva\Actions\Concerns\AsAction;
 use RLI\Booking\Events\BuyerProcessed;
+use Illuminate\Http\RedirectResponse;
 use Lorisleiva\Actions\ActionRequest;
 use Illuminate\Support\Arr;
-use App\Models\User;
 
 class ProcessBuyerAction
 {
     use AsAction;
 
-    protected function createBuyer(array $attributes): Voucher
+    /**
+     * @param array $validated
+     * @return Voucher
+     * @throws CouldNotPerformTransition
+     */
+    protected function processBuyer(array $validated): Voucher
     {
-        $validated = Validator::validate($attributes, $this->rules());
-        $voucher = $this->getVoucher($validated);
-        $agent = $this->getSeller($validated);
-        $fieldsExtracted = Arr::get($validated, 'body.data.fieldsExtracted');
-        $email = Arr::get($validated, 'body.inputs.email');
-        $mobile = Arr::get($validated, 'body.inputs.mobile');
-        $idType = Arr::get($validated, 'body.data.idType');
-        $idImageUrl = Arr::get($validated, 'body.data.idImageUrl');
-        $selfieImageUrl = Arr::get($validated, 'body.data.selfieImageUrl');
-        $buyer = Buyer::create([
-            'name' => Arr::get($fieldsExtracted, 'fullName'),
-            'address' => Arr::get($fieldsExtracted, 'address'),
-            'birthdate' => Arr::get($fieldsExtracted, 'dateOfBirth'),
-            'email' => $email,
-            'mobile' => $mobile,
-            'id_type' => $idType,
-            'id_number' => Arr::get($fieldsExtracted, 'idNumber'),
-            'id_image_url' => $idImageUrl,
-            'selfie_image_url' => $selfieImageUrl,
-//            'id_mark_url' => $this->faker->url(),
-        ]);
-        if ($contact = Contact::where('reference_code', $voucher->code)->first()) {
-            AssociateContactAction::run($buyer, $contact);
-        }
-        $order = $voucher->getOrder();
-        $order->buyer()->associate($buyer);
-        $order->state->transitionTo(ProcessedPendingConfirmation::class);
-        $order->save();
-        $voucher->save();
-
+        $buyer = $this->createBuyer($validated);
+        $voucher = $this->afterCreatingBuyerProcessing($buyer, $validated);
         BuyerProcessed::dispatch($voucher);
 
         return $voucher;
     }
 
+    /**
+     * @param array $attributes
+     * @return Voucher
+     * @throws CouldNotPerformTransition
+     */
     public function handle(array $attributes): Voucher
     {
-        return $this->createBuyer($attributes);
+        $validated = Validator::validate($attributes, $this->rules());
+
+        return $this->processBuyer($validated);
     }
 
+    /**
+     * @return array[]
+     */
     public function rules(): array
     {
         return [
@@ -81,9 +69,14 @@ class ProcessBuyerAction
         ];
     }
 
-    public function asController(ActionRequest $request): \Illuminate\Http\RedirectResponse
+    /**
+     * @param ActionRequest $request
+     * @return RedirectResponse
+     * @throws CouldNotPerformTransition
+     */
+    public function asController(ActionRequest $request): RedirectResponse
     {
-        $buyer = $this->createBuyer($request->validated());
+        $buyer = $this->processBuyer($request->validated());
 
         return back(302)->with([
             'key' => 'value'
@@ -104,11 +97,71 @@ class ProcessBuyerAction
         return Voucher::where('code', $code)->firstOrFail();
     }
 
-    private function getSeller(array $attributes): User
+    /**
+     * @param array $validated
+     * @return Buyer
+     */
+    public function createBuyer(array $validated): Buyer
+    {
+        $fieldsExtracted = Arr::get($validated, 'body.data.fieldsExtracted');
+        $email = Arr::get($validated, 'body.inputs.email');
+        $mobile = Arr::get($validated, 'body.inputs.mobile');
+        $idType = Arr::get($validated, 'body.data.idType');
+        $idImageUrl = Arr::get($validated, 'body.data.idImageUrl');
+        $selfieImageUrl = Arr::get($validated, 'body.data.selfieImageUrl');
+
+        return app(Buyer::class)->create([
+            'name' => Arr::get($fieldsExtracted, 'fullName'),
+            'address' => Arr::get($fieldsExtracted, 'address'),
+            'birthdate' => Arr::get($fieldsExtracted, 'dateOfBirth'),
+            'email' => $email,
+            'mobile' => $mobile,
+            'id_type' => $idType,
+            'id_number' => Arr::get($fieldsExtracted, 'idNumber'),
+            'id_image_url' => $idImageUrl,
+            'selfie_image_url' => $selfieImageUrl,
+        ]);
+    }
+
+    /**
+     * @param Buyer $buyer
+     * @param array $validated
+     * @return Voucher
+     * @throws CouldNotPerformTransition
+     */
+    protected function afterCreatingBuyerProcessing(Buyer $buyer, array $validated): Voucher
+    {
+        optional($this->getContact($validated), function (Contact $contact) use ($buyer) {
+            AssociateContactAction::run($buyer, $contact);
+        });
+        $voucher = $this->getVoucher($validated);
+        $order = $voucher->getOrder();
+        $order->buyer()->associate($buyer);
+        $order->state->transitionTo(ProcessedPendingConfirmation::class); //automatic saving
+
+        return $voucher;
+    }
+
+    /**
+     * @param array $validated
+     * @return Contact|null
+     */
+    protected function getContact(array $validated): ?Contact
+    {
+        $reference_code = Arr::get($validated, 'body.inputs.code');
+
+        return Contact::where('reference_code', $reference_code)->first();
+    }
+
+    /**
+     * @param array $attributes
+     * @return Seller
+     */
+    private function getSeller(array $attributes): Seller
     {
         $agent_attributes = Arr::get($attributes, 'body.campaign.agent');
         $email = Arr::get($agent_attributes, 'email');
 
-        return User::where('email', $email)->firstOrFail();
+        return Seller::where('email', $email)->firstOrFail();
     }
 }

@@ -13,7 +13,16 @@ beforeEach(function() {
 
 dataset('contact', function () {
     return [
-        [ fn () => Contact::factory()->create() ]
+        [
+            fn () => Contact::factory()->create([
+                'idImage' => 'https://jn-img.enclaves.ph/Test/idImage.jpg',
+                'selfieImage' => 'https://jn-img.enclaves.ph/Test/selfieImage.jpg',
+                'payslipImage' => 'https://jn-img.enclaves.ph/Test/payslipImage.jpg',
+                'voluntarySurrenderFormDocument' => 'https://unec.edu.az/application/uploads/2014/12/pdf-sample.pdf',
+                'usufructAgreementDocument' => 'https://file-examples.com/storage/fe92070d83663e82d92ecf7/2017/10/file-sample_150kB.pdf',
+                'contractToSellDocument' => 'https://s29.q4cdn.com/175625835/files/doc_downloads/test.pdf',
+            ])
+        ]
     ];
 });
 

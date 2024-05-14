@@ -10,7 +10,7 @@ use Lorisleiva\Actions\Concerns\AsAction;
 use Lorisleiva\Actions\ActionRequest;
 use Illuminate\Support\Arr;
 
-class OnboardContactAction
+class EarmarkContactAction
 {
     use AsAction;
 
