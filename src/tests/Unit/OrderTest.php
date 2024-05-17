@@ -1,13 +1,15 @@
 <?php
 
 use RLI\Booking\Classes\State\{Abandoned, InternallyCreatedPendingUpdate, UpdatedPendingProcessing};
-use Carbon\Carbon;
+
 use RLI\Booking\Classes\State\{ProcessedPendingConfirmation, ConfirmedPendingInvoice};
 use RLI\Booking\Classes\State\{InvoicedPendingPayment, PaidPendingFulfillment};
 use Illuminate\Foundation\Testing\{RefreshDatabase, WithFaker};
 use RLI\Booking\Models\{Buyer, Inventory, Order, Product, Seller};
+use RLI\Booking\Data\FinancialSchemeData;
 use Illuminate\Database\QueryException;
 use RLI\Booking\Data\OrderData;
+use Carbon\Carbon;
 
 uses(RefreshDatabase::class, WithFaker::class);
 
@@ -204,4 +206,21 @@ test('order has inventory', function (Order $order) {
     expect($order->property_code)->toBe($inventory->property_code);
 })->with([
     [ fn() => Order::factory()->create([ 'transaction_id' => null, 'property_code' => null]) ]
+]);
+
+test('order has financial scheme', function (Order $order) {
+    expect($order->financialScheme)->toBeNull();
+    $order->dp_percent = 10;
+    $order->dp_months = 12;
+    expect($order->financialScheme)->toBeInstanceOf(FinancialSchemeData::class);
+    $order->save();
+    $order = Order::find($order->id);
+    expect($order->financialScheme->toArray())->toBe(FinancialSchemeData::from(array_filter((['dp_percent' => 10, 'dp_months' => 12])))->toArray());
+    $financialScheme = FinancialSchemeData::from(array_filter((['dp_percent' => 8, 'dp_months' => 8])));
+    $order->financialScheme = $financialScheme;
+    $order->save();
+    $order = Order::find($order->id);
+    expect($order->financialScheme->toArray())->toBe($financialScheme->toArray());
+})->with([
+    [ fn() => Order::factory()->create([ 'dp_percent' => null, 'dp_months' => null]) ]
 ]);

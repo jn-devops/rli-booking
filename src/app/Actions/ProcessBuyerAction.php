@@ -16,13 +16,17 @@ class ProcessBuyerAction
 {
     use AsAction;
 
+    protected string $project_code;
+
     /**
      * @param array $validated
+     * @param string $project_code
      * @return Voucher
      * @throws CouldNotPerformTransition
      */
-    protected function processBuyer(array $validated): Voucher
+    protected function processBuyer(array $validated, string $project_code = ''): Voucher
     {
+        $this->project_code = $project_code;
         $buyer = $this->createBuyer($validated);
         $voucher = $this->afterCreatingBuyerProcessing($buyer, $validated);
         BuyerProcessed::dispatch($voucher);
@@ -32,14 +36,15 @@ class ProcessBuyerAction
 
     /**
      * @param array $attributes
+     * @param string $project_code
      * @return Voucher
      * @throws CouldNotPerformTransition
      */
-    public function handle(array $attributes): Voucher
+    public function handle(array $attributes, string $project_code = ''): Voucher
     {
         $validated = Validator::validate($attributes, $this->rules());
 
-        return $this->processBuyer($validated);
+        return $this->processBuyer($validated, $project_code);
     }
 
     /**
@@ -71,15 +76,16 @@ class ProcessBuyerAction
 
     /**
      * @param ActionRequest $request
+     * @param string $project_code
      * @return RedirectResponse
      * @throws CouldNotPerformTransition
      */
-    public function asController(ActionRequest $request): RedirectResponse
+    public function asController(ActionRequest $request, string $project_code = ''): RedirectResponse
     {
-        $buyer = $this->processBuyer($request->validated());
+        $voucher = $this->processBuyer($request->validated(), $project_code);
 
         return back(302)->with([
-            'key' => 'value'
+            'voucher' => $voucher->toData()
         ]);
     }
 
@@ -89,7 +95,7 @@ class ProcessBuyerAction
      * @param array $attributes
      * @return Voucher
      */
-    private function getVoucher(array $attributes): Voucher
+    protected function getVoucher(array $attributes): Voucher
     {
         $inputs =  Arr::get($attributes, 'body.inputs');
         $code = Arr::get($inputs, 'code');
@@ -154,12 +160,12 @@ class ProcessBuyerAction
     }
 
     /**
-     * @param array $attributes
+     * @param array $validated
      * @return Seller
      */
-    private function getSeller(array $attributes): Seller
+    protected function getSeller(array $validated): Seller
     {
-        $agent_attributes = Arr::get($attributes, 'body.campaign.agent');
+        $agent_attributes = Arr::get($validated, 'body.campaign.agent');
         $email = Arr::get($agent_attributes, 'email');
 
         return Seller::where('email', $email)->firstOrFail();

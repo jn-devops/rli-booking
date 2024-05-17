@@ -2,7 +2,8 @@
 
 namespace RLI\Booking\Models;
 
-use RLI\Booking\Data\{BuyerData, ProductData, SellerData};
+use RLI\Booking\Data\{BuyerData, FinancialSchemeData, ProductData, SellerData};
+use PhpOffice\PhpSpreadsheet\Calculation\Statistical\Distributions\F;
 use RLI\Booking\Traits\HasPackageFactory as HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use RLI\Booking\Interfaces\AttributableData;
@@ -16,22 +17,23 @@ use RLI\Booking\Traits\HasMeta;
 /**
  * Class Order
  *
- * @property integer          $id
- * @property string           $sku
- * @property string           $property_code
- * @property int              $dp_percent
- * @property int              $dp_months
- * @property Product          $product
- * @property Buyer            $buyer
- * @property Seller           $seller
- * @property string           $transaction_id
- * @property OrderState       $state
- * @property string           $code_url
- * @property string           $code_img_url
- * @property string           $expiration_date
- * @property string           $payment_id
- * @property SellerCommission $sellerCommission
- * @property Inventory        $inventory
+ * @property integer             $id
+ * @property string              $sku
+ * @property string              $property_code
+ * @property int                 $dp_percent
+ * @property int                 $dp_months
+ * @property Product             $product
+ * @property Buyer               $buyer
+ * @property Seller              $seller
+ * @property string              $transaction_id
+ * @property OrderState          $state
+ * @property string              $code_url
+ * @property string              $code_img_url
+ * @property string              $expiration_date
+ * @property string              $payment_id
+ * @property SellerCommission    $sellerCommission
+ * @property Inventory           $inventory
+ * @property FinancialSchemeData $financialScheme
  *
  * @method   int        getKey()
  */
@@ -138,5 +140,24 @@ class Order extends Model implements AttributableData
     public function sellerCommission(): BelongsTo
     {
         return $this->belongsTo(SellerCommission::class, 'seller_commission_code', 'code');
+    }
+
+    public function getFinancialSchemeAttribute(): ?FinancialSchemeData
+    {
+        $financialScheme = array_filter(
+            [
+                'dp_percent' => $this->dp_percent,
+                'dp_months' => $this->dp_months
+            ]
+        );
+        return $financialScheme ? FinancialSchemeData::from($financialScheme) : null;
+    }
+
+    public function setFinancialSchemeAttribute(FinancialSchemeData $value): self
+    {
+        $this->dp_percent = $value->dp_percent;
+        $this->dp_months = $value->dp_months;
+
+        return $this;
     }
 }

@@ -19,7 +19,7 @@ dataset('contact', function () {
                 'selfieImage' => 'https://jn-img.enclaves.ph/Test/selfieImage.jpg',
                 'payslipImage' => 'https://jn-img.enclaves.ph/Test/payslipImage.jpg',
                 'voluntarySurrenderFormDocument' => 'https://unec.edu.az/application/uploads/2014/12/pdf-sample.pdf',
-                'usufructAgreementDocument' => 'https://file-examples.com/storage/fe92070d83663e82d92ecf7/2017/10/file-sample_150kB.pdf',
+                'usufructAgreementDocument' => 'https://jn-img.enclaves.ph/Microservices%20Logo/Level%200%20-Book%20Flight_Property.pdf',
                 'contractToSellDocument' => 'https://s29.q4cdn.com/175625835/files/doc_downloads/test.pdf',
             ])
         ]
@@ -94,7 +94,7 @@ test('contact can attach media', function () {
     $selfieImageUrl = 'https://jn-img.enclaves.ph/Test/selfieImage.jpg';
     $payslipImageUrl = 'https://jn-img.enclaves.ph/Test/payslipImage.jpg';
     $voluntarySurrenderFormDocument = 'https://unec.edu.az/application/uploads/2014/12/pdf-sample.pdf';
-    $usufructAgreementDocument = 'https://file-examples.com/storage/fe92070d83663e82d92ecf7/2017/10/file-sample_150kB.pdf';
+    $usufructAgreementDocument = 'https://jn-img.enclaves.ph/Microservices%20Logo/Level%200%20-Book%20Flight_Property.pdf';
     $contractToSellDocument = 'https://s29.q4cdn.com/175625835/files/doc_downloads/test.pdf';
     $contact = Contact::factory()->create([
         'idImage' => null,
@@ -127,7 +127,7 @@ test('contact can attach media', function () {
     expect($contact->selfieImage->file_name)->toBe('selfieImage.jpg');
     expect($contact->payslipImage->file_name)->toBe('payslipImage.jpg');
     expect($contact->voluntarySurrenderFormDocument->file_name)->toBe('pdf-sample.pdf');
-    expect($contact->usufructAgreementDocument->file_name)->toBe('file-sample_150kB.pdf');
+    expect($contact->usufructAgreementDocument->file_name)->toBe('Level-0--Book-Flight_Property.pdf');
     expect($contact->contractToSellDocument->file_name)->toBe('test.pdf');
     tap(config('app.url'), function ($host) use ($contact) {
         expect($contact->idImage->getUrl())->toBe(__(':host/storage/:path', ['host' => $host, 'path' => $contact->idImage->getPathRelativeToRoot()]));

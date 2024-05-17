@@ -2,8 +2,8 @@
 
 use RLI\Booking\Actions\{GenerateVoucherAction, EarmarkContactAction, ProcessBuyerAction, UpdateOrderAction};
 use RLI\Booking\Models\{Buyer, Contact, Inventory, Order, Product, Seller, SellerCommission, Voucher};
+use RLI\Booking\Classes\State\{ProcessedPendingConfirmation, UpdatedPendingProcessing};
 use Illuminate\Foundation\Testing\{RefreshDatabase, WithFaker};
-use RLI\Booking\Classes\State\ProcessedPendingConfirmation;
 use RLI\Booking\Data\FinancialSchemeData;
 use RLI\Booking\Events\BuyerProcessed;
 use Illuminate\Support\Facades\Event;
@@ -77,6 +77,7 @@ test('process buyer action', function (Voucher $voucher) {
 
     $array = json_decode($json, true);
     expect($order->buyer)->toBeEmpty();
+    expect($order->state)->toBeInstanceOf(UpdatedPendingProcessing::class);
     expect($voucher = ProcessBuyerAction::run($array))->toBeInstanceOf(Voucher::class);
     expect($voucher->getOrder())->toBeInstanceOf(Order::class);
     expect($voucher->getOrder()->id)->toBe($order->id);
@@ -117,6 +118,7 @@ test('process buyer action with contact uid', function (Voucher $voucher) {
 
     $array = json_decode($json, true);
     expect($order->buyer)->toBeEmpty();
+    expect($order->state)->toBeInstanceOf(UpdatedPendingProcessing::class);
     expect($voucher = ProcessBuyerAction::run($array))->toBeInstanceOf(Voucher::class);
     expect($voucher->getOrder())->toBeInstanceOf(Order::class);
     expect($voucher->getOrder()->id)->toBe($order->id);

@@ -19,7 +19,7 @@ test('attach contact media action works', function (Contact $contact) {
         'selfieImage' => 'https://jn-img.enclaves.ph/Test/selfieImage.jpg',
         'payslipImage' => 'https://jn-img.enclaves.ph/Test/payslipImage.jpg',
         'voluntarySurrenderFormDocument' => 'https://unec.edu.az/application/uploads/2014/12/pdf-sample.pdf',
-        'usufructAgreementDocument' => 'https://file-examples.com/storage/fe92070d83663e82d92ecf7/2017/10/file-sample_150kB.pdf',
+        'usufructAgreementDocument' => 'https://jn-img.enclaves.ph/Microservices%20Logo/Level%200%20-Book%20Flight_Property.pdf',
         'contractToSellDocument' => 'https://s29.q4cdn.com/175625835/files/doc_downloads/test.pdf'
     ];
 
@@ -73,7 +73,7 @@ test('attach contact media action has an endpoint', function (Contact $contact) 
         'selfieImage' => 'https://jn-img.enclaves.ph/Test/selfieImage.jpg',
         'payslipImage' => 'https://jn-img.enclaves.ph/Test/payslipImage.jpg',
         'voluntarySurrenderFormDocument' => 'https://unec.edu.az/application/uploads/2014/12/pdf-sample.pdf',
-        'usufructAgreementDocument' => 'https://file-examples.com/storage/fe92070d83663e82d92ecf7/2017/10/file-sample_150kB.pdf',
+        'usufructAgreementDocument' => 'https://jn-img.enclaves.ph/Microservices%20Logo/Level%200%20-Book%20Flight_Property.pdf',
         'contractToSellDocument' => 'https://s29.q4cdn.com/175625835/files/doc_downloads/test.pdf'
     ];
     $response = $this->post(route('attach-contact-media', ['uid' => $contact->uid]), $attribs);

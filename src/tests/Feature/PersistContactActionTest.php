@@ -118,7 +118,8 @@ test('persist contact action', function (array $attribs) {
     $original_queries_count = 2;
     $image_query_count = 0;//5;
     $contact_query_count = 1;
-    $queries_count = $original_queries_count + $image_query_count + $contact_query_count;
+    $voucher_query_count = 2;
+    $queries_count = $original_queries_count + $image_query_count + $contact_query_count + $voucher_query_count;
     \Pest\Laravel\expectsDatabaseQueryCount($queries_count);
     $action = app(PersistContactAction::class);
     $contact = $action->run($attribs);
@@ -128,7 +129,7 @@ test('persist contact action', function (array $attribs) {
     expect($contact->toData())->toBe(ContactData::fromModel($contact)->toArray());
 })->with('attribs');
 
-test('persist contact action has an end point', function (array $attribs) {
+test('persist contact end point', function (array $attribs) {
     $response = $this->postJson(route('persist-contact'), $attribs);
     $response->assertStatus(200);
     $search = Arr::only($attribs, ['first_name', 'middle_name', 'last_name']);

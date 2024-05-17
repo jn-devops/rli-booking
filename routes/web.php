@@ -57,3 +57,5 @@ Route::post('associate-contact/{buyer}/{contact}', \RLI\Booking\Actions\Associat
     ->name('associate-contact');
 Route::post('subtract-inventory/{inventory}', \RLI\Booking\Actions\SubtractInventoryAction::class)
     ->name('subtract-inventory');
+Route::post('auto-onboard-buyer/{project_code}', \RLI\Booking\Actions\AutoOnboardBuyerAction::class)
+    ->name('auto-onboard-buyer');
