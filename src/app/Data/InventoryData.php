@@ -3,9 +3,9 @@
 namespace RLI\Booking\Data;
 
 use RLI\Booking\Interfaces\CanHydrateFromModel;
-use RLI\Booking\Models\Inventory;
 use Spatie\LaravelData\Attributes\MapInputName;
 use Spatie\LaravelData\Attributes\Computed;
+use RLI\Booking\Models\Inventory;
 use Spatie\LaravelData\Data;
 
 class InventoryData extends Data implements CanHydrateFromModel
@@ -27,6 +27,7 @@ class InventoryData extends Data implements CanHydrateFromModel
     public function __construct(
         #[MapInputName('id')]
         public int $inventory_id,
+        public string $sku,
         public string $property_code
     )
     {
@@ -45,6 +46,7 @@ class InventoryData extends Data implements CanHydrateFromModel
 
         return new self(
             inventory_id: $inventory->id,
+            sku: $inventory->sku,
             property_code: $model->property_code
         );
     }

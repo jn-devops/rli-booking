@@ -2,33 +2,33 @@
 
 namespace RLI\Booking\Models;
 
-use Illuminate\Support\Collection;
 use RLI\Booking\Traits\HasPackageFactory as HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use RLI\Booking\Interfaces\AttributableData;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Collection;
 use RLI\Booking\Data\ProductData;
 use RLI\Booking\Traits\HasMeta;
 
 /**
  * Class Product
  *
- * @property int     $id
- * @property string  $sku
- * @property string  $type
- * @property string  $name
- * @property int     $processing_fee
- * @property string  $description
- * @property string  $category
- * @property int     $status
- * @property int     $unit_type
- * @property string  $brand
- * @property int     $price
- * @property string  $location
- * @property int     $floor_area
- * @property int     $lot_area
- * @property array   $url_links
- * @property array   $inventory
+ * @property int        $id
+ * @property string     $sku
+ * @property string     $type
+ * @property string     $name
+ * @property int        $processing_fee
+ * @property string     $description
+ * @property string     $category
+ * @property int        $status
+ * @property int        $unit_type
+ * @property string     $brand
+ * @property int        $price
+ * @property string     $location
+ * @property int        $floor_area
+ * @property int        $lot_area
+ * @property array      $url_links
+ * @property array      $inventory
  * @property Collection $inventories
  *
  * @method   int     getKey()
@@ -47,9 +47,9 @@ class Product extends Model implements AttributableData
         return ProductData::fromModel($this)->toArray();
     }
 
-    public function inventories()
+    public function inventories(): HasMany
     {
-        return $this->hasMany(Inventory::class);
+        return $this->hasMany(Inventory::class, 'sku', 'sku');
     }
 
     public function getTypeAttribute(): ?string

@@ -13,10 +13,16 @@ return new class extends Migration
     {
         Schema::create('inventories', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('product_id');
+//            $table->foreignId('product_id');
+            $table->string('sku')->nullable();
             $table->string('property_code')->unique();
             $table->timestamps();
             $table->softDeletes();
+            $table->foreign('sku')
+                ->references('sku')
+                ->on('products')
+                ->onUpdate('cascade')
+            ;
         });
     }
 

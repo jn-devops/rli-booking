@@ -1,21 +1,16 @@
 <?php
 
-use RLI\Booking\Actions\{AutoOnboardBuyerAction, PersistContactAction, GenerateVoucherAction, UpdateOrderAction};
-use RLI\Booking\Models\{Buyer, Contact, Inventory, Order, Product, Seller, SellerCommission, Voucher};
+use RLI\Booking\Models\{Buyer, Contact, Inventory, Order, Product, Seller, Voucher};
+use RLI\Booking\Actions\{AutoOnboardBuyerAction, PersistContactAction};
 use Illuminate\Foundation\Testing\{RefreshDatabase, WithFaker};
 use RLI\Booking\Classes\State\ProcessedPendingConfirmation;
-use RLI\Booking\Data\FinancialSchemeData;
 use RLI\Booking\Events\BuyerProcessed;
-use Illuminate\Support\Facades\Event;
-use RLI\Booking\Seeders\{ProductSeeder, UserSeeder};
-use RLI\Booking\Data\InventoryData;
-
+use Illuminate\Support\Facades\Event;;
 
 uses(RefreshDatabase::class, WithFaker::class);
 
 beforeEach(function() {
     Product::factory()->create();
-    $this->seed(UserSeeder::class);
     Event::fake(BuyerProcessed::class);
     $this->faker = $this->makeFaker('en_PH');
 });
@@ -150,8 +145,13 @@ dataset('contact inputs', function () {
     ];
 });
 
-test('auto onboard buyer action with no contacts and zero inventory', function (array $kyc_inputs) {
-    $project_code = $this->faker->word();
+dataset('project code', function () {
+    return [
+        [ fn() => $this->faker->word() ]
+    ];
+});
+
+test('auto onboard buyer action with no contacts and zero inventory', function (array $kyc_inputs, string $project_code) {
     /************************ before ************************************/
     expect(app(Contact::class)->count())->toBe(0);
     expect(app(Inventory::class)->count())->toBe(0);
@@ -165,10 +165,9 @@ test('auto onboard buyer action with no contacts and zero inventory', function (
     expect($order->property_code)->toBe($project_code);
     expect($order->inventory)->toBeNull();
     /************************ after ************************************/
-})->with('kyc inputs');
+})->with('kyc inputs', 'project code');
 
-test('auto onboard buyer action with no contacts but with an inventory', function (array $kyc_inputs) {
-    $project_code = $this->faker->word();
+test('auto onboard buyer action with no contacts but with an inventory', function (array $kyc_inputs, string $project_code) {
     $inventory = Inventory::factory()->create([
         'property_code' => trans(':project_code-001-002-003', [
             'project_code' => $project_code
@@ -187,10 +186,9 @@ test('auto onboard buyer action with no contacts but with an inventory', functio
     expect($order->property_code)->toBe($inventory->property_code);
     expect($order->inventory->is($inventory))->toBeTrue();
     /************************ after ************************************/
-})->with('kyc inputs');
+})->with('kyc inputs', 'project code');
 
-test('auto onboard buyer action with a contact and an inventory', function (array $kyc_inputs, array $contact_inputs) {
-    $project_code = $this->faker->word();
+test('auto onboard buyer action with a contact and an inventory', function (array $kyc_inputs, array $contact_inputs, string $project_code) {
     $inventory = Inventory::factory()->create([
         'property_code' => trans(':project_code-001-002-003', [
             'project_code' => $project_code
@@ -213,10 +211,9 @@ test('auto onboard buyer action with a contact and an inventory', function (arra
     $contact = PersistContactAction::run($contact_inputs);
     expect($contact->reference_code)->toBe($voucher->code);
     expect($order->buyer->fresh()->contact->is($contact))->toBeTrue();
-})->with('kyc inputs', 'contact inputs');
+})->with('kyc inputs', 'contact inputs', 'project code');
 
-test('auto onboard buyer end point with no contacts and zero inventory', function (array $kyc_inputs) {
-    $project_code = $this->faker->word();
+test('auto onboard buyer end point with no contacts and zero inventory', function (array $kyc_inputs, string $project_code) {
     /************************ before ************************************/
     expect(app(Contact::class)->count())->toBe(0);
     expect(app(Inventory::class)->count())->toBe(0);
@@ -233,10 +230,9 @@ test('auto onboard buyer end point with no contacts and zero inventory', functio
     expect($order->property_code)->toBe($project_code);
     expect($order->inventory)->toBeNull();
     /************************ after ************************************/
-})->with('kyc inputs');
+})->with('kyc inputs', 'project code');
 
-test('auto onboard buyer end point with no contacts but with an inventory', function (array $kyc_inputs) {
-    $project_code = $this->faker->word();
+test('auto onboard buyer end point with no contacts but with an inventory', function (array $kyc_inputs, string $project_code) {
     $inventory = Inventory::factory()->create([
         'property_code' => trans(':project_code-001-002-003', [
             'project_code' => $project_code
@@ -258,10 +254,9 @@ test('auto onboard buyer end point with no contacts but with an inventory', func
     expect($order->property_code)->toBe($inventory->property_code);
     expect($order->inventory->is($inventory))->toBeTrue();
     /************************ after ************************************/
-})->with('kyc inputs');
+})->with('kyc inputs', 'project code');
 
-test('auto onboard buyer end point with a contact and an inventory', function (array $kyc_inputs, array $contact_inputs) {
-    $project_code = $this->faker->word();
+test('auto onboard buyer end point with a contact and an inventory', function (array $kyc_inputs, array $contact_inputs, string $project_code) {
     $inventory = Inventory::factory()->create([
         'property_code' => trans(':project_code-001-002-003', [
             'project_code' => $project_code
@@ -287,4 +282,4 @@ test('auto onboard buyer end point with a contact and an inventory', function (a
     $contact = PersistContactAction::run($contact_inputs);
     expect($contact->reference_code)->toBe($voucher->code);
     expect($order->buyer->fresh()->contact->is($contact))->toBeTrue();
-})->with('kyc inputs', 'contact inputs');
+})->with('kyc inputs', 'contact inputs', 'project code');

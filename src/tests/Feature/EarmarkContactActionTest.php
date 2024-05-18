@@ -49,7 +49,7 @@ dataset('financial scheme', function () {
     ];
 });
 
-test('onboard contact action', function (Contact $contact, Inventory $inventory, Seller $seller, SellerCommission $sellerCommission, FinancialSchemeData $financialSchemeData) {
+test('earmark contact action', function (Contact $contact, Inventory $inventory, Seller $seller, SellerCommission $sellerCommission, FinancialSchemeData $financialSchemeData) {
     $voucher = EarmarkContactAction::run(...func_get_args());
     expect($voucher)->toBeInstanceOf(Voucher::class);
     tap($voucher->getOrder(), function (Order $order) use ($inventory, $seller, $sellerCommission, $financialSchemeData) {
@@ -66,7 +66,7 @@ test('onboard contact action', function (Contact $contact, Inventory $inventory,
     });
 })->with('contact', 'inventory', 'seller', 'seller_commission', 'financial scheme');
 
-test('onboard contact end points', function (Contact $contact, Inventory $inventory, Seller $seller, SellerCommission $sellerCommission, FinancialSchemeData $financialSchemeData) {
+test('earmark contact end points', function (Contact $contact, Inventory $inventory, Seller $seller, SellerCommission $sellerCommission, FinancialSchemeData $financialSchemeData) {
     $attribs = [
         'contact_uid' => $contact->uid,
         'property_code' => $inventory->property_code,

@@ -12,7 +12,7 @@ class InventorySheetImport implements ToModel, WithHeadingRow, WithUpserts
     public function model(array $row): ?Product
     {
         $sku = $row['sku'];
-        return tap(Product::where('sku', $sku)->first(), function (Product $product) use ($row) {
+        return tap(Product::where('sku', $sku)->first(), function (Product $product) use ($row, $sku) {
             $inventory_json = $row['product_codes'];
             $inventory_array = json_decode($inventory_json, false);
 
@@ -20,7 +20,10 @@ class InventorySheetImport implements ToModel, WithHeadingRow, WithUpserts
 
             $non_unique_property_codes = [];
             foreach (array_unique($inventory_array) as $property_code) {
-                $inventory =  new Inventory(['property_code' => $property_code]);
+                $inventory =  new Inventory([
+                    'sku' => $sku,
+                    'property_code' => $property_code
+                ]);
                 try {
                     $product->inventories()->save($inventory);
                 }

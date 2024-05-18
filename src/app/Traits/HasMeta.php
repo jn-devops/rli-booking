@@ -9,7 +9,7 @@ trait HasMeta
 {
     protected array $schemalessAttributes = ['meta'];
 
-    public function initializeHasMeta()
+    public function initializeHasMeta(): void
     {
         $this->mergeFillable(['meta']);
         $this->mergeCasts([

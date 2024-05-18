@@ -15,8 +15,10 @@ class InventoryFactory extends Factory
      */
     public function definition(): array
     {
+        $product = Product::factory()->create();
+
         return [
-            'product_id' => Product::factory()->create(),
+            'sku' => $product->sku,
             'property_code' => $this->faker->word()
                 . '-0' . $this->faker->numberBetween(1,4)
                 . '-0' . $this->faker->numberBetween(1,20)
