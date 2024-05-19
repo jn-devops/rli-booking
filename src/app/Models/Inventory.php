@@ -32,12 +32,16 @@ class Inventory extends Model implements AttributableData
     use HasFactory;
     use HasMeta;
 
-    protected $fillable = ['sku', 'property_code'];
+    protected $fillable = ['sku', 'property_code', 'meta'];
 
     protected $casts = [
         'mappings' => 'array',
         'reserved_at' => 'datetime',
         'sold_at' => 'datetime',
+    ];
+
+    protected $hidden = [
+        'meta'
     ];
 
     public function toData(): array

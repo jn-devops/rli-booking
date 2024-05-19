@@ -1,7 +1,7 @@
 <?php
 use Illuminate\Foundation\Testing\{RefreshDatabase, WithFaker};
+use RLI\Booking\Models\{Inventory, Product};
 use RLI\Booking\Data\InventoryData;
-use RLI\Booking\Models\Inventory;
 use Illuminate\Support\Carbon;
 
 uses(RefreshDatabase::class, WithFaker::class);
@@ -67,5 +67,14 @@ test('inventory has mappings', function () {
     expect($inventory->mappings)->toBeNull();
     $inventory->mappings = $array = ['x' => 'y'];
     expect($inventory->mappings)->toBe($array);
+});
+
+test('inventory has a product', function () {
+    $inventory = Inventory::factory()->create(['sku' => null]);
+    expect($inventory->product)->toBeNull();
+    $product = Product::factory()->create();
+    expect($product->inventories->toArray())->toBe([]);
+    $inventory->product()->associate($product);
+    expect($inventory->product)->toBeInstanceOf(Product::class);
 });
 

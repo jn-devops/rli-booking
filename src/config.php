@@ -9,6 +9,16 @@ return [
         'order' => [
             'webhook' => env('BOOKING_DEFAULT_ORDER_WEBHOOK')
         ],
+        'product' => [
+            'processing_fee' => env('BOOKING_DEFAULT_PROCESSING_FEE', 10000), //in PHP
+            'auto' => [
+                'PHH1' => [
+                    'location' => 'Pampanga',
+                    'category' => 'Extraordinary, Pasinaya',
+                    'brand' => 'Pasinaya',
+                ],
+            ],
+        ],
     ],
     'seeds' => [
         'sellers' => [
