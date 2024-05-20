@@ -13,9 +13,9 @@ return [
             'processing_fee' => env('BOOKING_DEFAULT_PROCESSING_FEE', 10000), //in PHP
             'auto' => [
                 'PHH1' => [
-                    'location' => 'Pampanga',
-                    'category' => 'Extraordinary, Pasinaya',
-                    'brand' => 'Pasinaya',
+                    'location' => 'Cavite',
+                    'category' => 'Extraordinary, Pasinaya Homes',
+                    'brand' => 'Pasinaya Homes Hilaga',
                 ],
             ],
         ],

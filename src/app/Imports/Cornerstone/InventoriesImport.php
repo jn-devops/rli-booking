@@ -28,8 +28,8 @@ class InventoriesImport implements ToModel, WithHeadingRow, WithUpserts, WithGro
         $floor_area = $meta['data']['floor_area'];
         $location = config('booking.defaults.product.auto')[$project_code]['location'];
         $product = app(Product::class)->firstOrCreate(['sku' => $meta['data']['sku']],[
-            'type' => 'stand-alone',
-            'name' => $brand . ' ' . $location . ' ' . $unit_type . ' ' . 'L' . $lot_area . ' ' . 'F' . $floor_area,
+            'type' => 'simple',
+            'name' => $brand . ' ' . $unit_type . ' ' . 'L' . $lot_area . ' ' . 'F' . $floor_area,
             'processing_fee' => config('booking.defaults.product.processing_fee'),
             'category' => config('booking.defaults.product.auto')[$project_code]['category'],
             'status' => 1,
