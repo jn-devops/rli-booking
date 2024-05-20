@@ -13,6 +13,7 @@ class VerifyCsrfToken extends Middleware
      */
     protected $except = [
         '/process-buyer',
-        '/auto-reserve'
+        '/auto-reserve',
+        '/auto-onboard-buyer/*'
     ];
 }

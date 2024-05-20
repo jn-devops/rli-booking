@@ -47,3 +47,7 @@ Route::post('persist-contact', \RLI\Booking\Actions\PersistContactAction::class)
 
 Route::post('attach-contact-media/{uid}', \RLI\Booking\Actions\AttachContactMediaAction::class)
     ->name('attach-contact-media');
+
+Route::get('references/{voucher}', function (\RLI\Booking\Models\Voucher $voucher) {
+   return $voucher->toData();
+});
