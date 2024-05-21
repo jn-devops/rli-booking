@@ -21,6 +21,11 @@ dataset('contact', function () {
                 'voluntarySurrenderFormDocument' => 'https://unec.edu.az/application/uploads/2014/12/pdf-sample.pdf',
                 'usufructAgreementDocument' => 'https://jn-img.enclaves.ph/Microservices%20Logo/Level%200%20-Book%20Flight_Property.pdf',
                 'contractToSellDocument' => 'https://s29.q4cdn.com/175625835/files/doc_downloads/test.pdf',
+                'deedOfRestrictionsDocument' => 'https://s29.q4cdn.com/175625835/files/doc_downloads/test.pdf',
+                'disclosureDocument' => 'https://s29.q4cdn.com/175625835/files/doc_downloads/test.pdf',
+                'borrowerConformityDocument' => 'https://s29.q4cdn.com/175625835/files/doc_downloads/test.pdf',
+                'statementOfAccountDocument' => 'https://s29.q4cdn.com/175625835/files/doc_downloads/test.pdf',
+                'invoiceDocument' => 'https://s29.q4cdn.com/175625835/files/doc_downloads/test.pdf',
             ])
         ]
     ];
@@ -46,6 +51,11 @@ test('contact has schema attributes', function (Contact $contact) {
     expect($contact->voluntarySurrenderFormDocument)->toBeInstanceOf(Media::class);
     expect($contact->usufructAgreementDocument)->toBeInstanceOf(Media::class);
     expect($contact->contractToSellDocument)->toBeInstanceOf(Media::class);
+    expect($contact->deedOfRestrictionsDocument)->toBeInstanceOf(Media::class);
+    expect($contact->disclosureDocument)->toBeInstanceOf(Media::class);
+    expect($contact->borrowerConformityDocument)->toBeInstanceOf(Media::class);
+    expect($contact->statementOfAccountDocument)->toBeInstanceOf(Media::class);
+    expect($contact->invoiceDocument)->toBeInstanceOf(Media::class);
     expect($contact->reference_code)->toBeString();
 })->with('contact');
 
@@ -80,6 +90,7 @@ test('contact has data', function (Contact $contact) {
         expect(array_filter($co_borrower))->toBe(array_filter($contact->co_borrowers[$index]));
     };
     expect($data->order->toArray())->toBe(ContactOrderData::from($contact->order)->toArray());
+
     foreach (array_filter($data->uploads->toArray()) as $upload) {
         $name = $upload['name'];
         $url = $upload['url'];
@@ -96,6 +107,11 @@ test('contact can attach media', function () {
     $voluntarySurrenderFormDocument = 'https://unec.edu.az/application/uploads/2014/12/pdf-sample.pdf';
     $usufructAgreementDocument = 'https://jn-img.enclaves.ph/Microservices%20Logo/Level%200%20-Book%20Flight_Property.pdf';
     $contractToSellDocument = 'https://s29.q4cdn.com/175625835/files/doc_downloads/test.pdf';
+    $deedOfRestrictionsDocument = 'https://s29.q4cdn.com/175625835/files/doc_downloads/test.pdf';
+    $disclosureDocument = 'https://s29.q4cdn.com/175625835/files/doc_downloads/test.pdf';
+    $borrowerConformityDocument = 'https://s29.q4cdn.com/175625835/files/doc_downloads/test.pdf';
+    $statementOfAccountDocument = 'https://s29.q4cdn.com/175625835/files/doc_downloads/test.pdf';
+    $invoiceDocument = 'https://s29.q4cdn.com/175625835/files/doc_downloads/test.pdf';
     $contact = Contact::factory()->create([
         'idImage' => null,
         'selfieImage' => null,
@@ -103,6 +119,11 @@ test('contact can attach media', function () {
         'voluntarySurrenderFormDocument' => null,
         'usufructAgreementDocument' => null,
         'contractToSellDocument' => null,
+        'deedOfRestrictionsDocument' => null,
+        'disclosureDocument' => null,
+        'borrowerConformityDocument' => null,
+        'statementOfAccountDocument' => null,
+        'invoiceDocument' => null
     ]);
     $contact->idImage = $idImageUrl;
     $contact->selfieImage = $selfieImageUrl;
@@ -110,6 +131,12 @@ test('contact can attach media', function () {
     $contact->voluntarySurrenderFormDocument = $voluntarySurrenderFormDocument;
     $contact->usufructAgreementDocument = $usufructAgreementDocument;
     $contact->contractToSellDocument = $contractToSellDocument;
+    $contact->deedOfRestrictionsDocument = $deedOfRestrictionsDocument;
+    $contact->disclosureDocument = $disclosureDocument;
+    $contact->borrowerConformityDocument = $borrowerConformityDocument;
+    $contact->statementOfAccountDocument = $statementOfAccountDocument;
+    $contact->invoiceDocument = $invoiceDocument;
+
     $contact->save();
     expect($contact->idImage)->toBeInstanceOf(Media::class);
     expect($contact->selfieImage)->toBeInstanceOf(Media::class);
@@ -117,18 +144,33 @@ test('contact can attach media', function () {
     expect($contact->voluntarySurrenderFormDocument)->toBeInstanceOf(Media::class);
     expect($contact->usufructAgreementDocument)->toBeInstanceOf(Media::class);
     expect($contact->contractToSellDocument)->toBeInstanceOf(Media::class);
+    expect($contact->deedOfRestrictionsDocument)->toBeInstanceOf(Media::class);
+    expect($contact->disclosureDocument)->toBeInstanceOf(Media::class);
+    expect($contact->borrowerConformityDocument)->toBeInstanceOf(Media::class);
+    expect($contact->statementOfAccountDocument)->toBeInstanceOf(Media::class);
+    expect($contact->invoiceDocument)->toBeInstanceOf(Media::class);
     expect($contact->idImage->name)->toBe('idImage');
     expect($contact->selfieImage->name)->toBe('selfieImage');
     expect($contact->payslipImage->name)->toBe('payslipImage');
     expect($contact->voluntarySurrenderFormDocument->name)->toBe('voluntarySurrenderFormDocument');
     expect($contact->usufructAgreementDocument->name)->toBe('usufructAgreementDocument');
     expect($contact->contractToSellDocument->name)->toBe('contractToSellDocument');
+    expect($contact->deedOfRestrictionsDocument->name)->toBe('deedOfRestrictionsDocument');
+    expect($contact->disclosureDocument->name)->toBe('disclosureDocument');
+    expect($contact->borrowerConformityDocument->name)->toBe('borrowerConformityDocument');
+    expect($contact->statementOfAccountDocument->name)->toBe('statementOfAccountDocument');
+    expect($contact->invoiceDocument->name)->toBe('invoiceDocument');
     expect($contact->idImage->file_name)->toBe('idImage.jpg');
     expect($contact->selfieImage->file_name)->toBe('selfieImage.jpg');
     expect($contact->payslipImage->file_name)->toBe('payslipImage.jpg');
     expect($contact->voluntarySurrenderFormDocument->file_name)->toBe('pdf-sample.pdf');
     expect($contact->usufructAgreementDocument->file_name)->toBe('Level-0--Book-Flight_Property.pdf');
     expect($contact->contractToSellDocument->file_name)->toBe('test.pdf');
+    expect($contact->deedOfRestrictionsDocument->file_name)->toBe('test.pdf');
+    expect($contact->disclosureDocument->file_name)->toBe('test.pdf');
+    expect($contact->borrowerConformityDocument->file_name)->toBe('test.pdf');
+    expect($contact->statementOfAccountDocument->file_name)->toBe('test.pdf');
+    expect($contact->invoiceDocument->file_name)->toBe('test.pdf');
     tap(config('app.url'), function ($host) use ($contact) {
         expect($contact->idImage->getUrl())->toBe(__(':host/storage/:path', ['host' => $host, 'path' => $contact->idImage->getPathRelativeToRoot()]));
         expect($contact->selfieImage->getUrl())->toBe(__(':host/storage/:path', ['host' => $host, 'path' => $contact->selfieImage->getPathRelativeToRoot()]));
@@ -136,6 +178,11 @@ test('contact can attach media', function () {
         expect($contact->voluntarySurrenderFormDocument->getUrl())->toBe(__(':host/storage/:path', ['host' => $host, 'path' => $contact->voluntarySurrenderFormDocument->getPathRelativeToRoot()]));
         expect($contact->usufructAgreementDocument->getUrl())->toBe(__(':host/storage/:path', ['host' => $host, 'path' => $contact->usufructAgreementDocument->getPathRelativeToRoot()]));
         expect($contact->contractToSellDocument->getUrl())->toBe(__(':host/storage/:path', ['host' => $host, 'path' => $contact->contractToSellDocument->getPathRelativeToRoot()]));
+        expect($contact->deedOfRestrictionsDocument->getUrl())->toBe(__(':host/storage/:path', ['host' => $host, 'path' => $contact->deedOfRestrictionsDocument->getPathRelativeToRoot()]));
+        expect($contact->disclosureDocument->getUrl())->toBe(__(':host/storage/:path', ['host' => $host, 'path' => $contact->disclosureDocument->getPathRelativeToRoot()]));
+        expect($contact->borrowerConformityDocument->getUrl())->toBe(__(':host/storage/:path', ['host' => $host, 'path' => $contact->borrowerConformityDocument->getPathRelativeToRoot()]));
+        expect($contact->statementOfAccountDocument->getUrl())->toBe(__(':host/storage/:path', ['host' => $host, 'path' => $contact->statementOfAccountDocument->getPathRelativeToRoot()]));
+        expect($contact->invoiceDocument->getUrl())->toBe(__(':host/storage/:path', ['host' => $host, 'path' => $contact->invoiceDocument->getPathRelativeToRoot()]));
     });
     $contact->idImage->delete();
     $contact->selfieImage->delete();
@@ -143,10 +190,20 @@ test('contact can attach media', function () {
     $contact->voluntarySurrenderFormDocument->delete();
     $contact->usufructAgreementDocument->delete();
     $contact->contractToSellDocument->delete();
+    $contact->deedOfRestrictionsDocument->delete();
+    $contact->disclosureDocument->delete();
+    $contact->borrowerConformityDocument->delete();
+    $contact->statementOfAccountDocument->delete();
+    $contact->invoiceDocument->delete();
     $contact->clearMediaCollection('id-images');
     $contact->clearMediaCollection('selfie-images');
     $contact->clearMediaCollection('payslip-images');
     $contact->clearMediaCollection('voluntary_surrender_form-documents');
     $contact->clearMediaCollection('usufruct_agreement-documents');
     $contact->clearMediaCollection('contract_to_sell-documents');
+    $contact->clearMediaCollection('deed_of_restrictions-documents');
+    $contact->clearMediaCollection('disclosure-documents');
+    $contact->clearMediaCollection('borrower_conformity-documents');
+    $contact->clearMediaCollection('statement_of_account-documents');
+    $contact->clearMediaCollection('invoice-documents');
 });

@@ -44,6 +44,11 @@ use Spatie\Image\Enums\Fit;
  * @property Media  $voluntarySurrenderFormDocument
  * @property Media  $usufructAgreementDocument
  * @property Media  $contractToSellDocument
+ * @property Media  $deedOfRestrictionsDocument
+ * @property Media  $disclosureDocument
+ * @property Media  $borrowerConformityDocument
+ * @property Media  $statementOfAccountDocument
+ * @property Media  $invoiceDocument
  * @property string $reference_code
  *
  * @method   int    getKey()
@@ -75,6 +80,11 @@ class Contact extends Model implements AttributableData, HasMedia
         'voluntarySurrenderFormDocument',
         'usufructAgreementDocument',
         'contractToSellDocument',
+        'deedOfRestrictionsDocument',
+        'disclosureDocument',
+        'borrowerConformityDocument',
+        'statementOfAccountDocument',
+        'invoiceDocument',
         'reference_code'
     ];
 
@@ -260,6 +270,119 @@ class Contact extends Model implements AttributableData, HasMedia
     }
 
     /**
+     * @return Media|null
+     */
+    public function getDeedOfRestrictionsDocumentAttribute(): ?Media
+    {
+        return $this->getFirstMedia('deed_of_restrictions-documents');
+    }
+
+    /**
+     * @param string|null $url
+     * @return $this
+     * @throws FileCannotBeAdded
+     * @throws FileDoesNotExist
+     * @throws FileIsTooBig
+     */
+    public function setDeedOfRestrictionsDocumentAttribute(?string $url): static
+    {
+        if ($url)
+            $this->addMediaFromUrl($url)
+                ->usingName('deedOfRestrictionsDocument')
+                ->toMediaCollection('deed_of_restrictions-documents');
+
+        return $this;
+    }
+
+    public function getDisclosureDocumentAttribute(): ?Media
+    {
+        return $this->getFirstMedia('disclosure-documents');
+    }
+
+    /**
+     * @param string|null $url
+     * @return $this
+     * @throws FileCannotBeAdded
+     * @throws FileDoesNotExist
+     * @throws FileIsTooBig
+     */
+    public function setDisclosureDocumentAttribute(?string $url): static
+    {
+        if ($url)
+            $this->addMediaFromUrl($url)
+                ->usingName('disclosureDocument')
+                ->toMediaCollection('disclosure-documents');
+
+        return $this;
+    }
+
+    public function getBorrowerConformityDocumentAttribute(): ?Media
+    {
+        return $this->getFirstMedia('borrower_conformity-documents');
+    }
+
+    /**
+     * @param string|null $url
+     * @return $this
+     * @throws FileCannotBeAdded
+     * @throws FileDoesNotExist
+     * @throws FileIsTooBig
+     */
+    public function setBorrowerConformityDocumentAttribute(?string $url): static
+    {
+        if ($url)
+            $this->addMediaFromUrl($url)
+                ->usingName('borrowerConformityDocument')
+                ->toMediaCollection('borrower_conformity-documents');
+
+        return $this;
+    }
+
+    public function getStatementOfAccountDocumentAttribute(): ?Media
+    {
+        return $this->getFirstMedia('statement_of_account-documents');
+    }
+
+    /**
+     * @param string|null $url
+     * @return $this
+     * @throws FileCannotBeAdded
+     * @throws FileDoesNotExist
+     * @throws FileIsTooBig
+     */
+    public function setStatementOfAccountDocumentAttribute(?string $url): static
+    {
+        if ($url)
+            $this->addMediaFromUrl($url)
+                ->usingName('statementOfAccountDocument')
+                ->toMediaCollection('statement_of_account-documents');
+
+        return $this;
+    }
+
+    public function getInvoiceDocumentAttribute(): ?Media
+    {
+        return $this->getFirstMedia('invoice-documents');
+    }
+
+    /**
+     * @param string|null $url
+     * @return $this
+     * @throws FileCannotBeAdded
+     * @throws FileDoesNotExist
+     * @throws FileIsTooBig
+     */
+    public function setInvoiceDocumentAttribute(?string $url): static
+    {
+        if ($url)
+            $this->addMediaFromUrl($url)
+                ->usingName('invoiceDocument')
+                ->toMediaCollection('invoice-documents');
+
+        return $this;
+    }
+
+    /**
      * @return void
      */
     public function registerMediaCollections(): void
@@ -271,6 +394,11 @@ class Contact extends Model implements AttributableData, HasMedia
             'voluntary_surrender_form-documents' => 'application/pdf',
             'usufruct_agreement-documents' => 'application/pdf',
             'contract_to_sell-documents' => 'application/pdf',
+            'deed_of_restrictions-documents' => 'application/pdf',
+            'disclosure-documents' => 'application/pdf',
+            'borrower_conformity-documents' => 'application/pdf',
+            'statement_of_account-documents' => 'application/pdf',
+            'invoice-documents' => 'application/pdf'
         ];
 
         foreach ($collections as $collection => $mimeTypes) {
@@ -311,6 +439,32 @@ class Contact extends Model implements AttributableData, HasMedia
                         'url' => $url
                     ]
                 ];
+            })
+            ->toArray();
+    }
+
+    /**
+     * Helper function to get all media field names registered in the media collection i.e.,
+     *
+     * id-images => idImage
+     * selfie-images => selfieImage
+     * payslip-images => payslipImage
+     * voluntary_surrender_form-documents => voluntarySurrenderFormDocument
+     * usufruct_agreement-documents => usufructAgreementDocument
+     * contract_to_sell-documents =< contractToSellDocument
+     * deed_of_restrictions-documents => deedOfRestrictionsDocument
+     * borrower_conformity-documents => borrowerConformityDocument
+     * statement_of_account-documents => statementOfAccountDocument
+     * invoice-documents => invoiceDocument
+     *
+     * @return array
+     */
+    public function getMediaFieldNames(): array
+    {
+        return $this->getRegisteredMediaCollections()
+            ->pluck('name')
+            ->map(function($key){
+                return Str::singular(Str::camel($key));
             })
             ->toArray();
     }

@@ -20,9 +20,13 @@ test('attach contact media action works', function (Contact $contact) {
         'payslipImage' => 'https://jn-img.enclaves.ph/Test/payslipImage.jpg',
         'voluntarySurrenderFormDocument' => 'https://unec.edu.az/application/uploads/2014/12/pdf-sample.pdf',
         'usufructAgreementDocument' => 'https://jn-img.enclaves.ph/Microservices%20Logo/Level%200%20-Book%20Flight_Property.pdf',
-        'contractToSellDocument' => 'https://s29.q4cdn.com/175625835/files/doc_downloads/test.pdf'
+        'contractToSellDocument' => 'https://s29.q4cdn.com/175625835/files/doc_downloads/test.pdf',
+        'deedOfRestrictionsDocument' => 'https://s29.q4cdn.com/175625835/files/doc_downloads/test.pdf',
+        'disclosureDocument' => 'https://s29.q4cdn.com/175625835/files/doc_downloads/test.pdf',
+        'borrowerConformityDocument' => 'https://s29.q4cdn.com/175625835/files/doc_downloads/test.pdf',
+        'statementOfAccountDocument' => 'https://s29.q4cdn.com/175625835/files/doc_downloads/test.pdf',
+        'invoiceDocument' => 'https://s29.q4cdn.com/175625835/files/doc_downloads/test.pdf'
     ];
-
     $contact = app(AttachContactMediaAction::class)->run($contact, $attribs);
     expect($contact->idImage)->toBeInstanceOf(Media::class);
     expect($contact->selfieImage)->toBeInstanceOf(Media::class);
@@ -58,6 +62,26 @@ test('attach contact media action works', function (Contact $contact) {
             'name' => $contact->contractToSellDocument->name,
             'url' => $contact->contractToSellDocument->getUrl()
         ],
+        [
+            'name' => $contact->deedOfRestrictionsDocument->name,
+            'url' => $contact->deedOfRestrictionsDocument->getUrl()
+        ],
+        [
+            'name' => $contact->disclosureDocument->name,
+            'url' => $contact->disclosureDocument->getUrl()
+        ],
+        [
+            'name' => $contact->borrowerConformityDocument->name,
+            'url' => $contact->borrowerConformityDocument->getUrl()
+        ],
+        [
+            'name' => $contact->statementOfAccountDocument->name,
+            'url' => $contact->statementOfAccountDocument->getUrl()
+        ],
+        [
+            'name' => $contact->invoiceDocument->name,
+            'url' => $contact->invoiceDocument->getUrl()
+        ],
     ]);
     $contact->idImage->delete();
     $contact->selfieImage->delete();
@@ -74,7 +98,12 @@ test('attach contact media action has an endpoint', function (Contact $contact) 
         'payslipImage' => 'https://jn-img.enclaves.ph/Test/payslipImage.jpg',
         'voluntarySurrenderFormDocument' => 'https://unec.edu.az/application/uploads/2014/12/pdf-sample.pdf',
         'usufructAgreementDocument' => 'https://jn-img.enclaves.ph/Microservices%20Logo/Level%200%20-Book%20Flight_Property.pdf',
-        'contractToSellDocument' => 'https://s29.q4cdn.com/175625835/files/doc_downloads/test.pdf'
+        'contractToSellDocument' => 'https://s29.q4cdn.com/175625835/files/doc_downloads/test.pdf',
+        'deedOfRestrictionsDocument' => 'https://s29.q4cdn.com/175625835/files/doc_downloads/test.pdf',
+        'disclosureDocument' => 'https://s29.q4cdn.com/175625835/files/doc_downloads/test.pdf',
+        'borrowerConformityDocument' => 'https://s29.q4cdn.com/175625835/files/doc_downloads/test.pdf',
+        'statementOfAccountDocument' => 'https://s29.q4cdn.com/175625835/files/doc_downloads/test.pdf',
+        'invoiceDocument' => 'https://s29.q4cdn.com/175625835/files/doc_downloads/test.pdf'
     ];
     $response = $this->post(route('attach-contact-media', ['uid' => $contact->uid]), $attribs);
     $response->assertStatus(200);
@@ -114,6 +143,26 @@ test('attach contact media action has an endpoint', function (Contact $contact) 
             [
                 'name' => $contact->contractToSellDocument->name,
                 'url' => $contact->contractToSellDocument->getUrl()
+            ],
+            [
+                'name' => $contact->deedOfRestrictionsDocument->name,
+                'url' => $contact->deedOfRestrictionsDocument->getUrl()
+            ],
+            [
+                'name' => $contact->disclosureDocument->name,
+                'url' => $contact->disclosureDocument->getUrl()
+            ],
+            [
+                'name' => $contact->borrowerConformityDocument->name,
+                'url' => $contact->borrowerConformityDocument->getUrl()
+            ],
+            [
+                'name' => $contact->statementOfAccountDocument->name,
+                'url' => $contact->statementOfAccountDocument->getUrl()
+            ],
+            [
+                'name' => $contact->invoiceDocument->name,
+                'url' => $contact->invoiceDocument->getUrl()
             ],
         ]
     );

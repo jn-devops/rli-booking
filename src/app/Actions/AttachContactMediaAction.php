@@ -2,6 +2,7 @@
 
 namespace RLI\Booking\Actions;
 
+use Illuminate\Support\Arr;
 use Lorisleiva\Actions\Concerns\AsAction;
 use Lorisleiva\Actions\ActionRequest;
 use RLI\Booking\Models\Contact;
@@ -20,14 +21,11 @@ class AttachContactMediaAction
 
     public function rules(): array
     {
-        return [
-            'idImage' => ['nullable', 'url'],
-            'selfieImage' => ['nullable', 'url'],
-            'payslipImage' => ['nullable', 'url'],
-            'voluntarySurrenderFormDocument' => ['nullable', 'url'],
-            'usufructAgreementDocument' => ['nullable', 'url'],
-            'contractToSellDocument' => ['nullable', 'url'],
-        ];
+        return Arr::mapWithKeys(app(Contact::class)->getMediaFieldNames(), function (string $mediaFieldName) {
+            return [
+                $mediaFieldName => ['nullable', 'url']
+            ];
+        });
     }
 
     public function asController(string $uid, ActionRequest $request): \Illuminate\Http\JsonResponse
