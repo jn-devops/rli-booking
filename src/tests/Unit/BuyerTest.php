@@ -25,7 +25,7 @@ test('buyer has schema attributes', function () {
 });
 
 test('buyer has data', function () {
-    $buyer = Buyer::factory()->create();
+    $buyer = Buyer::factory()->forContact()->create();
     $data = BuyerData::fromModel($buyer);
     expect($data->name)->toBe($buyer->name);
     expect($data->address)->toBe($buyer->address);
