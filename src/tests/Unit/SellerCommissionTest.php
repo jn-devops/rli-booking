@@ -15,14 +15,23 @@ test('seller commission has schema attributes', function () {
     $seller_commission = SellerCommission::factory()->create();
     expect($seller_commission->seller)->toBeInstanceOf(Seller::class);
     expect($seller_commission->code)->toBeString();
+    expect($seller_commission->project_code)->toBeString();
     expect($seller_commission->scheme)->toBeArray();
     expect($seller_commission->remarks)->toBeString();
 });
+
+test('seller commission has unique seller code and project code', function () {
+    $code = $this->faker->word();
+    $project_code = $this->faker->word();
+    SellerCommission::factory()->create(['code' => $code, 'project_code' => $project_code]);
+    SellerCommission::factory()->create(['code' => $code, 'project_code' => $project_code]);
+})->expectException(\Illuminate\Database\UniqueConstraintViolationException::class);
 
 test('seller commission has data', function () {
     $seller_commission = SellerCommission::factory()->create();
     $data = SellerCommissionData::fromModel($seller_commission);
     expect($data->code)->toBe($seller_commission->code);
+    expect($data->project_code)->toBe($seller_commission->project_code);
     expect($data->scheme->toArray())->toBe($seller_commission->scheme);
     expect($data->remarks)->toBe($seller_commission->remarks);
 });

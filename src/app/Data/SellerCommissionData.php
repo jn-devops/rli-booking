@@ -12,6 +12,7 @@ class SellerCommissionData extends Data implements CanHydrateFromModel
 
     public function __construct(
         public string $code,
+        public ?string $project_code,
         /** @var SellerCommissionSchemeData[] */
         public DataCollection $scheme,
         public ?string $remarks,
@@ -21,6 +22,7 @@ class SellerCommissionData extends Data implements CanHydrateFromModel
     {
         return new self(
             code: $model->code,
+            project_code: $model->project_code,
             scheme: new DataCollection(SellerCommissionSchemeData::class, $model->scheme),
             remarks: $model->remarks
         );

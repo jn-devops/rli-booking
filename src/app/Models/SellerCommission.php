@@ -13,6 +13,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property int     $id
  * @property Seller  $seller
  * @property string  $code
+ * @property string  $project_code
  * @property array   $scheme
  * @property string  $remarks
  *
@@ -22,7 +23,7 @@ class SellerCommission extends Model implements AttributableData
 {
     use HasFactory;
 
-    protected $fillable = ['code', 'scheme', 'remarks'];
+    protected $fillable = ['code', 'project_code', 'scheme', 'remarks'];
 
     protected $casts = [
         'scheme' => 'array'

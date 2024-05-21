@@ -41,7 +41,7 @@ test('seller has seller commissions', function () {
     $seller = Seller::factory()->create();
     $seller->sellerCommissions()->saveMany([
         new SellerCommission([
-            'code' => 'ABC-123', 'scheme' => $scheme = [
+            'code' => 'ABC-123', 'project_code' => 'AGM', 'scheme' => $scheme = [
                 [
                     'seller_code' => $manager->code,
                     'percent' => 0.02
@@ -56,8 +56,8 @@ test('seller has seller commissions', function () {
                 ],
             ],
             'remarks' => $this->faker->sentence()]),
-        new SellerCommission(['code' => 'DEF-456', 'scheme' => [], 'remarks' => $this->faker->sentence()]),
-        new SellerCommission(['code' => 'GHI-789', 'scheme' => [], 'remarks' => $this->faker->sentence()]),
+        new SellerCommission(['code' => 'DEF-456', 'project_code' => 'PHH1', 'scheme' => [], 'remarks' => $this->faker->sentence()]),
+        new SellerCommission(['code' => 'GHI-789', 'project_code' => 'PHH2','scheme' => [], 'remarks' => $this->faker->sentence()]),
     ]);
     expect($seller->sellerCommissions)->toHaveCount(3);
     $seller_commission = $seller->sellerCommissions->where('code', 'ABC-123')->first();

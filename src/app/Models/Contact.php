@@ -49,6 +49,8 @@ use Spatie\Image\Enums\Fit;
  * @property Media  $borrowerConformityDocument
  * @property Media  $statementOfAccountDocument
  * @property Media  $invoiceDocument
+ * @property Media  $receiptDocument
+ * @property Media  $deedOfSaleDocument
  * @property string $reference_code
  *
  * @method   int    getKey()
@@ -85,7 +87,9 @@ class Contact extends Model implements AttributableData, HasMedia
         'borrowerConformityDocument',
         'statementOfAccountDocument',
         'invoiceDocument',
-        'reference_code'
+        'receiptDocument',
+        'reference_code',
+        'deedOfSaleDocument'
     ];
 
     protected $casts = [
@@ -382,6 +386,50 @@ class Contact extends Model implements AttributableData, HasMedia
         return $this;
     }
 
+    public function getReceiptDocumentAttribute(): ?Media
+    {
+        return $this->getFirstMedia('receipt-documents');
+    }
+
+    /**
+     * @param string|null $url
+     * @return $this
+     * @throws FileCannotBeAdded
+     * @throws FileDoesNotExist
+     * @throws FileIsTooBig
+     */
+    public function setReceiptDocumentAttribute(?string $url): static
+    {
+        if ($url)
+            $this->addMediaFromUrl($url)
+                ->usingName('receiptDocument')
+                ->toMediaCollection('receipt-documents');
+
+        return $this;
+    }
+
+    public function getDeedOfSaleDocumentAttribute(): ?Media
+    {
+        return $this->getFirstMedia('deed_of_sale-documents');
+    }
+
+    /**
+     * @param string|null $url
+     * @return $this
+     * @throws FileCannotBeAdded
+     * @throws FileDoesNotExist
+     * @throws FileIsTooBig
+     */
+    public function setDeedOfSaleDocumentAttribute(?string $url): static
+    {
+        if ($url)
+            $this->addMediaFromUrl($url)
+                ->usingName('deedOfSaleDocument')
+                ->toMediaCollection('deed_of_sale-documents');
+
+        return $this;
+    }
+
     /**
      * @return void
      */
@@ -398,7 +446,9 @@ class Contact extends Model implements AttributableData, HasMedia
             'disclosure-documents' => 'application/pdf',
             'borrower_conformity-documents' => 'application/pdf',
             'statement_of_account-documents' => 'application/pdf',
-            'invoice-documents' => 'application/pdf'
+            'invoice-documents' => 'application/pdf',
+            'receipt-documents' => 'application/pdf',
+            'deed_of_sale-documents' => 'application/pdf',
         ];
 
         foreach ($collections as $collection => $mimeTypes) {
@@ -456,6 +506,8 @@ class Contact extends Model implements AttributableData, HasMedia
      * borrower_conformity-documents => borrowerConformityDocument
      * statement_of_account-documents => statementOfAccountDocument
      * invoice-documents => invoiceDocument
+     * receipt-documents => receiptDocument
+     * deed_of_sale-documents => deedOfSaleDocument
      *
      * @return array
      */

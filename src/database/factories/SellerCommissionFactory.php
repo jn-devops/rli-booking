@@ -15,6 +15,7 @@ class SellerCommissionFactory extends Factory
         return [
             'seller_id' => Seller::factory()->create(),
             'code' => $this->faker->word(),
+            'project_code' => $this->faker->word(),
             'scheme' => [
                 0 => [
                     'seller_code' => Seller::factory()->create()->code,

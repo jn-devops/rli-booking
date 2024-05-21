@@ -25,7 +25,9 @@ test('attach contact media action works', function (Contact $contact) {
         'disclosureDocument' => 'https://s29.q4cdn.com/175625835/files/doc_downloads/test.pdf',
         'borrowerConformityDocument' => 'https://s29.q4cdn.com/175625835/files/doc_downloads/test.pdf',
         'statementOfAccountDocument' => 'https://s29.q4cdn.com/175625835/files/doc_downloads/test.pdf',
-        'invoiceDocument' => 'https://s29.q4cdn.com/175625835/files/doc_downloads/test.pdf'
+        'invoiceDocument' => 'https://s29.q4cdn.com/175625835/files/doc_downloads/test.pdf',
+        'receiptDocument' => 'https://s29.q4cdn.com/175625835/files/doc_downloads/test.pdf',
+        'deedOfSaleDocument' => 'https://s29.q4cdn.com/175625835/files/doc_downloads/test.pdf',
     ];
     $contact = app(AttachContactMediaAction::class)->run($contact, $attribs);
     expect($contact->idImage)->toBeInstanceOf(Media::class);
@@ -82,6 +84,14 @@ test('attach contact media action works', function (Contact $contact) {
             'name' => $contact->invoiceDocument->name,
             'url' => $contact->invoiceDocument->getUrl()
         ],
+        [
+            'name' => $contact->receiptDocument->name,
+            'url' => $contact->receiptDocument->getUrl()
+        ],
+        [
+            'name' => $contact->deedOfSaleDocument->name,
+            'url' => $contact->deedOfSaleDocument->getUrl()
+        ],
     ]);
     $contact->idImage->delete();
     $contact->selfieImage->delete();
@@ -103,7 +113,9 @@ test('attach contact media action has an endpoint', function (Contact $contact) 
         'disclosureDocument' => 'https://s29.q4cdn.com/175625835/files/doc_downloads/test.pdf',
         'borrowerConformityDocument' => 'https://s29.q4cdn.com/175625835/files/doc_downloads/test.pdf',
         'statementOfAccountDocument' => 'https://s29.q4cdn.com/175625835/files/doc_downloads/test.pdf',
-        'invoiceDocument' => 'https://s29.q4cdn.com/175625835/files/doc_downloads/test.pdf'
+        'invoiceDocument' => 'https://s29.q4cdn.com/175625835/files/doc_downloads/test.pdf',
+        'receiptDocument' => 'https://s29.q4cdn.com/175625835/files/doc_downloads/test.pdf',
+        'deedOfSaleDocument' => 'https://s29.q4cdn.com/175625835/files/doc_downloads/test.pdf',
     ];
     $response = $this->post(route('attach-contact-media', ['uid' => $contact->uid]), $attribs);
     $response->assertStatus(200);
@@ -163,6 +175,14 @@ test('attach contact media action has an endpoint', function (Contact $contact) 
             [
                 'name' => $contact->invoiceDocument->name,
                 'url' => $contact->invoiceDocument->getUrl()
+            ],
+            [
+                'name' => $contact->receiptDocument->name,
+                'url' => $contact->receiptDocument->getUrl()
+            ],
+            [
+                'name' => $contact->deedOfSaleDocument->name,
+                'url' => $contact->deedOfSaleDocument->getUrl()
             ],
         ]
     );

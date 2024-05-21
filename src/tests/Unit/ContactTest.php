@@ -26,6 +26,8 @@ dataset('contact', function () {
                 'borrowerConformityDocument' => 'https://s29.q4cdn.com/175625835/files/doc_downloads/test.pdf',
                 'statementOfAccountDocument' => 'https://s29.q4cdn.com/175625835/files/doc_downloads/test.pdf',
                 'invoiceDocument' => 'https://s29.q4cdn.com/175625835/files/doc_downloads/test.pdf',
+                'receiptDocument' => 'https://s29.q4cdn.com/175625835/files/doc_downloads/test.pdf',
+                'deedOfSaleDocument' => 'https://s29.q4cdn.com/175625835/files/doc_downloads/test.pdf',
             ])
         ]
     ];
@@ -56,6 +58,8 @@ test('contact has schema attributes', function (Contact $contact) {
     expect($contact->borrowerConformityDocument)->toBeInstanceOf(Media::class);
     expect($contact->statementOfAccountDocument)->toBeInstanceOf(Media::class);
     expect($contact->invoiceDocument)->toBeInstanceOf(Media::class);
+    expect($contact->receiptDocument)->toBeInstanceOf(Media::class);
+    expect($contact->deedOfSaleDocument)->toBeInstanceOf(Media::class);
     expect($contact->reference_code)->toBeString();
 })->with('contact');
 
@@ -112,6 +116,8 @@ test('contact can attach media', function () {
     $borrowerConformityDocument = 'https://s29.q4cdn.com/175625835/files/doc_downloads/test.pdf';
     $statementOfAccountDocument = 'https://s29.q4cdn.com/175625835/files/doc_downloads/test.pdf';
     $invoiceDocument = 'https://s29.q4cdn.com/175625835/files/doc_downloads/test.pdf';
+    $receiptDocument = 'https://s29.q4cdn.com/175625835/files/doc_downloads/test.pdf';
+    $deedOfSaleDocument = 'https://s29.q4cdn.com/175625835/files/doc_downloads/test.pdf';
     $contact = Contact::factory()->create([
         'idImage' => null,
         'selfieImage' => null,
@@ -123,7 +129,9 @@ test('contact can attach media', function () {
         'disclosureDocument' => null,
         'borrowerConformityDocument' => null,
         'statementOfAccountDocument' => null,
-        'invoiceDocument' => null
+        'invoiceDocument' => null,
+        'receiptDocument' => null,
+        'deedOfSaleDocument' => null
     ]);
     $contact->idImage = $idImageUrl;
     $contact->selfieImage = $selfieImageUrl;
@@ -136,6 +144,8 @@ test('contact can attach media', function () {
     $contact->borrowerConformityDocument = $borrowerConformityDocument;
     $contact->statementOfAccountDocument = $statementOfAccountDocument;
     $contact->invoiceDocument = $invoiceDocument;
+    $contact->receiptDocument = $receiptDocument;
+    $contact->deedOfSaleDocument = $deedOfSaleDocument;
 
     $contact->save();
     expect($contact->idImage)->toBeInstanceOf(Media::class);
@@ -149,6 +159,8 @@ test('contact can attach media', function () {
     expect($contact->borrowerConformityDocument)->toBeInstanceOf(Media::class);
     expect($contact->statementOfAccountDocument)->toBeInstanceOf(Media::class);
     expect($contact->invoiceDocument)->toBeInstanceOf(Media::class);
+    expect($contact->receiptDocument)->toBeInstanceOf(Media::class);
+    expect($contact->deedOfSaleDocument)->toBeInstanceOf(Media::class);
     expect($contact->idImage->name)->toBe('idImage');
     expect($contact->selfieImage->name)->toBe('selfieImage');
     expect($contact->payslipImage->name)->toBe('payslipImage');
@@ -160,6 +172,8 @@ test('contact can attach media', function () {
     expect($contact->borrowerConformityDocument->name)->toBe('borrowerConformityDocument');
     expect($contact->statementOfAccountDocument->name)->toBe('statementOfAccountDocument');
     expect($contact->invoiceDocument->name)->toBe('invoiceDocument');
+    expect($contact->receiptDocument->name)->toBe('receiptDocument');
+    expect($contact->deedOfSaleDocument->name)->toBe('deedOfSaleDocument');
     expect($contact->idImage->file_name)->toBe('idImage.jpg');
     expect($contact->selfieImage->file_name)->toBe('selfieImage.jpg');
     expect($contact->payslipImage->file_name)->toBe('payslipImage.jpg');
@@ -171,6 +185,8 @@ test('contact can attach media', function () {
     expect($contact->borrowerConformityDocument->file_name)->toBe('test.pdf');
     expect($contact->statementOfAccountDocument->file_name)->toBe('test.pdf');
     expect($contact->invoiceDocument->file_name)->toBe('test.pdf');
+    expect($contact->receiptDocument->file_name)->toBe('test.pdf');
+    expect($contact->deedOfSaleDocument->file_name)->toBe('test.pdf');
     tap(config('app.url'), function ($host) use ($contact) {
         expect($contact->idImage->getUrl())->toBe(__(':host/storage/:path', ['host' => $host, 'path' => $contact->idImage->getPathRelativeToRoot()]));
         expect($contact->selfieImage->getUrl())->toBe(__(':host/storage/:path', ['host' => $host, 'path' => $contact->selfieImage->getPathRelativeToRoot()]));
@@ -183,6 +199,8 @@ test('contact can attach media', function () {
         expect($contact->borrowerConformityDocument->getUrl())->toBe(__(':host/storage/:path', ['host' => $host, 'path' => $contact->borrowerConformityDocument->getPathRelativeToRoot()]));
         expect($contact->statementOfAccountDocument->getUrl())->toBe(__(':host/storage/:path', ['host' => $host, 'path' => $contact->statementOfAccountDocument->getPathRelativeToRoot()]));
         expect($contact->invoiceDocument->getUrl())->toBe(__(':host/storage/:path', ['host' => $host, 'path' => $contact->invoiceDocument->getPathRelativeToRoot()]));
+        expect($contact->receiptDocument->getUrl())->toBe(__(':host/storage/:path', ['host' => $host, 'path' => $contact->receiptDocument->getPathRelativeToRoot()]));
+        expect($contact->deedOfSaleDocument->getUrl())->toBe(__(':host/storage/:path', ['host' => $host, 'path' => $contact->deedOfSaleDocument->getPathRelativeToRoot()]));
     });
     $contact->idImage->delete();
     $contact->selfieImage->delete();
@@ -195,6 +213,8 @@ test('contact can attach media', function () {
     $contact->borrowerConformityDocument->delete();
     $contact->statementOfAccountDocument->delete();
     $contact->invoiceDocument->delete();
+    $contact->receiptDocument->delete();
+    $contact->deedOfSaleDocument->delete();
     $contact->clearMediaCollection('id-images');
     $contact->clearMediaCollection('selfie-images');
     $contact->clearMediaCollection('payslip-images');
@@ -206,4 +226,6 @@ test('contact can attach media', function () {
     $contact->clearMediaCollection('borrower_conformity-documents');
     $contact->clearMediaCollection('statement_of_account-documents');
     $contact->clearMediaCollection('invoice-documents');
+    $contact->clearMediaCollection('receipt-documents');
+    $contact->clearMediaCollection('deed_of_sale-documents');
 });
