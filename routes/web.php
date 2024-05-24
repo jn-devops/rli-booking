@@ -61,3 +61,8 @@ Route::post('auto-onboard-buyer/{project_code}', \RLI\Booking\Actions\AutoOnboar
     ->name('auto-onboard-buyer');
 Route::get('rider/{checkin_code}', \RLI\Booking\Actions\ProcessRiderAction::class)
     ->name('rider');
+Route::get('seller/{seller}', function (\RLI\Booking\Models\Seller $seller) {
+    return inertia()->render('Seller/Commission', [
+        'seller' => $seller->toData()
+    ]);
+});
