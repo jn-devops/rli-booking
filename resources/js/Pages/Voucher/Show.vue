@@ -363,7 +363,7 @@
                 <template #logo>
                     <!-- <AuthenticationCardLogo /> -->
                 </template>
-                <div class="text-center py-6">
+                <div class="text-center py-6 dark:text-white light:text-black">
                     Take note of the reservation code:
                     <div class="font-extrabold text-blue-500">{{ props.voucherCode }}</div>
                     <!-- <div class="font-extrabold text-blue-500">{{ props.booking.reference_code }}</div> -->
@@ -372,7 +372,7 @@
                     <!-- <div><button class="bg-gray-500 text-white"><a :href="url">Or click this ugly button to authenticate (eKYC)</a></button></div> -->
                     <div>
                         <ButtonPrimary>
-                            <a :href="url" class="p-5">Proceed to Authenticate</a>
+                            <a :href="url" class="p-5 dark:text-white light:text-black">Proceed to Authenticate</a>
                         </ButtonPrimary>
                         <!-- <button class="bg-gray-500 text-white">
                             <a :href="url" class="border border-black text-white bg-black mt-4 py-2 px-6 rounded">Proceed to Authenticate</a>

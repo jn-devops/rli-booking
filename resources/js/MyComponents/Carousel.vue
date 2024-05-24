@@ -225,30 +225,64 @@ const viewDetails = (parameter) =>{
 </script>
 <template>
   <!-- <p>1</p> -->
-  <Carousel :items-to-show="3" :wrap-around="true">
-    <Slide 
-    v-for="(listItem, index) in filteredItems" :key="index"
-    >
-      <div
-      class="carousel__item mx-1 h-96 rounded-lg dark:text-white light:text-black">
-        <img :src="listItem.url_links.facade" alt="item image" class="carousel__image h-56">
-        <div class="carousel__content">
-          <h3 class="carousel__title font-bold text-sm">{{ listItem.name }}</h3>
-          <p class="font-bold text-sm mb-0">₱{{ listItem.price.toLocaleString() }}</p>
-          <p class="carousel__description text-sm">{{ listItem.brand }}</p>
-          <div class="w-full mt-1">
-           <button 
-           @click="viewDetails(listItem)"
-           class="border border-rose-500 bg-white text-rose-500 px-3 py-1 w-full rounded-full hover:bg-rose-500 hover:text-white">View Details</button>
+  <div class="hidden md:block">
+    <Carousel :items-to-show="3" :wrap-around="true">
+      <Slide 
+      v-for="(listItem, index) in filteredItems" :key="index"
+      >
+        <div
+        class="carousel__item mx-1 h-96 rounded-lg dark:text-white light:text-black">
+          <img :src="listItem.url_links.facade" alt="item image" class="carousel__image h-56">
+          <div class="carousel__content">
+            <h3 class="carousel__title font-bold text-sm">{{ listItem.name }}</h3>
+            <p class="font-bold text-sm mb-0">₱{{ listItem.price.toLocaleString() }}</p>
+            <p class="carousel__description text-sm">{{ listItem.brand }}</p>
+            <div class="w-full mt-1">
+             <button 
+             @click="viewDetails(listItem)"
+             class="border border-rose-500 bg-white text-rose-500 px-3 py-1 w-full rounded-full hover:bg-rose-500 hover:text-white">View Details</button>
+            </div>
           </div>
         </div>
-      </div>
-    </Slide>
+      </Slide>
+  
+      <template #addons>
+        <Navigation />
+      </template> 
+    </Carousel>
+  </div>
 
-    <template #addons>
-      <Navigation />
-    </template> 
-  </Carousel>
+  <!-- mobile -->
+  <div class="md:hidden block">
+    <Carousel :items-to-show="2" :wrap-around="true" class="sm:block md:hidden">
+      <Slide 
+      v-for="(listItem, index) in filteredItems" :key="index"
+      >
+        <div
+        class="carousel__item mx-1 h-96 rounded-lg dark:text-white light:text-black">
+
+        <img 
+          :src="listItem.url_links.facade ? listItem.url_links.facade : 'https://placehold.co/600x400'" 
+          alt="item image" 
+          class="carousel__image h-56">
+          <div class="carousel__content">
+            <h3 class="carousel__title font-bold text-sm">{{ listItem.name }}</h3>
+            <p class="font-bold text-sm mb-0">₱{{ listItem.price.toLocaleString() }}</p>
+            <p class="carousel__description text-sm">{{ listItem.brand }}</p>
+            <div class="w-full mt-1">
+             <button 
+             @click="viewDetails(listItem)"
+             class="border border-rose-500 bg-white text-rose-500 px-3 py-1 w-full rounded-full hover:bg-rose-500 hover:text-white">View Details</button>
+            </div>
+          </div>
+        </div>
+      </Slide>
+  
+      <template #addons>
+        <Navigation />
+      </template> 
+    </Carousel>
+  </div>
 </template>
 
 

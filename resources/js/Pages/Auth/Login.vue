@@ -55,7 +55,7 @@ const submit = () => {
         <div v-if="status" class="mb-4 font-medium text-sm text-green-600 dark:text-green-400">
             {{ status }}
         </div>
-        <div class="text-center py-4 font-bold text-xl">
+        <div class="text-center py-4 font-bold text-xl dark:text-white light:text-black">
             <h2>Log in your Account</h2>
         </div>
         <form @submit.prevent="submit">
@@ -110,7 +110,7 @@ const submit = () => {
             </div>
             <div class="w-full mt-4 text-center">
 
-                <ButtonPrimary class="text-center w-full" :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
+                <ButtonPrimary class="text-center w-full dark:text-white light:text-black" :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
                     Log in
                 </ButtonPrimary>
             </div>

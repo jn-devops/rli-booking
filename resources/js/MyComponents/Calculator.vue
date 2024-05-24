@@ -78,10 +78,10 @@ const handleDownpaymentChange = () => {
 };
 
   const today = new Date();
-  const month = today.toLocaleString('default', {month : 'long'}); //Momth
-  const month1 = today.getMonth(); // Month
-  const day = today.getDate(); // Day
-  const year = today.getFullYear(); //Year
+  let month = today.toLocaleString('default', {month : 'long'}); //Momth
+  let month1 = today.getMonth(); // Month
+  let day = today.getDate(); // Day
+  let year = today.getFullYear(); //Year
   const dateToday = (month1 + 1) + '/' + day + '/' + year; 
   const spotDate = (month1 + 2 ) + '/' + day + '/' + year;
   const futureMonth = (today.getMonth() + Number(selectedMonths.value)) % 12;
@@ -89,7 +89,49 @@ const handleDownpaymentChange = () => {
   const futureDate = (futureMonth + 1) + '/' + today.getDate() + '/' + futureYear;
  const fDate = ref(futureDate);
 
- const rDueDate = (month1 + 1) + '/' + (day + 9) + '/' + year;
+
+
+//  update 01/05/2024
+// Function to check if a year is a leap year
+function isLeapYear(year) {
+    return (year % 4 === 0 && year % 100 !== 0) || (year % 400 === 0);
+}
+
+// Function to get the number of days in a month
+function daysInMonth(month1, year) {
+    const monthsWith31Days = [0, 2, 4, 6, 7, 9, 11];
+    if (month1 === 1) { // February
+        return isLeapYear(year) ? 29 : 28;
+    } else {
+        return monthsWith31Days.includes(month1) ? 31 : 30;
+    }
+}
+
+// Add 9 days to the current day
+day += 9;
+
+// Check if the new day exceeds the number of days in the current month
+while (day > daysInMonth(month1, year)) {
+    // If so, subtract the days of the current month and move to the next month
+    day -= daysInMonth(month1, year);
+    month1++;
+
+    // If the month exceeds December, adjust the year and reset the month to January
+    if (month1 > 11) {
+        month1 = 0;
+        year++;
+    }
+}
+
+// Update month (adding 1 since JavaScript months are 0-indexed)
+const adjustedMonth = month1 + 1;
+
+// Construct the adjusted due date string
+const rDueDate = adjustedMonth + '/' + day + '/' + year;
+
+console.log(rDueDate); // Output: "5/9/2024"
+//  const rDueDate = (month1 + 1) + '/' + (day + 9) + '/' + year;
+
 //  const option = {month: 'long', day: '2-digit', year: 'numeric'};
 //  const rDueDate = rNewDueDate.toLocaleString('en-US', option);
 

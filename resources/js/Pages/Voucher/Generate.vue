@@ -11,12 +11,13 @@ import InputLabel from '@/Components/InputLabel.vue';
 import TextInput from '@/Components/TextInput.vue';
 import FloorAreaLogo from '@/MyComponents/FloorAreaLogo.vue';
 import LotAreaLogo from '@/MyComponents/LotAreaLogo.vue';
-import { ref, computed, watch , reactive, onMounted, onUnmounted  } from 'vue';
+import { ref, computed, watch , reactive, onMounted, onUnmounted, provide  } from 'vue';
 import ButtonPrimary from '@/MyComponents/ButtonPrimary.vue';
 import RLICardLayout from '@/MyComponents/RLICardLayout.vue';
 import RLICardv2 from "@/MyComponents/RLICardv2.vue";
 import UserIconLogo from '@/MyComponents/UserIconLogo.vue';
 import RLICard from "@/MyComponents/RLICard.vue";
+import RLICardv3 from "@/MyComponents/RLICardv3.vue";
 import Carousel from '@/MyComponents/Carousel.vue';
 import FloorLogo from '@/MyComponents/FloorLogo.vue';                 
 import CarparkLogo from '@/MyComponents/CarparkLogo.vue';
@@ -28,6 +29,8 @@ import DefaultSecondaryButton from "@/MyComponents/DefaultSecondaryButton.vue";
 import DefaultPrimaryButton from "@/MyComponents/DefaultPrimaryButton.vue";
 import Dropdown from "@/Components/Dropdown.vue";
 import UnitTypeLogo from "@/MyComponents/UnitTypeLogo.vue";
+import ProductList from '@/MyComponents/ProductList.vue';
+import ShareLogo from '@/MyComponents/ShareLogo.vue';
 
 let params = new URLSearchParams(window.location.search)
 
@@ -43,19 +46,21 @@ const props = defineProps({
         default: true,
     }
 })
-const productDetails = ref({
-  brand: props.products[2].brand,
-  category: props.products[2].category,
-  floor_area: props.products[2].floor_area,
-  lot_area: props.products[2].lot_area,
-  name: props.products[2].name,
-  price: props.products[2].price,
-  processing_fee: props.products[2].processing_fee,
-  sku: props.products[2].sku,
-  type: props.products[2].type,
-  unit_type: props.products[2].unit_type,
-  url_links: props.products[2].url_links
-});
+// const productDetails = ref({
+//   brand: props.products[2].brand,
+//   category: props.products[2].category,
+//   floor_area: props.products[2].floor_area,
+//   lot_area: props.products[2].lot_area,
+//   name: props.products[2].name,
+//   price: props.products[2].price,
+//   processing_fee: props.products[2].processing_fee,
+//   sku: props.products[2].sku,
+//   type: props.products[2].type,
+//   unit_type: props.products[2].unit_type,
+//   url_links: props.products[2].url_links
+// });
+
+const productDetails = ref(null);
 // const defaultSKU = ref(props.products[1].sku);
 const form = useForm({
   email: seller,
@@ -63,9 +68,10 @@ const form = useForm({
   sku: sku
 });
 
-form.sku = productDetails.value.sku;
+// form.sku = productDetails.value.sku;
 // console.log('productDetails:', productDetails.value);
 // console.log('sku:', form.sku);
+// console.log('product:', props.products);
 const showingProductDetails = ref(false);
 
 const closeModal = () => {
@@ -76,15 +82,17 @@ const validSKU = ref(false);
 const product = ref(null);
 const leadGenerationLink = ref(null);
 const showingInfoDetails = ref(false);
-
-const createLink = () => {
-  
+const selectedProduct = ref(null);
+const createLink = (newParameter) => {
+  // console.log('createLink:', newParameter);
+  form.sku = newParameter.sku;
+  selectedProduct.value = newParameter;
   leadGenerationLink.value = null;
   let title = 'Lead Generation: ' + seller + ' (' + form.sku + ')';
   router.post(route('create-link', { sku: form.sku, title: title }));
   setTimeout(function(){
     showingInfoDetails.value = true
-  },1500);
+  },2500);
   
 };
 
@@ -93,17 +101,16 @@ const showProductDetails = () => {
     showingProductDetails.value = true;
 }
 
-watch (() => form.sku, (newValue) => {
- // console.log('form.sku changed:', newValue); // Log the new value
+// watch (() => form.sku, (newValue) => {
+watch (() => form.sku, () => {
   leadGenerationLink.value = null;
   if (form.sku.length>0) {
-    // console.log('newValue: ', newValue);
-    axios.get(route('products-show', {sku: newValue})).then( response => {
+    console.log(form.sku);
+    axios.get(route('products-show', {sku: form.sku})).then( response => {
       if (200 === response.status) {
         validSKU.value = true;
         product.value = response.data;
-        // console.log('response data:', response.data);
-        // console.log(validSKU.value);
+        console.log(validSKU.value);
       }
     }).catch(error => {
       validSKU.value = false;
@@ -111,7 +118,7 @@ watch (() => form.sku, (newValue) => {
       console.log(error.response.status);
     });
   }
-},{ immediate: true });
+});
 watch (
     () => usePage().props.flash.event,
     (event) => {
@@ -125,7 +132,12 @@ watch (
     { immediate: true }
 );
 
-const generateVoucher = () => {
+// const generatedSku = ref('');
+const generateVoucher = (newParams) => {
+  console.log('click');
+  form.sku = newParams.sku;
+  // generatedVoucher.value = newParams
+  console.log('form:', form);
   form.post(route('generate-voucher'), {
     errorBag: 'generateVoucher',
     preserveScroll: true,
@@ -141,18 +153,34 @@ const generateVoucher = () => {
 //   details = newValue;
 //   console.log('jsonDetails: ', details);
 // });
+const viewDetailed = ref(null);
+const showViewDetails = ref(false);
+const showingViewDetails = (newPrams) =>{
+  console.log('newpParams:', newPrams);
+  viewDetailed.value = newPrams;
 
+  console.log('viewDetails:', viewDetailed.value);
+  showViewDetails.value = true;
+}
+
+const closeModalViewDetail = () =>{
+  showViewDetails.value = !true;
+}
 
 const closeModalInfo = () =>{
   showingInfoDetails.value = !true;
 }
 
-const showInfoDetail = () =>{
+
+const showInfoDetail = (newParams) =>{
+  selectedProduct.value = newParams;
+  console.log('newPrams:', selectedProduct.value);
   showingInfoDetails.value = true;
 }
 const copyToClipboard = (leadParams) =>{
-  navigator.clipboard.writeText(leadParams);
-  console.log("copied: ", leadParams);
+  console.log('leadParams:', leadParams);
+  navigator.clipboard.writeText(leadParams.value);
+  console.log("copied.value: ", leadParams.value);
 }
 
 
@@ -165,20 +193,20 @@ const handleCopyClick = (event) => {
 const displayValue = ref('');
 const property = ref('');
 
-const updateDisplayValue = () => {
-  if (form.sku && form.sku.includes('AGM')) {
-    displayValue.value = 'Agapeya';
-    property.value = 'Agapeya';
-  } else if (form.sku && form.sku.includes('ZYA')) {
-    displayValue.value = 'Zaya';
-    property.value = 'Zaya';
-  } else {
-    displayValue.value = '';
-  }
-};
+// const updateDisplayValue = () => {
+//   if (form.sku && form.sku.includes('AGM')) {
+//     displayValue.value = 'Agapeya';
+//     property.value = 'Agapeya';
+//   } else if (form.sku && form.sku.includes('ZYA')) {
+//     displayValue.value = 'Zaya';
+//     property.value = 'Zaya';
+//   } else {
+//     displayValue.value = '';
+//   }
+// };
 
 // console.log('productDetails:', productDetails.value);
-watch(() => form.sku, updateDisplayValue, updateDisplayValue());
+// watch(() => form.sku, updateDisplayValue, updateDisplayValue());
 
 // console.log('Initial form.sku:', form.sku);
 // console.log('Initial displayVal:', displayValue.value);
@@ -226,14 +254,19 @@ const dropDown = () =>{
   showingDropdown.value = !showingDropdown.value;
 }
 
-const dropDownItem = (skuParams, index) =>{
-  // console.log('sku:', newDetails.value);
+const dropDownItem = (skuParams) =>{
+  // console.log('skuNow:', productDetails.value);
   productDetails.value = {}
+  form.sku = null;
   showingDropdown.value = !showingDropdown.value;
   form.sku = skuParams.sku;
   productDetails.value = skuParams;
+  highlightedIndex.value = -1;
 
+  // console.log('formSKU: ', form.sku);
   // console.log('index: ',index, 'skuParams:', productDetails.value);
+
+  // console.log("filteredItemsUpdate: ", filteredItems);
 
   // console.log('index: ',index, 'skuParams:', productDetails.value.brand);
 }
@@ -339,50 +372,155 @@ const uniqueBrands = [...new Set(props.products.map(product => product.brand))];
 const uniqueProductsBrand = uniqueBrands.map(brand => {
   return props.products.find(product => product.brand === brand);
 });
+
+
+const uniqueLocations = [...new Set(props.products.map(product => product.location))];
+const uniqueProductsLocation = uniqueLocations.map(location => {
+  return props.products.find(product => product.location === location);
+});
 // console.log('unique', uniqueProductsBrand);
 const enterFunction = (skuParam) =>{
-  console.log('parameter SKU:', skuParam);
+  // console.log('parameter SKU:', skuParam);
 }
 // console.log("brand:", property.value);
 // console.log("sku:", props.products.sku);
+const prodsku = ref('');
+const locationName = ref('Laguna');
+const projName = ref('Agapeya');
+const items = ref({});
+items.value = props.products
+const filteredItems = computed(() => {
+  if (!items.value) return [];
+
+  return items.value.filter(item => {
+    if(productDetails.value){
+      const sku = productDetails.value.sku;
+      prodsku.value = sku;
+      return item.sku.includes(sku) && 
+             item.brand.includes(projName.value) && 
+             item.location.includes(locationName.value) && 
+             !item.type.includes('configurable');
+    } else{
+      prodsku.value = '';
+      // console.log('item.value:', item.value);
+      return item.brand.includes(projName.value) && 
+             item.location.includes(locationName.value) && 
+             !item.type.includes('configurable');
+    }
+  });
+});
+
+// Watch prodsku and clear productDetails when prodsku is cleared
+watch(prodsku, (newVal, oldVal) => {
+  if (!newVal) {
+    productDetails.value = null;
+  }
+});
+const filteredItem = computed(() => {
+  // if (!items.value) return [];
+
+  // return items.value.filter(item => {
+  //     return item.brand.includes(projName.value) && item.location.includes(locationName.value) && !item.type.includes('configurable')
+  // });
+  const query = prodsku.value.toLowerCase();
+  return filteredItems.value.filter(item =>
+    item.name.toLowerCase().includes(query) || item.sku.toLowerCase().includes(query)
+  );
+});
+
+const filterOptions = () => {
+
+  // inputValue.value = inputValue.value;
+  const query = prodsku.value.toLowerCase();
+  // if(inputValue.value){
+    filteredItems.value.filter(option =>
+    option.sku.toLowerCase().includes(query) || option.name.toLowerCase().includes(query)
+    );
+  // } else{
+  //   filteredOptions.value = [];
+  // }
+};
+
+const selectOption = (option) => {
+  prodsku.value = option.sku;
+  console.log()
+  // showDropdown.value = false;
+  // inputValue.value = `${option.sku} - ${option.name}`;
+  showingDropdown.value = false;
+  highlightedIndex.value = -1;
+};
+
+const handleKeydown = (event) => {
+  if (!showingDropdown.value) return;
+
+  switch (event.key) {
+    case 'ArrowDown':
+      event.preventDefault();
+      highlightedIndex.value = (highlightedIndex.value + 1) % filteredItem.value.length;
+      break;
+    case 'ArrowUp':
+      event.preventDefault();
+      highlightedIndex.value = (highlightedIndex.value - 1 + filteredItem.value.length) % filteredItem.value.length;
+      break;
+    case 'Enter':
+      event.preventDefault();
+      if (highlightedIndex.value >= 0 && highlightedIndex.value < filteredItem.value.length) {
+        dropDownItem(filteredItem.value[highlightedIndex.value]);
+      }
+      break;
+  }
+};
+
+provide('products', filteredItems);
+// console.log('filteredItems:', productDetails.value);
+// provide('productsDetails', filteredItems);
+const highlightedIndex = ref(-1);
+const handleBlur = () => {
+  //setTimeout(() => {
+    showingDropdown.value = false;
+  //}, 100); // Delay to allow click event to register
+};
+
+
 </script>
 
 <template>
   
-  <RLICard class="items-start relative">
+  <RLICardv3 class="items-start relative">
     <!-- Content Left -->
     <template #title>
-      <h1 class="font-bold text-3xl"> Sales Reservation</h1>
+      <h1 class="dark:text-white light:text-black font-bold text-3xl my-6"> Select property to reserve</h1>
     </template>
     <template #contentLeft>
-      <div class="mb-4">
-        <form @submit.prevent="generateVoucher">
-         <div class="bg-gray-100 w-full py-2 my-6 rounded-lg">
+      <div class="grid grid-cols-2 mt-4">
+        <form>
+         <!-- <div class="bg-gray-100 dark:bg-gray-600 w-full py-2 my-6 rounded-lg">
           <div class="flex items-center gap-2">
               <div v-if="$page.props.jetstream.managesProfilePhotos">
                 <img class="h-8 w-8 rounded-full object-cover" :src="$page.props.auth.user.profile_photo_url" :alt="$page.props.auth.user.name">
               </div>
               <div v-else class="">
-                <!-- <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" stroke="#cfcfcf"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path fill-rule="evenodd" clip-rule="evenodd" d="M22 12C22 17.5228 17.5228 22 12 22C6.47715 22 2 17.5228 2 12C2 6.47715 6.47715 2 12 2C17.5228 2 22 6.47715 22 12ZM15 9C15 10.6569 13.6569 12 12 12C10.3431 12 9 10.6569 9 9C9 7.34315 10.3431 6 12 6C13.6569 6 15 7.34315 15 9ZM12 20.5C13.784 20.5 15.4397 19.9504 16.8069 19.0112C17.4108 18.5964 17.6688 17.8062 17.3178 17.1632C16.59 15.8303 15.0902 15 11.9999 15C8.90969 15 7.40997 15.8302 6.68214 17.1632C6.33105 17.8062 6.5891 18.5963 7.19296 19.0111C8.56018 19.9503 10.2159 20.5 12 20.5Z" fill="#cfcfcf"></path> </g></svg>
-                 -->
                  <UserIconLogo class="h-20 w-20 py-2"/>
               </div>
-              <div class="text-sm">
+              <div class="text-sm dark:text-white light:text-black">
                   <p class="text-lg font-bold">{{sellerName}}</p>
                   <p>{{seller}}</p>
                   <p class="bg_text capitalize">seller</p>
               </div>
           </div>
-         </div>
-          <div class="col-span-6 sm:col-span-4">
+         </div> -->
+          <div class="col-span-6 sm:col-span-4 rounded-full">
             <InputLabel for="sku" value="Product SKU" class="font-bold text-lg" />
             <TextInput
                 @click="dropDown()"
                 id="sku"
-                v-model="form.sku"
-                v-on:keyup.enter="enterFunction(form.sku)"
+                v-model="prodsku"
+                @input="filterOptions"
+                @focus="showingDropdown = true"
+                @blur="handleBlur"
+                @keydown="handleKeydown"
                 type="text"
-                class="mt-1 block w-full rounded-full"
+                class="mt-2 block w-full rounded-full border-0 py-1.5 pl-3 pr-10 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6"
                 placeholder="Enter value"
                 required
                 autofocus
@@ -396,9 +534,13 @@ const enterFunction = (skuParam) =>{
             class="bg-white shadow-2xl border rounded-lg py-2 px-3 absolute h-40 z-30 w-5/12 overflow-y-auto"
             >
                 <div 
-                @click="dropDownItem(skuItem, index)"
-                v-for="(skuItem, index) in products"
-                class="text-md my-1 hover:bg-gray-100 hover:font-bold py-1">
+                @mousedown="dropDownItem(skuItem)"
+                v-for="(skuItem, index) in filteredItem"
+                :class="{
+                  'px-2 py-1 cursor-pointer hover:bg-blue-600 hover:text-white z-50': true,
+                  'hover:bg-blue-600 hover:text-white': true,
+                  'bg-blue-600 text-white': index === highlightedIndex,
+                }">
                  {{ skuItem.sku }} - {{ skuItem.name }}
                 </div>
             </div>
@@ -499,180 +641,67 @@ const enterFunction = (skuParam) =>{
           </DialogModal>
           </div>
         </form>
-      </div>
-    </template>
-    <template #subTitle v-if="form.sku">
-      <div class="my-6">
-        <div class="flex justify-between items-center">
-          <div class="font-semibold text-lg">
-            Browse other Properties
-          </div>
-          <div class="">
-            <select class="rounded-lg w-full border-gray-400"
-            @change="onChange"
-            v-model="property"
-            >
-            <option 
-              v-for="(product, index) in uniqueProductsBrand" 
-              :key="index" 
-              :value="product.brand"
-            >
-              {{ product.brand }}
-            </option>
-              <!-- <option value="Agapeya">Agapaeya</option>
-              <option value="zaya">Zaya</option> -->
-            </select>
-          </div>
-        </div>
-      </div>
-    </template>
-    <template #BrowseProperty v-if="form.sku">
-      <div class="h-auto dark:text-white">
-        <Carousel 
-        :products="props.products"
-        :property="property"
-        @view-details="handleDetails"
-        />
-        <!-- <Carousel 
-        :products="props.products"
-        /> -->
-      </div>
-    </template>
-    <!-- content Right -->
-    <template #contentRight class="">
-      <div v-if="!form.sku" class="h-full">
-        <div class="bg-gray-100 h-48 w-full rounded-lg">&nbsp;&nbsp;</div>
-        <div class="mt-2 bg-gray-100 h-10 w-full rounded-lg">&nbsp;</div>
-        <div class="grid grid-cols-5 gap-3">
-          <div class="bg-gray-100 h-14 w-full mt-2 rounded-lg">&nbsp;</div>
-          <div class="bg-gray-100 h-14 w-full mt-2 rounded-lg">&nbsp;</div>
-          <div class="bg-gray-100 h-14 w-full mt-2 rounded-lg">&nbsp;</div>
-          <div class="bg-gray-100 h-14 w-full mt-2 rounded-lg">&nbsp;</div>
-          <div class="bg-gray-100 h-14 w-full mt-2 rounded-lg">&nbsp;</div>
-        </div>
-        <div class="text-transparent h-10">
-          <div>
-            &nbsp;&nbsp;
-          </div>
-        </div>
-      </div>
-      <div v-else-if="form && form.sku && form.sku.length >= 19 || productDetails" class="dark:text-white light:text-black">
-        <div>
-            <div class=" bg-gray-100 h-2/4 w-full">
-              <img :src="productDetails.url_links.facade" alt="Item Image1" class="h-full w-2/4 mx-auto"/>
-            </div>
-            <div  class="mt-3">
-              <h1 class="font-bold text-3xl">{{ productDetails.name }}</h1>
-            </div>
-            <div class="hidden lg:grid lg:grid-cols-5 mt-4">
-                    <div class="flex gap-2 basis-0 grow flex-shrink-0">
-                        <LotAreaLogo />
-                        <div>
-                            <p class="text-gray-400">Lot Area</p>
-                            <p>{{ productDetails.lot_area }}</p>
-                        </div>
-                    </div>
-                    <div class="flex gap-2 basis-0 grow flex-shrink-0">
-                        <FloorAreaLogo />
-                        <div>
-                            <p class="text-gray-400">Floor Area</p>
-                            <p>{{ productDetails.floor_area }}SQM</p>
-                        </div>
-                    </div>
-                    <div class="flex gap-2 w-auto">
-                        <UnitTypeLogo />
-                        <div>
-                            <p class="text-gray-400">Unit Type</p>
-                            <p>{{ productDetails.unit_type.toLowerCase().split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ') }}</p>
-                        </div>
-                    </div>
-                    <div class="flex gap-2 basis-0 grow flex-shrink-0">
-                        <ToiletBathLogo />
-                        <div>
-                            <p class="text-gray-400">Bedrooms</p>
-                            <p>1</p>
-                        </div>
-                    </div>
-                    <div class="flex gap-2 basis-0 grow flex-shrink-0">
-                        <CarparkLogo />
-                        <div>
-                            <p class="text-gray-400">Carpark</p>
-                            <p>1</p>
-                        </div>
-                    </div>
-            </div>
-            <div class="mt-4 text-lg">
-                <div class="pb-4 py-3">
-                    <div class="flex gap-1">
-                            <p class="font-bold">Product SKU:</p>
-                            <p class="font-semibold">{{ form.sku }}</p>
-                    </div>
-                    <div class="flex gap-1">
-                            <p class="font-bold">Location:</p>
-                            <p>{{ productDetails.location }}</p>
-                    </div>
-                    <div class="flex gap-1">
-                            <p class="font-bold">Market Segment / Project Name:</p>
-                            <p>{{ productDetails.category}}</p>
-                    </div>
-                    <div class="flex gap-1">
-                            <p class="font-bold">Total Contract Price:</p>
-                            <p>₱{{ productDetails.price.toLocaleString() }}.00</p>
-                    </div>
-                    <div class="flex gap-1">
-                            <p class="font-bold">Processing Fee:</p>
-                            <p>₱{{ productDetails.processing_fee.toLocaleString() }}.00</p>
-                    </div>
+        <div class="flex gap-2 px-4">
+          <div class="grow w-1/4">
+            <InputLabel for="location" value="Location" class="font-bold text-lg" />
+                    <select class="custom-select mt-2 block w-full rounded-md border-0 py-1.5 pl-3 pr-10 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                    v-model="locationName"
+                    >
+                        <option selected disabled>Select Project Name</option>
+                        <option v-for="product in uniqueProductsLocation" :key="product.id">
+                            {{ product.location }}
+                        </option>
+                    </select>
                 </div>
-            </div>
+                <div class="grow w-1/4">
+                    <InputLabel for="project_name" value="Project Name" class="font-bold text-lg" />
+                    <select class="mt-2 block w-full rounded-md border-0 py-1.5 pl-3 pr-10 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                    v-model="projName"
+                    >
+                        <option selected disabled>Select Project Name</option>
+                        <option v-for="product in uniqueProductsBrand" :key="product.id">
+                            {{ product.brand }}
+                        </option>
+                    </select>
+                </div>
         </div>
-        <div class="py-3">
-        <form @submit.prevent="generateVoucher" class="flex gap-2">
-          <template v-if="validSKU">
-            <DefaultSecondaryButton @click.prevent="createLink()">
-              <template #textSecondary>
-                Generate Link
-              </template>
-            </DefaultSecondaryButton>
-            <!-- <SecondaryButton @click = "showProductDetails()">
-              View
-            </SecondaryButton> -->
-          </template>
-          <DefaultPrimaryButton :class="{ 'opacity-25': form.processing }" :disabled="form.processing" class="">
-            <template #text>
-              Start
-            </template>
-          </DefaultPrimaryButton>
-        </form>
-        
-        </div>
-        <!-- <div v-if="leadGenerationLink" class="text-gray-700 dark:text-gray-300 text-md bg-gray-100 py-2 px-6 rounded-full">
-            <div class="flex justify-between items-center">
-              <div>
-                <p class="font-bold">Generated Link: 
-                  <span class="text-sky-600">{{ leadGenerationLink }}</span>
-                </p>
-              </div>
-              <div class="flex items-center">
-                <button 
-                @click="showInfoDetail()"
-                class="w-10 h-10">
-                  <InfoDetails />
-                </button>
-                <CopyButton @click.prevent="copyToClipboard(leadGenerationLink)">
-                  <template #icon>
-                    <CopyLogo class="w-4 h-4 mx-auto"/>
-                  </template>
-                </CopyButton>
-              </div>
-            </div>
-        </div> -->
       </div>
-      <!-- Modal -->
-      <div v-show="showingInfoDetails"
-      @click.prevent="closeModalInfo()"
-      class="fixed inset-0 bg-black bg-opacity-30 top-0 left-0 flex justify-center px-6 py-1 z-10  overflow-y-auto"
-      >
+      <div class="mt-12">
+        <div class="grid grid-rows-1">
+          <ProductList 
+          :project-name="projName"
+          @product-selected="showInfoDetail"
+          >
+            <template #buttons="{product}">
+              <form @submit.prevent="generateVoucher(product)" class="flex gap-2 items-center justify-center">
+                  <button 
+                  :class="{ 'opacity-25': form.processing }" :disabled="form.processing" :key="product.id"
+                  class="border w-auto h-10 px-6 py-2 bg_btn text-white font-semibold rounded-full text-sm hover:bg-black hover:opacity-80">Reserve</button>  
+                <!-- <button @click.prevent="createLink()" class="hover:text-white hover:bg-rose-500">
+                  gener
+                </button> -->
+                <button 
+                @click.prevent="showingViewDetails(product)"
+                class="border bg_border w-auto h-10 px-4 py-2 rounded-full text-sm hover:text-white hover:bg-rose-500 ">View Details</button>
+                <div 
+                
+                @click.prevent="createLink(product)"
+                class="bg-rose-200 w-8 h-8 rounded-full flex items-center cursor-pointer hover:border hover:border-rose-500 hover:bg-white">
+                  <ShareLogo class="mx-auto h-4 w-4"/>
+                </div>
+              </form>
+            </template>
+          </ProductList>
+        </div>
+      </div>
+    </template>
+    
+  </RLICardv3>
+   <!-- Modal Share-->
+  <div v-show="showingInfoDetails"
+  @click.prevent="closeModalInfo()"
+  class="fixed inset-0 bg-black bg-opacity-30 top-0 left-0 flex justify-center px-6 py-1 z-10  overflow-y-auto"
+  >
         <div
         v-if="showingInfoDetails" 
         class="bg-white self-center max-w-screen-lg rounded">
@@ -685,76 +714,172 @@ const enterFunction = (skuParam) =>{
                 <img src="../../../img/RaemulanLandsLogo.png" alt="Logo" class="mx-auto h-20 mt-2">
                 <img src="../../../img/Elnvital_Logo.png" alt="Logo" class="mx-auto h-20 mt-2">
             </div> -->
-            <div class="grid grid-cols-2 pt-6 pb-6 gap-2 items-center px-6">
-                <div class="px-8">
-                  <h1 class="text-3xl font-bold mb-2">{{ product.name }}</h1>
-                  <h1 class="bg_text text-2xl font-semibold">Generated Link</h1>
-                  <div class="text-md bg-gray-200 py-2 px-4 rounded-full flex justify-between mt-4 items-center">
-                    <div>
-                      <span class="text-sky-600">{{ leadGenerationLink }}</span>
-                    </div>
-                    <CopyButton @click.prevent="handleCopyClick">
-                      <template #icon>
-                        <CopyLogo class="w-4 h-4 mx-auto"/>
-                      </template>
-                    </CopyButton>
-                    <!-- <button class="bg-white rounded-full w-8 h-8">
-                    </button> -->
-                  </div>
-                  <div class="mt-4 text-md">
-                    <p>
-                    We've generated a link for you. This link can be shared with anyone or used to create advertising materials for selling the property.
-                  </p>
-                  </div>
+            <div class="">
+                <div class="w-full p-4 text-right">
+                  <button 
+                  @click.prevent="closeModalInfo()"
+                  class="bg-gray-50 text-gray-400 px-3 py-1 rounded-full text-xl text-right">&times;</button>
                 </div>
-                <div class="px-2">
-                  <img src="../../../img/InfoImage.png" alt="infoImage" srcset="">
+                <div class="grid grid-cols-2 pt-6 pb-6 gap-2 items-center px-6">
+                  <div class="px-8">
+                    <h1 class="text-3xl font-bold mb-2">{{ selectedProduct.name }}</h1>
+                    <h1 class="bg_text text-2xl font-semibold">Generated Link</h1>
+                    <div class="text-md bg-gray-200 py-2 px-4 rounded-full flex justify-between mt-4 items-center">
+                      <div>
+                        <span class="text-sky-600">{{ leadGenerationLink }}</span>
+                      </div>
+                      <CopyButton @click.prevent="handleCopyClick">
+                        <template #icon>
+                          <CopyLogo class="w-4 h-4 mx-auto"/>
+                        </template>
+                      </CopyButton>
+                      <!-- <button class="bg-white rounded-full w-8 h-8">
+                      </button> -->
+                    </div>
+                    <div class="mt-4 text-md">
+                      <p>
+                      We've generated a link for you. This link can be shared with anyone or used to create advertising materials for selling the property.
+                    </p>
+                    </div>
+                  </div>
+                  <div class="px-2">
+                    <img src="../../../img/InfoImage.png" alt="infoImage" srcset="">
+                  </div>
                 </div>
               </div>
           
         </div>
       </div>
-      <!-- Modal End -->
-      <!-- <DialogModal :show="showingInfoDetails" @close="closeModalInfo">
-       
-            <template #title>
-            
-            </template>
-            <template #content>
-              <div class="grid grid-cols-2 pt-10 pb-6 gap-2">
-                <div class="mx-2">
-                  <h1 class="text-3xl font-bold mb-2">{{ product.name }}</h1>
-                  <h1 class="bg_text text-2xl font-semibold">Generated Link</h1>
-                  <div class="text-md bg-gray-200 py-2 px-4 rounded-full flex justify-between mt-4 items-center">
-                    <div>
-                      <span class="text-sky-600">{{ leadGenerationLink }}</span>
+      <!-- Modal Details -->
+      <div v-show="showViewDetails"
+  @click.self="closeModalViewDetail()"
+  class="fixed inset-0 bg-black bg-opacity-30 top-0 left-0 flex justify-center px-6 py-1 z-10  overflow-y-auto"
+  >
+        <div
+        v-if="showViewDetails" 
+        class="bg-white self-center max-w-screen-xl rounded py-2">
+            <!-- <div class="w-full p-4 text-right">
+                <button 
+                @click="showInfoDetail"
+                class="bg-gray-50 text-gray-400 px-3 py-1 rounded-full text-1xl text-right">&times;</button>
+            </div> -->
+            <!-- <div class="py-2 mb-3 md:flex flex-row gap-4">
+                <img src="../../../img/RaemulanLandsLogo.png" alt="Logo" class="mx-auto h-20 mt-2">
+                <img src="../../../img/Elnvital_Logo.png" alt="Logo" class="mx-auto h-20 mt-2">
+            </div> -->
+            <div class="">
+                <div class="w-full p-4 text-right">
+                  <button 
+                  @click.self="closeModalViewDetail()"
+                  class="bg-gray-50 text-gray-400 px-3 py-1 rounded-full text-xl text-right">&times;</button>
+                </div>
+                <div class="grid grid-cols-2 pt-6 pb-6 gap-4 px-6">
+                  <div class="px-2">
+                    <img :src="viewDetailed.url_links.facade" class="object-fit w-full h-full" alt="Detail Image" srcset="">
+                  </div>
+                  <div class="">
+                    <h1 class="text-3xl font-bold mb-2">{{ viewDetailed.name }}</h1>
+                    <div class="hidden lg:grid lg:grid-cols-5 mt-4">
+                        <div class="flex gap-2 basis-0 grow flex-shrink-0">
+                            <LotAreaLogo />
+                            <div>
+                                <p class="text-gray-400">Lot Area</p>
+                                <p>{{ viewDetailed.lot_area }}</p>
+                            </div>
+                        </div>
+                        <div class="flex gap-2 basis-0 grow flex-shrink-0">
+                            <FloorAreaLogo />
+                            <div>
+                                <p class="text-gray-400">Floor Area</p>
+                                <p>{{ viewDetailed.floor_area }}SQM</p>
+                            </div>
+                        </div>
+                        <div class="flex gap-2 w-auto">
+                            <UnitTypeLogo />
+                            <div>
+                                <p class="text-gray-400">Unit Type</p>
+                                <p>{{ viewDetailed.unit_type.toLowerCase().split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ') }}</p>
+                            </div>
+                        </div>
+                        <div class="flex gap-2 basis-0 grow flex-shrink-0">
+                            <ToiletBathLogo />
+                            <div>
+                                <p class="text-gray-400">Bedrooms</p>
+                                <p>1</p>
+                            </div>
+                        </div>
+                        <div class="flex gap-2 basis-0 grow flex-shrink-0">
+                            <CarparkLogo />
+                            <div>
+                                <p class="text-gray-400">Carpark</p>
+                                <p>1</p>
+                            </div>
+                        </div>
                     </div>
-                    <CopyButton @click="copyToClipboard(leadGenerationLink)">
-                      <template #icon>
-                        <CopyLogo class="w-4 h-4 mx-auto"/>
-                      </template>
-                    </CopyButton>
-                 
+                    <div class="mt-4 text-lg">
+                      <div class="pb-4 py-3">
+                          <div class="flex gap-1">
+                                  <p class="font-bold">Product SKU:</p>
+                                  <p class="font-semibold">{{ viewDetailed.sku }}</p>
+                          </div>
+                          <div class="flex gap-1">
+                                  <p class="font-bold">Location:</p>
+                                  <p>{{ viewDetailed.location }}</p>
+                          </div>
+                          <div class="flex gap-1">
+                                  <p class="font-bold">Market Segment / Project Name:</p>
+                                  <p>{{ viewDetailed.category}}</p>
+                          </div>
+                          <div class="flex gap-1">
+                                  <p class="font-bold">Total Contract Price:</p>
+                                  <p>₱{{ viewDetailed.price.toLocaleString() }}.00</p>
+                          </div>
+                          <div class="flex gap-1">
+                                  <p class="font-bold">Processing Fee:</p>
+                                  <p>₱{{ viewDetailed.processing_fee.toLocaleString() }}.00</p>
+                          </div>
+                      </div>
+                    </div>
+                    <div>
+                      <form @submit.prevent="generateVoucher(viewDetailed)" class="flex gap-2 items-center">
+                          <button 
+                          :class="{ 'opacity-25': form.processing }" :disabled="form.processing"
+                          class="border w-44 h-14 px-6 py-2 bg_btn text-white font-semibold rounded-full text-sm">Reserve</button>
+                          <div   
+                          @click.prevent="createLink(viewDetailed)"
+                          class="bg-rose-200 w-10 h-10 rounded-full flex items-center cursor-pointer">
+                            <ShareLogo class="mx-auto"/>
+                          </div>
+                        </form>
+                    </div>
                   </div>
-                  <div class="mt-4 text-md">
-                    <p>
-                    We've generated a link for you. This link can be shared with anyone or used to create advertising materials for selling the property.
-                  </p>
-                  </div>
+                
                 </div>
-                <div>
-                  <img src="../../../img/InfoImage.png" alt="infoImage" srcset="">
-                </div>
+              
               </div>
-               
-            </template>
-      </DialogModal> -->
-    </template>
-  </RLICard>
+          
+        </div>
+      </div>
 </template>
 
 <style scoped>
-.bg_text{
+.bg_text, .bg_border{
   color: #CD045D;
+}
+.bg_border:hover{
+  color: #ffff;
+}
+.bg_border{
+  border: solid 1px #CD045D;
+}
+.custom-select::after{
+  content: url('../../../img/SelectDropdownIconpng.png');
+  position: absolute;
+  top: 50%;
+  right: 10px;
+  transform: translateY(-50%);
+  height: 20px;
+  width: 20px;
+  pointer-events: none;
 }
 </style>

@@ -16,7 +16,7 @@ class ContactController extends Controller
     {
         $contacts = new DataCollection(ContactData::class, Contact::all());
 
-        return inertia()->render('Contacts/Index',['xxx' => $contacts]);
+        return inertia()->render('Contacts/Index',['contacts' => $contacts]);
     }
 
     /**
