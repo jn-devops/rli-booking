@@ -59,3 +59,5 @@ Route::post('subtract-inventory/{inventory}', \RLI\Booking\Actions\SubtractInven
     ->name('subtract-inventory');
 Route::post('auto-onboard-buyer/{project_code}', \RLI\Booking\Actions\AutoOnboardBuyerAction::class)
     ->name('auto-onboard-buyer');
+Route::get('rider/{checkin_code}', \RLI\Booking\Actions\ProcessRiderAction::class)
+    ->name('rider');

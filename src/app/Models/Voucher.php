@@ -10,6 +10,7 @@ use RLI\Booking\Data\OrderData;
  * Class Voucher
  *
  * @property string $code
+ * @property string $checkin_code
  *
  * @method   int    getKey()
  */
