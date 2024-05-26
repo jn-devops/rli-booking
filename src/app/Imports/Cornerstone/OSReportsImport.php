@@ -9,7 +9,7 @@ use PhpOffice\PhpSpreadsheet\Shared\Date;
 use RLI\Booking\Classes\{SKU, UnitType};
 use Illuminate\Support\{Carbon, Str};
 use RLI\Booking\Models\Voucher;
-use RLI\Booking\Models\{Order, SellerCommission};
+use RLI\Booking\Models\{Order, Seller, SellerCommission};
 
 HeadingRowFormatter::default('cornerstone-os-report-1');
 
@@ -114,6 +114,12 @@ class OSReportsImport implements ToModel, WithHeadingRow, WithGroupedHeadingRow
             'project_code' => $project_code
         ]);
         $seller_commission->seller()->associate($order->seller);
+        $seller_commission->scheme = [
+            0 => [
+                'seller_code' => $order->seller->code,
+                'percent' => 1
+            ],
+        ];
         $seller_commission->meta->set([
             'legacy' => [
                 'selling_unit' => $row['selling_unit'],
