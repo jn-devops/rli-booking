@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('seller_commissions', function (Blueprint $table) {
-            $table->string('project_code')->nullable()->index();
+            $table->string('project_code')->after('seller_id')->nullable()->index();
             $table->unique(['project_code', 'code']);
         });
     }

@@ -29,7 +29,6 @@ use RLI\Booking\Traits\HasMeta;
  * @property int        $lot_area
  * @property array      $url_links
  * @property array      $inventory
- * @property Collection $inventories
  *
  * @method   int     getKey()
  */
@@ -168,18 +167,6 @@ class Product extends Model implements AttributableData
     public function setUrlLinksAttribute(array $value): static
     {
         $this->getAttribute('meta')->set('url_links', $value);
-
-        return $this;
-    }
-
-    public function getInventoryAttribute(): ?array
-    {
-        return (array) $this->getAttribute('meta')->get('inventory');
-    }
-
-    public function setInventoryAttribute(array $value): static
-    {
-        $this->getAttribute('meta')->set('inventory', $value);
 
         return $this;
     }

@@ -16,7 +16,7 @@ class InventorySheetImport implements ToModel, WithHeadingRow, WithUpserts
             $inventory_json = $row['product_codes'];
             $inventory_array = json_decode($inventory_json, false);
 
-            $product->inventory = $inventory_array;//TODO: deprecate
+//            $product->inventory = $inventory_array;//TODO: deprecate
 
             $non_unique_property_codes = [];
             foreach (array_unique($inventory_array) as $property_code) {

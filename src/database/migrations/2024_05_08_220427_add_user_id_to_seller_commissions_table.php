@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('seller_commissions', function (Blueprint $table) {
-            $table->foreignId('seller_id')->after('id')->nullable();
+            $table->foreignId('seller_id')->after('code')->nullable();
         });
     }
 
