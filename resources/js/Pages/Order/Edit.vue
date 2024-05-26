@@ -88,7 +88,7 @@ console.log("product", props.order);
                     </div> -->
         
                     <!-- Property Code -->
-                    <div class="">
+                    <div class="dark:text-white light:text-black">
                         <div class="hidden md:block">
                             <div class="text-2xl font-bold">
                             <h1>{{ props.order.product.name }}</h1>
@@ -156,7 +156,7 @@ console.log("product", props.order);
                     v-if="props.property_code"
                     :class="{'block': (props.property_code)}"
                     class="">
-                    <div class="mb-2">
+                    <div class="mb-2 dark:text-white light:text-black">
                         <div class="flex gap-1 font-bold">
                             <p>Property Code:</p>
                             <p>{{ props.property_code }}</p>
@@ -188,7 +188,7 @@ console.log("product", props.order);
                     </div>
                     <div class="block md:hidden">
                         <div class="my-2">
-                            <h1 class="font-bold text-2xl">Calculate Financing Scheme</h1>
+                            <h1 class="font-bold text-2xl dark:text-white light:text-black">Calculate Financing Scheme</h1>
                         </div>
                         <Calculator 
                         :voucherCode="props.voucherCode" 
@@ -198,7 +198,7 @@ console.log("product", props.order);
                         @months-changed="handleMonthsChanges"
                         >
                             <template #buttons>
-                                    <ButtonPrimary class="ms-4 px-6 py-3" :class="{ 'opacity-25': form.processing }" :disabled="form.processing" @click="submit()">
+                                    <ButtonPrimary class="ms-4 px-6 py-3 dark:text-white light:text-black" :class="{ 'opacity-25': form.processing }" :disabled="form.processing" @click="submit()">
                                         Submit & Continue
                                     </ButtonPrimary>
                             </template>
@@ -208,7 +208,7 @@ console.log("product", props.order);
             </template>
             <template #tcp>
                 <div class="mt-4">
-                    <div class="">
+                    <div class="dark:text-white light:text-black">
                         <div class="flex gap-1 border-b-2 pb-4">
                             <p class="text-sm font-bold">Total Contract Price:</p>
                             <p class="text-sm font-bold">₱2,900,000</p>
@@ -221,7 +221,7 @@ console.log("product", props.order);
                 </div>
             </template>
             <template #contentRight>
-                <div class="my-4 font-bold text-2xl">
+                <div class="my-4 font-bold text-2xl dark:text-white light:text-black">
                     <p>Calculate Financing Scheme</p>
                 </div>
     
@@ -233,7 +233,7 @@ console.log("product", props.order);
                 @months-changed="handleMonthsChanges"
                 >
                     <template #buttons>
-                            <ButtonPrimary class="ms-4 px-6 py-3" :class="{ 'opacity-25': form.processing }" :disabled="form.processing" @click="submit()">
+                            <ButtonPrimary class="ms-4 px-6 py-3 dark:text-white light:text-black" :class="{ 'opacity-25': form.processing }" :disabled="form.processing" @click="submit()">
                                 Submit & Continue
                             </ButtonPrimary>
                     </template>
@@ -241,8 +241,9 @@ console.log("product", props.order);
             </template>
         </RLICard>
         <RLICardv2 v-else>
-            <div>
-                <img src="../../../img/Agapeya_img.png">
+            <div class="rounded-lg">
+                <!-- <img src="../../../img/Agapeya_img.png"> -->
+                <img :src="props.order.product.url_links.facade" class="rounded-xl h-auto w-auto object-contain">
             </div>
             <form @submit.prevent="submit">
                 <div class="mt-4">
@@ -277,11 +278,11 @@ console.log("product", props.order);
                     <InputError class="mt-2" :message="form.errors.property_code" />
                 </div> -->
                 <div>
-                    <div class="text-3xl font-bold">
+                    <div class="text-3xl font-bold dark:text-white light:text-black">
                         <h1>{{ props.order.product.name }}</h1>
                     </div>
                     <div class="flex gap-1 mt-3 items-center">
-                        <p class="font-bold text-lg mb-0">Reservation Code:</p>
+                        <p class="font-bold text-lg mb-0 dark:text-white light:text-black">Reservation Code:</p>
                         <p class="text-sky-600 text-2xl">{{ props.voucherCode }}</p>
                     </div>
                 </div>
@@ -375,7 +376,7 @@ console.log("product", props.order);
                     </PrimaryButton> -->
                     <!-- <button :disabled="!(selectedTerm && selectedDownpayment && selectedMonths)" -->
                    
-                    <ButtonPrimary class="px-6 py-3 w-full" :class="{ 'opacity-25': form.processing }" :disabled="form.processing" @click="submit()">
+                    <ButtonPrimary class="px-6 py-3 w-full dark:text-white light:text-black" :class="{ 'opacity-25': form.processing }" :disabled="form.processing" @click="submit()">
                         Submit
                     </ButtonPrimary>
                 </div>

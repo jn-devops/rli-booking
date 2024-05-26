@@ -8,6 +8,7 @@ import InputLabel from '@/Components/InputLabel.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import TextInput from '@/Components/TextInput.vue';
 import ButtonPrimary from '@/MyComponents/ButtonPrimary.vue';
+import RLICardv2 from '@/MyComponents/RLICardv2.vue';
 
 const form = useForm({
     name: '',
@@ -29,14 +30,14 @@ const submit = () => {
 <template>
     <Head title="Register" />
 
-    <AuthenticationCard>
+    <RLICardv2>
         <template #logo>
             <!-- <AuthenticationCardLogo /> -->
             <div class="relative mb-4">
             <img src="../../../img/RaemulanLandsLogo.png" alt="RLI_Logo">
             </div>
         </template>
-        <div class="text-center py-4 font-bold text-xl">
+        <div class="text-center py-4 font-bold text-xl dark:text-white light:text-black">
             <h2>Create an Account</h2>
         </div>
         <form @submit.prevent="submit">
@@ -137,10 +138,10 @@ const submit = () => {
                 <!-- <PrimaryButton class="ms-4" :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
                     Register
                 </PrimaryButton> -->
-                <ButtonPrimary class="ms-4" :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
+                <ButtonPrimary class="ms-4 dark:text-white light:text-black" :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
                     Register
                 </ButtonPrimary>
             </div>
         </form>
-    </AuthenticationCard>
+    </RLICardv2>
 </template>

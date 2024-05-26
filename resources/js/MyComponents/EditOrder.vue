@@ -23,7 +23,7 @@ const props = defineProps({
             <div class="relative">
                 <img src="../../img/Rectangle_39.png" class="w-full">
             </div>
-            <div class="hidden lg:grid lg:grid-cols-5 mt-2">
+            <div class="hidden lg:grid lg:grid-cols-5 mt-2 dark:text-white light:text-black">
                 <div class="flex gap-2">
                     <LotAreaLogo />
                     <div>
@@ -60,7 +60,7 @@ const props = defineProps({
                     </div>
                 </div>
             </div>
-            <div class="lg:hidden md:block">
+            <div class="lg:hidden md:block dark:text-white light:text-black">
                 <div class="grid md:grid-cols-3 mt-2">
                     <div class="flex gap-2">
                         <LotAreaLogo />
@@ -159,7 +159,7 @@ const props = defineProps({
                 </div>
            
             </div> -->
-            <div class="my-2">
+            <div class="my-2 dark:text-white light:text-black">
                 <h3 class="font-bold">Seller Details:</h3>
                 <div class="flex gap-1 mt-1">
                     <div class="grow w-8">
@@ -184,7 +184,7 @@ const props = defineProps({
             </div>
             <div class="w-full">
                 <Collapsible >
-                    <div class="grid grid-cols-3">
+                    <div class="grid grid-cols-3 dark:text-white light:text-black">
                         <div class="flex gap-2">
                             <LotAreaLogo />
                             <div>
@@ -207,7 +207,7 @@ const props = defineProps({
                             </div>
                         </div>
                     </div>
-                    <div class="grid grid-cols-3 mt-4">
+                    <div class="grid grid-cols-3 mt-4 dark:text-white light:text-black">
                         <div class="flex gap-2">
                             <ToiletBathLogo />
                             <div>
@@ -223,7 +223,7 @@ const props = defineProps({
                             </div>
                         </div>
                     </div>
-                    <div class="">
+                    <div class="dark:text-white light:text-black">
                         <div class="">
                             <div class="border-b-2 pb-4 py-3">
                                 <div class="flex gap-1 font-bold">
