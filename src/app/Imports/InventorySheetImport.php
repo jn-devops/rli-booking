@@ -2,15 +2,15 @@
 
 namespace RLI\Booking\Imports;
 
+use Maatwebsite\Excel\Concerns\{ToModel, WithUpserts};
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
 use RLI\Booking\Models\{Inventory, Product};
-use Maatwebsite\Excel\Concerns\WithUpserts;
-use Maatwebsite\Excel\Concerns\ToModel;
 
 class InventorySheetImport implements ToModel, WithHeadingRow, WithUpserts
 {
     public function model(array $row): ?Product
     {
+        if (!isset($row['sku'])) return null;
         $sku = $row['sku'];
         return tap(Product::where('sku', $sku)->first(), function (Product $product) use ($row, $sku) {
             $inventory_json = $row['product_codes'];

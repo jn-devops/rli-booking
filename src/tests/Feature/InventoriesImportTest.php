@@ -13,9 +13,9 @@ beforeEach(function() {
 test('inventory import works', function () {
     expect(Inventory::count())->toBe(0);
     expect(Product::count())->toBe(0);
-    $path = "/Users/devops/Downloads/Pasinaya Homes Encoding/test_upload.xlsx";
+    $path = documents_path('test_cornerstone_inventories.xlsx');
     Excel::import(new InventoriesImport, $path);
     expect(Inventory::count() > 0)->toBeTrue();
     expect(Product::count() > 0)->toBeTrue();
-})->skip();
+});
 

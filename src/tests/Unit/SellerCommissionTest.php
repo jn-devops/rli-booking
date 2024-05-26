@@ -20,6 +20,15 @@ test('seller commission has schema attributes', function () {
     expect($seller_commission->remarks)->toBeString();
 });
 
+test('seller commission may just contain a code', function () {
+    $code = $this->faker->word();
+    $seller_commission = new SellerCommission(['code' => $code]);
+    $seller_commission->save();
+    $sc = SellerCommission::where('code', $code)->first();
+    expect($sc->is($seller_commission))->toBeTrue();
+    expect($sc->scheme)->toBeEmpty();
+});
+
 test('seller commission has unique seller code and project code', function () {
     $code = $this->faker->word();
     $project_code = $this->faker->word();

@@ -2,7 +2,8 @@
 
 namespace RLI\Booking\Seeders;
 
-use RLI\Booking\Models\Inventory;
+use RLI\Booking\Imports\Cornerstone\InventoriesImport;
+use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Database\Seeder;
 
 class InventorySeeder extends Seeder
@@ -12,6 +13,8 @@ class InventorySeeder extends Seeder
      */
     public function run(): void
     {
-        Inventory::factory(20)->create();
+        tap(documents_path('test_cornerstone_inventories.xlsx'), function ($path) {
+            if (file_exists($path)) Excel::import(new InventoriesImport, $path);
+        });
     }
 }

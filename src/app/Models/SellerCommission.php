@@ -6,6 +6,7 @@ use RLI\Booking\Traits\HasPackageFactory as HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use RLI\Booking\Interfaces\AttributableData;
 use Illuminate\Database\Eloquent\Model;
+use RLI\Booking\Traits\HasMeta;
 
 /**
  * Class Buyer
@@ -22,6 +23,7 @@ use Illuminate\Database\Eloquent\Model;
 class SellerCommission extends Model implements AttributableData
 {
     use HasFactory;
+    use HasMeta;
 
     protected $fillable = ['code', 'project_code', 'scheme', 'remarks'];
 

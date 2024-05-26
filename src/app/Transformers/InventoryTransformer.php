@@ -2,6 +2,7 @@
 
 namespace RLI\Booking\Transformers;
 
+use RLI\Booking\Classes\{UnitType, SKU};
 use League\Fractal\TransformerAbstract;
 
 class InventoryTransformer extends TransformerAbstract
@@ -30,21 +31,17 @@ class InventoryTransformer extends TransformerAbstract
         unset($resp['property_code']);
         $project_code = $resp['project_code'];
         $unit_type_name = $resp['unit_type'][0];
-        $array = explode(' ', $unit_type_name);
-        $array = preg_replace("/[^A-Za-z0-9 ]/", '', $array);
-        $model = '';
-        foreach ($array as $word) {
-            $word = match ($word) {
-                'TOWNHOUSE' => 'TH',
-                'FIREWALL' => 'FW',
-                default => $word[0],
-            };
-            $model = $model . $word;
-        }
-        $unit_type_amount = $resp['unit_type'][1];
+        $model = (new UnitType($unit_type_name))->toModel();
+        $tcp =  $resp['tcp'];
         $lot_area = $resp['lot_area'];
         $floor_area = $resp['floor_area'];
-        $resp['sku'] = 'JN-' . $project_code . '-' . $lot_area . '-' . $floor_area . '-' . $unit_type_amount . '-' . $model;
+        $resp['sku'] = (new SKU([
+            'project_code' => $project_code,
+            'total_contract_price' => $tcp,
+            'lot_area' => $lot_area,
+            'floor_area' => $floor_area,
+            'unit_type' => $model
+        ]))->toCode();
 
         return $resp;
     }
