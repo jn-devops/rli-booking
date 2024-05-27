@@ -22,10 +22,13 @@ import CustomDropdown from '@/MyComponents/CustomDropdown.vue';
 import Dropdown from '@/Components/Dropdown.vue';
 import ComisionComputation from '@/MyComponents/ComisionComputation.vue';
 import ContactReservationDetails from '@/MyComponents/ContactReservationDetails.vue';
-import { ref, watch } from 'vue';
+import { ref, watch, onMounted } from 'vue';
 
 const props = defineProps({
-    contact: Object,
+    contact: {
+    type: Object,
+    required: true
+  },
     products: Object,
     product: {
         type: Object,
@@ -167,6 +170,14 @@ const handleProjectName = (newParameter) =>{
     // console.log('new ProjectName: ', projName.value);
 
 }
+const newContact = ref(null);
+onMounted(() =>{
+    newContact.value = {
+        contact: props.contact
+    };
+})
+
+console.log('newContacts: ', newContact.value);
 </script>
 
     <!-- {{ props.contact }} -->
@@ -266,13 +277,13 @@ const handleProjectName = (newParameter) =>{
                                         <div class=" grid content-start">
                                             <div>
                                                 <p>Primary</p>
-                                                <p class="text-sm" :class="{ 'text-gray-300': !contact.addresses[0].address1 }">{{ contact.addresses[0].address1 || "No Data" }}</p>
+                                                <p v-if="contact?.addresses?.length > 0" class="text-sm" :class="{ 'text-gray-300': !contact.addresses[0]?.address1 }">{{ contact.addresses[0]?.address1 || "No Data" }}</p>
                                                 <!-- <p :class="{ 'text-gray-300': !contact.addresses[0].block }">{{ contact.addresses[0].block || "No Data" }}</p> -->
                                                 <!-- <p :class="{ 'text-gray-300': !contact.addresses[0].barangay }">{{ contact.addresses[0].barangay || "No Data" }}</p> -->
                                                 <!-- <p :class="{ 'text-gray-300': !contact.addresses[0].city }">{{ contact.addresses[0].city || "No Data" }}</p> -->
-                                                <p class="text-sm" :class="{ 'text-gray-300': !contact.addresses[0].country }">{{ contact.addresses[0].country || "No Data" }}</p>
-                                                <p class="text-sm" :class="{ 'text-gray-300': !contact.addresses[0].locality }">{{ contact.addresses[0].locality || "No Data" }}</p>
-                                                <p class="text-sm" :class="{ 'text-gray-300': !contact.addresses[0].postal_code }">{{ contact.addresses[0].postal_code || "No Data" }}</p>
+                                                <p v-if="contact?.addresses?.length > 0" class="text-sm" :class="{ 'text-gray-300': !contact.addresses[0]?.country }">{{ contact.addresses[0]?.country || "No Data" }}</p>
+                                                <p v-if="contact?.addresses?.length > 0" class="text-sm" :class="{ 'text-gray-300': !contact.addresses[0]?.locality }">{{ contact.addresses[0]?.locality || "No Data" }}</p>
+                                                <p v-if="contact?.addresses?.length > 0" class="text-sm" :class="{ 'text-gray-300': !contact.addresses[0]?.postal_code }">{{ contact.addresses[0]?.postal_code || "No Data" }}</p>
                                                 <!-- <p :class="{ 'text-gray-300': !contact.addresses[0].province }">{{ contact.addresses[0].province || "No Data" }}</p> -->
                                                 <!-- <p :class="{ 'text-gray-300': !contact.addresses[0].other }">{{ contact.addresses[0].other || "No Data" }}</p> -->
                                                 
@@ -297,15 +308,23 @@ const handleProjectName = (newParameter) =>{
                                         <div class=" grid content-start">
                                             <div>
                                                 <p>Secondary</p>
-                                                <p class="text-sm":class="{ 'text-gray-300': !contact.addresses[1].address1 }">{{ contact.addresses[1].address1 || "No Data" }}</p>
-                                                <!-- <p :class="{ 'text-gray-300': !contact.addresses[1].block }">{{ contact.addresses[1].block || "No Data" }}</p> -->
+                                                <!-- <p>1</p>
+                                                <p v-if="contact?.addresses?.length > 0" 
+                                                    class="text-sm" 
+                                                    :class="{ 'text-gray-300': !contact.addresses[1]?.address1 }">
+                                                    {{ contact.addresses[1]?.address1 || "No Data" }}
+                                                </p> -->
+                                                <p v-if="contact?.addresses?.length > 0" :class="{ 'text-gray-300': !contact.addresses[1]?.address1 }">{{ contact.addresses[1]?.address1 || "No Data" }}</p>
+                                                <p v-if="contact?.addresses?.length > 0" :class="{ 'text-gray-300': !contact.addresses[1]?.block }">{{ contact.addresses[1]?.block || "No Data" }}</p>
+                                                <p v-if="contact?.addresses?.length > 0" :class="{ 'text-gray-300': !contact.addresses[1]?.country }">{{ contact.addresses[1]?.country || "No Data" }}</p>
+                                                <p v-if="contact?.addresses?.length > 0" :class="{ 'text-gray-300': !contact.addresses[1]?.postal_code }">{{ contact.addresses[1]?.postal_code || "No Data" }}</p>
                                                 <!-- <p :class="{ 'text-gray-300': !contact.addresses[1].barangay }">{{ contact.addresses[1].barangay || "No Data" }}</p> -->
                                                 <!-- <p :class="{ 'text-gray-300': !contact.addresses[1].city }">{{ contact.addresses[1].city || "No Data" }}</p> -->
                                                 <!-- <p :class="{ 'text-gray-300': !contact.addresses[1].province }">{{ contact.addresses[1].province || "No Data" }}</p> -->
                                                 <!-- <p :class="{ 'text-gray-300': !contact.addresses[1].other }">{{ contact.addresses[1].other || "No Data" }}</p> -->
-                                                <p class="text-sm" :class="{ 'text-gray-300': !contact.addresses[1].country }">{{ contact.addresses[1].country || "No Data" }}</p>
-                                                <p class="text-sm" :class="{ 'text-gray-300': !contact.addresses[1].locality }">{{ contact.addresses[1].locality || "No Data" }}</p>
-                                                <p class="text-sm" :class="{ 'text-gray-300': !contact.addresses[1].postal_code }">{{ contact.addresses[1].postal_code || "No Data" }}</p>
+                                                <!-- <p class="text-sm" :class="{ 'text-gray-300': !contact.addresses[1].country }">{{ contact.addresses[1].country || "No Data" }}</p> -->
+                                                <!-- <p class="text-sm" :class="{ 'text-gray-300': !contact.addresses[1].locality }">{{ contact.addresses[1].locality || "No Data" }}</p> -->
+                                                <!-- <p class="text-sm" :class="{ 'text-gray-300': !contact.addresses[1].postal_code }">{{ contact.addresses[1].postal_code || "No Data" }}</p> -->
                                             </div>
                                         </div>
                                     </div>
