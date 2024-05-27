@@ -1,8 +1,8 @@
 <?php
 
 use RLI\Booking\Models\{Buyer, Contact, Order, Product, Seller, Voucher};
+use RLI\Booking\Data\{ContactData, OrderData, PayloadData, VoucherData};
 use Illuminate\Foundation\Testing\{RefreshDatabase, WithFaker};
-use RLI\Booking\Data\{OrderData, PayloadData, VoucherData};
 use RLI\Booking\Actions\GenerateVoucherAction;
 use RLI\Booking\Actions\ProcessBuyerAction;
 use RLI\Booking\Actions\UpdateOrderAction;
@@ -22,7 +22,7 @@ beforeEach(function() {
 
 dataset('voucher', [
     [
-        fn() => tap(GenerateVoucherAction::run(['sku' => Product::factory()->create()->sku]), function ($voucher) {
+        fn() => tap(GenerateVoucherAction::run(['sku' => Product::factory()->create()->sku, 'contact_uid' => Contact::factory()->create()->uid]), function ($voucher) {
             $attribs = [
                 'property_code' => $this->faker->word,
                 'dp_percent' => $this->faker->numberBetween(0,20),
@@ -109,6 +109,7 @@ test('voucher has data', function (Voucher $voucher) {
     $voucher_data = VoucherData::fromModel($voucher);
     expect($voucher_data->reference_code)->toBe($voucher->code);
     expect($voucher_data->order)->toBeInstanceOf(OrderData::class);
+    expect($voucher_data->contact)->toBeInstanceOf(ContactData::class);
 })->with('voucher');
 
 test('voucher is payload data', function (Voucher $voucher) {

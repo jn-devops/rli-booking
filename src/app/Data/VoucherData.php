@@ -13,5 +13,6 @@ class VoucherData extends Data implements CanHydrateFromModel
     public function __construct(
         public string $reference_code,
         public OrderData $order,
+        public ?ContactData $contact
     ) {}
 }
