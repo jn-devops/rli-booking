@@ -81,7 +81,7 @@ class GenerateVoucherAction
     protected function generateVoucher(Order $order, Contact $contact = null): Voucher
     {
         $metadata = [
-            'author' => 'RLI'
+            'author' => '537'
         ];
 
         $entities = array_filter(compact('order', 'contact'));
@@ -89,10 +89,14 @@ class GenerateVoucherAction
          $voucher = Vouchers::withPrefix(self::VOUCHER_PREFIX)
              ->withMask(self::VOUCHER_MASK)
              ->withOwner($order->seller)
-//             ->withEntities($order)
              ->withEntities(...$entities)
              ->withMetadata($metadata)
              ->create();
+
+         if (isset($contact)) {
+             $contact->reference_code = $voucher->code;
+             $contact->save();
+         }
 
          return Voucher::from($voucher);
     }

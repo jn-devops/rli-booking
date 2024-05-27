@@ -112,8 +112,9 @@ test('generate voucher action accepts contact uid', function (Product $product, 
         expect($order->property_code)->toBeNull();
     });
     expect($voucher->getContact()->is($contact))->toBeTrue();
+    expect($voucher->code)->toBe($contact->fresh()->reference_code);
 })->with([
-    [ fn() => Product::factory()->create(), fn() => Contact::factory()->create() ]
+    [ fn() => Product::factory()->create(), fn() => Contact::factory()->create(['reference_code' => null]) ]
 ])->with('default_seller');
 
 test('generate voucher end point requires sku attribute, default seller exists', function (Product $product, Seller $default_seller) {
