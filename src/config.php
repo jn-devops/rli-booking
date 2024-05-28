@@ -19,6 +19,9 @@ return [
                 ],
             ],
         ],
+        'url' => [
+            'campaign' => env('BOOKING_DEFAULT_CAMPAIGN_URL', 'https://kwyc-check.net/campaign-checkin/9b1827c4-f374-443d-97e7-58a28043c6ac')
+        ],
     ],
     'seeds' => [
         'sellers' => [

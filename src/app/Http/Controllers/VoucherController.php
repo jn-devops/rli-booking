@@ -2,17 +2,16 @@
 
 namespace RLI\Booking\Http\Controllers;
 
-use BaconQrCode\Renderer\Color\Rgb;
-use BaconQrCode\Renderer\Image\SvgImageBackEnd;
-use BaconQrCode\Renderer\RendererStyle\Fill;
 use BaconQrCode\Renderer\RendererStyle\RendererStyle;
 use BaconQrCode\Renderer\Image\ImagickImageBackEnd;
+use BaconQrCode\Renderer\Image\SvgImageBackEnd;
+use BaconQrCode\Renderer\RendererStyle\Fill;
 use BaconQrCode\Renderer\ImageRenderer;
-use BaconQrCode\Encoder\Encoder;
-use BaconQrCode\Writer;
-
 use App\Http\Controllers\Controller;
+use BaconQrCode\Renderer\Color\Rgb;
+use BaconQrCode\Encoder\Encoder;
 use RLI\Booking\Models\Voucher;
+use BaconQrCode\Writer;
 use Inertia\Inertia;
 
 class VoucherController extends Controller
@@ -45,7 +44,7 @@ class VoucherController extends Controller
     protected function getUrl($code): string
     {
         $query = http_build_query(compact('code'));
-        $campaign_url = 'https://kwyc-check.net/campaign-checkin/9b1827c4-f374-443d-97e7-58a28043c6ac';
+        $campaign_url = config('booking.defaults.url.campaign');
 
         return $campaign_url . '?' . $query;
     }
