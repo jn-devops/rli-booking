@@ -27,7 +27,7 @@ console.log('productList:', products);
 
 </script>
 <template>
-<div class="grid grid-cols-4 gap-2 justify-items-center dark:text-white white:text-black 2xl:w-4/5">
+<!-- <div class="grid sm:hidden md:grid-cols-2 lg:grid-cols-4 gap-2 justify-items-center dark:text-white white:text-black 2xl:w-4/5">
     <div v-for="product in products" :key="product.id"
     class="max-w-sm rounded-lg overflow-hidden shadow-lg p-2 border bg_border dark:text-white white:text-black">
         <div class="w-full h-48 rounded-lg flex items-center justify-start overflow-hidden">
@@ -37,7 +37,7 @@ console.log('productList:', products);
             class="object-fit w-full h-full rounded-lg scale-100 hover:scale-125 transition duration-300 ease-in-out hover:delay-100"/>
         </div>
         <div class="px-6 py-4 dark:text-white white:text-black">
-            <div class="font-bold text-md mb-2 dark:text-white white:text-black">{{ product.name }}</div>
+            <div class="font-bold text-md mb-2 dark:text-white white:text-black h-20 line-clamp-3">{{ product.name }}</div>
             <p class="font-bold text-gray-700 text-sm dark:text-white white:text-black">
                 ₱{{ product.price.toLocaleString() }}.00
             </p>
@@ -45,7 +45,31 @@ console.log('productList:', products);
                 Total Contract Price
             </p>
         </div>
-        <div v-if="$slots.buttons" class="flex items-center px-2 py-4">
+        <div v-if="$slots.buttons" class="block xl:flex items-center px-2 py-4">
+           <slot name="buttons" :product="product"/>
+        </div>
+      
+    </div>
+</div> -->
+<div class="grid grid-cols-2 md:grid-cols-4 gap-2 justify-items-center dark:text-white white:text-black 2xl:w-4/5">
+    <div v-for="product in products" :key="product.id"
+    class="max-w-sm rounded-lg overflow-hidden shadow-lg p-2 border bg_border dark:text-white white:text-black">
+        <div class="w-full h-28 md:h-48 rounded-lg flex items-center justify-start overflow-hidden">
+            <img 
+            @click="showingFullImage(product)"
+            :src="product.url_links.facade " 
+            class="object-contain w-full h-full rounded-lg scale-100 hover:scale-125 transition duration-300 ease-in-out hover:delay-100"/>
+        </div>
+        <div class="px-2 py-2 md:py-4 md:px-6 dark:text-white white:text-black">
+            <div class="font-bold text-xs sm:text-sm md:text-md mb-2 dark:text-white white:text-black h-auto md:h-20 line-clamp-3">{{ product.name }}</div>
+            <p class="font-bold text-gray-700 text-xs sm:text-sm md:text-sm dark:text-white white:text-black">
+                ₱{{ product.price.toLocaleString() }}.00
+            </p>
+            <p class="text-gray-700 text-xs sm:text-sm md:text-sm dark:text-white white:text-black">
+                Total Contract Price
+            </p>
+        </div>
+        <div v-if="$slots.buttons" class="block xl:flex items-center px-2 py-1 md:py-4">
            <slot name="buttons" :product="product"/>
         </div>
         <!-- <div class="px-6 pt-4 pb-2">
@@ -101,7 +125,7 @@ console.log('productList:', products);
       </div>
 </template>
 
-<style>
+<style scoped>
 .bg_btn{
     /* border-radius: 20px; */
     background: linear-gradient(268deg, #ec732e 1%, #CD045D 99.92%);
@@ -112,5 +136,12 @@ console.log('productList:', products);
 }
 .bg_text{
     color: #CD045D
+}
+
+.line-clamp3{
+    display: -webkit-box;
+    -webkit-line-clamp: 3; /* Number of lines to show */
+    -webkit-box-orient: vertical;
+    overflow: hidden;
 }
 </style>

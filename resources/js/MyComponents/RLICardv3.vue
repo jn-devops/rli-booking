@@ -13,6 +13,12 @@
                 </div>
             </div>
         </div>
+        <div class="md:hidden grid grid-rows-1">
+            <div v-if="$slots.contentLeft" class="w-full max-w-lg px-6 py-4 bg-white dark:bg-gray-800 shadow-2xl overflow-hidden sm:rounded-lg justify-items-center justify-self-center">
+                    <slot name="contentLeft"/>
+            </div>
+            
+        </div>
 
     </div>
 

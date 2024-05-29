@@ -492,208 +492,222 @@ const handleBlur = () => {
       <h1 class="dark:text-white light:text-black font-bold text-3xl my-6"> Select property to reserve</h1>
     </template>
     <template #contentLeft>
-      <div class="grid grid-cols-2 mt-4">
-        <form>
-         <!-- <div class="bg-gray-100 dark:bg-gray-600 w-full py-2 my-6 rounded-lg">
-          <div class="flex items-center gap-2">
-              <div v-if="$page.props.jetstream.managesProfilePhotos">
-                <img class="h-8 w-8 rounded-full object-cover" :src="$page.props.auth.user.profile_photo_url" :alt="$page.props.auth.user.name">
-              </div>
-              <div v-else class="">
-                 <UserIconLogo class="h-20 w-20 py-2"/>
-              </div>
-              <div class="text-sm dark:text-white light:text-black">
-                  <p class="text-lg font-bold">{{sellerName}}</p>
-                  <p>{{seller}}</p>
-                  <p class="bg_text capitalize">seller</p>
-              </div>
-          </div>
-         </div> -->
-          <div class="col-span-6 sm:col-span-4 rounded-full">
-            <InputLabel for="sku" value="Product SKU" class="font-bold text-lg" />
-            <TextInput
-                @click="dropDown()"
-                id="sku"
-                v-model="prodsku"
-                @input="filterOptions"
-                @focus="showingDropdown = true"
-                @blur="handleBlur"
-                @keydown="handleKeydown"
-                type="text"
-                class="mt-2 block w-full rounded-full border-0 py-1.5 pl-3 pr-10 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                placeholder="Enter value"
-                required
-                autofocus
-            />
-            <!-- <div class="text-gray-700 dark:text-gray-300 text-xs">
-              {{ leadGenerationLink }}
-            </div> -->
-            <InputError :message="form.errors.sku" class="mt-2" />
-            <div v-show="showingDropdown"
-            @click.outside="() => { showingDropdown = false; }"
-            class="bg-white shadow-2xl border rounded-lg py-2 px-3 absolute h-40 z-30 w-5/12 overflow-y-auto"
-            >
-                <div 
-                @mousedown="dropDownItem(skuItem)"
-                v-for="(skuItem, index) in filteredItem"
-                :class="{
-                  'px-2 py-1 cursor-pointer hover:bg-blue-600 hover:text-white z-50': true,
-                  'hover:bg-blue-600 hover:text-white': true,
-                  'bg-blue-600 text-white': index === highlightedIndex,
-                }">
-                 {{ skuItem.sku }} - {{ skuItem.name }}
+      <form>
+        <div class="grid md:grid-cols-2 sm:grid-rows-1 mt-4">
+           <!-- <div class="bg-gray-100 dark:bg-gray-600 w-full py-2 my-6 rounded-lg">
+            <div class="flex items-center gap-2">
+                <div v-if="$page.props.jetstream.managesProfilePhotos">
+                  <img class="h-8 w-8 rounded-full object-cover" :src="$page.props.auth.user.profile_photo_url" :alt="$page.props.auth.user.name">
+                </div>
+                <div v-else class="">
+                   <UserIconLogo class="h-20 w-20 py-2"/>
+                </div>
+                <div class="text-sm dark:text-white light:text-black">
+                    <p class="text-lg font-bold">{{sellerName}}</p>
+                    <p>{{seller}}</p>
+                    <p class="bg_text capitalize">seller</p>
                 </div>
             </div>
-          </div>
-          
-          <div class="col-span-6 sm:col-span-4 hidden">
-            <InputLabel for="discount" value="Percent Discount" />
-            <TextInput
-                id="name"
-                v-model="form.discount"
-                type="number"
-                min="0"
-                max="100"
-                class="mt-1 block w-full"
-            />
-            <div class="text-xs text-gray-600 dark:text-gray-400">on processing fee</div>
-            <InputError :message="form.errors.discount" class="mt-2" />
-          </div>
-    
-          <div>
-          <ActionMessage :on="form.recentlySuccessful" class="me-3">
-            Customized.
-          </ActionMessage>
-    
-          <!-- <div class="flex items-center justify-end space-x-4 px-4 py-3">
-            <template v-if="validSKU">
-              <SecondaryButton @click = "createLink()">
-                Generate
-              </SecondaryButton>
-              <SecondaryButton @click = "showProductDetails()">
-                View
-              </SecondaryButton>
-            </template>
-            <ButtonPrimary :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
-              Start
-            </ButtonPrimary>
-          </div> -->
-          <DialogModal :show="showingProductDetails" @close="closeModal">
-            <div class="w-full p-4 text-right">
-                <button 
-                class="bg-gray-50 text-gray-400 px-3 py-1 rounded-full text-2xl text-right">X</button>
+           </div> -->
+            <div class="rounded-full pt-2">
+              <InputLabel for="sku" value="Product SKU" class="font-bold text-lg" />
+              <TextInput
+                  @click="dropDown()"
+                  id="sku"
+                  v-model="prodsku"
+                  @input="filterOptions"
+                  @blur="handleBlur"
+                  @keydown="handleKeydown"
+                  type="text"
+                  class="mt-2 block w-full rounded-full border-0 py-1.5 pl-3 pr-10 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                  placeholder="Enter value"
+                  required
+                  autofocus
+              />
+              <!-- <div class="text-gray-700 dark:text-gray-300 text-xs">
+                {{ leadGenerationLink }}
+              </div> -->
+              <InputError :message="form.errors.sku" class="mt-2" />
+              <div v-show="showingDropdown"
+              @click.outside="() => { showingDropdown = false; }"
+              class="bg-white shadow-2xl border rounded-lg py-2 px-3 absolute h-40 z-30 w-3/4 md:w-5/12 overflow-y-auto"
+              >
+                  <div 
+                  @mousedown="dropDownItem(skuItem)"
+                  v-for="(skuItem, index) in filteredItem"
+                  :class="{
+                    'px-2 py-1 cursor-pointer hover:bg-blue-600 hover:text-white z-50': true,
+                    'hover:bg-blue-600 hover:text-white': true,
+                    'bg-blue-600 text-white': index === highlightedIndex,
+                  }">
+                   {{ skuItem.sku }} - {{ skuItem.name }}
+                  </div>
+              </div>
             </div>
-            <template #title>
-              <div class="flex items-start gap-3 justify-between py-4">
-              <div class="text-3xl">{{ product.name }}</div>
-              <div class="text-2xl text-gray-300 bg-gray-50 rounded-full px-2">
-                <button @click="closeModal">&times;</button>
-              </div>
-              </div>
-            </template>
-            <template #content>
-              <div class="p-4">
-                <div>
-                
-                  <img src="../../../img/ProductImg.png" alt="" class="w-full">
-                </div>
-    
-                <div class="flex gap-6 mt-4">
-                  <div class="flex gap-2">
-                      <div>
-                          <FloorAreaLogo />
-                      </div>
-                      <div class="text-1xl">
-                          <p class="text-gray-500">Floor Area</p>
-                          <p class="mt-1">{{ product.floor_area }}SQM</p>
-                      </div>
-                  </div>
-                  <div class="flex gap-2">
-                      <div>
-                          <LotAreaLogo />
-                      </div>
-                      <div class="text-1xl">
-                          <p class="text-gray-500">Lot Area</p>
-                          <p class="mt-1">{{ product.lot_area }}SQM</p>
-                      </div>
-                  </div>
-                </div>
-    
-                <div class="mt-4">
-                  <div class="font-bold text-xl">
-                      <ul>
-                        <li class="mt-2">Location: <span class="font-normal">{{ product.location }}</span></li>
-                        <li class="mt-2">Category: <span class="font-normal">{{ product.category }}</span></li>
-                        <li class="mt-2">Unit Type: <span class="font-normal">{{ product.unit_type.toLowerCase().split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ') }}</span></li>
-                        <li class="mt-2">Total Contract Prize: <span class="font-normal">₱{{ product.price.toLocaleString() }}.00</span></li>
-                        <li class="mt-2">Price: <span class="font-normal">₱{{ product.price.toLocaleString() }}.00</span></li>
-                        <li class="mt-2">Processing Fee: <span class="font-normal">₱{{ product.processing_fee.toLocaleString() }}.00</span></li>
-                      </ul>
-                  </div>
-                  <div>
-                    <ul>
-                      <li></li>
-                    </ul>
-                  </div>
-                </div>
-              </div>
-            </template>
-          </DialogModal>
-          </div>
-        </form>
-        <div class="flex gap-2 px-4">
-          <div class="grow w-1/4">
-            <InputLabel for="location" value="Location" class="font-bold text-lg" />
-                    <select class="custom-select mt-2 block w-full rounded-md border-0 py-1.5 pl-3 pr-10 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                    v-model="locationName"
-                    >
-                        <option selected disabled>Select Project Name</option>
-                        <option v-for="product in uniqueProductsLocation" :key="product.id">
-                            {{ product.location }}
-                        </option>
-                    </select>
-                </div>
+            <div class="flex gap-2 sm:px-0 md:px-4 pt-2 md:ot-0">
                 <div class="grow w-1/4">
-                    <InputLabel for="project_name" value="Project Name" class="font-bold text-lg" />
-                    <select class="mt-2 block w-full rounded-md border-0 py-1.5 pl-3 pr-10 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                    v-model="projName"
-                    >
-                        <option selected disabled>Select Project Name</option>
-                        <option v-for="product in uniqueProductsBrand" :key="product.id">
-                            {{ product.brand }}
-                        </option>
-                    </select>
+                  <InputLabel for="location" value="Location" class="font-bold text-lg" />
+                          <select class="custom-select mt-2 block w-full rounded-md border-0 py-1.5 pl-3 pr-10 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                          v-model="locationName"
+                          >
+                              <option selected disabled>Select Project Name</option>
+                              <option v-for="product in uniqueProductsLocation" :key="product.id">
+                                  {{ product.location }}
+                              </option>
+                          </select>
+                      </div>
+                      <div class="grow w-1/4">
+                          <InputLabel for="project_name" value="Project Name" class="font-bold text-lg" />
+                          <select class="mt-2 block w-full rounded-md border-0 py-1.5 pl-3 pr-10 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                          v-model="projName"
+                          >
+                              <option selected disabled>Select Project Name</option>
+                              <option v-for="product in uniqueProductsBrand" :key="product.id">
+                                  {{ product.brand }}
+                              </option>
+                          </select>
+                      </div>
+            </div>
+            
+            <!-- <div class="hidden">
+              <InputLabel for="discount" value="Percent Discount" />
+              <TextInput
+                  id="name"
+                  v-model="form.discount"
+                  type="number"
+                  min="0"
+                  max="100"
+                  class="mt-1 block w-full"
+              />
+              <div class="text-xs text-gray-600 dark:text-gray-400">on processing fee</div>
+              <InputError :message="form.errors.discount" class="mt-2" />
+            </div>
+      
+            <div>
+            <ActionMessage :on="form.recentlySuccessful" class="me-3">
+              Customized.
+            </ActionMessage> -->
+      
+            <!-- <div class="flex items-center justify-end space-x-4 px-4 py-3">
+              <template v-if="validSKU">
+                <SecondaryButton @click = "createLink()">
+                  Generate
+                </SecondaryButton>
+                <SecondaryButton @click = "showProductDetails()">
+                  View
+                </SecondaryButton>
+              </template>
+              <ButtonPrimary :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
+                Start
+              </ButtonPrimary>
+            </div> -->
+            <!-- <DialogModal :show="showingProductDetails" @close="closeModal">
+              <div class="w-full p-4 text-right">
+                  <button 
+                  class="bg-gray-50 text-gray-400 px-3 py-1 rounded-full text-2xl text-right">X</button>
+              </div>
+              <template #title>
+                <div class="flex items-start gap-3 justify-between py-4">
+                <div class="text-3xl">{{ product.name }}</div>
+                <div class="text-2xl text-gray-300 bg-gray-50 rounded-full px-2">
+                  <button @click="closeModal">&times;</button>
                 </div>
+                </div>
+              </template>
+              <template #content>
+                <div class="p-4">
+                  <div>
+                  
+                    <img src="../../../img/ProductImg.png" alt="" class="w-full">
+                  </div>
+      
+                  <div class="flex gap-6 mt-4">
+                    <div class="flex gap-2">
+                        <div>
+                            <FloorAreaLogo />
+                        </div>
+                        <div class="text-1xl">
+                            <p class="text-gray-500">Floor Area</p>
+                            <p class="mt-1">{{ product.floor_area }}SQM</p>
+                        </div>
+                    </div>
+                    <div class="flex gap-2">
+                        <div>
+                            <LotAreaLogo />
+                        </div>
+                        <div class="text-1xl">
+                            <p class="text-gray-500">Lot Area</p>
+                            <p class="mt-1">{{ product.lot_area }}SQM</p>
+                        </div>
+                    </div>
+                  </div>
+      
+                  <div class="mt-4">
+                    <div class="font-bold text-xl">
+                        <ul>
+                          <li class="mt-2">Location: <span class="font-normal">{{ product.location }}</span></li>
+                          <li class="mt-2">Category: <span class="font-normal">{{ product.category }}</span></li>
+                          <li class="mt-2">Unit Type: <span class="font-normal">{{ product.unit_type.toLowerCase().split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ') }}</span></li>
+                          <li class="mt-2">Total Contract Prize: <span class="font-normal">₱{{ product.price.toLocaleString() }}.00</span></li>
+                          <li class="mt-2">Price: <span class="font-normal">₱{{ product.price.toLocaleString() }}.00</span></li>
+                          <li class="mt-2">Processing Fee: <span class="font-normal">₱{{ product.processing_fee.toLocaleString() }}.00</span></li>
+                        </ul>
+                    </div>
+                    <div>
+                      <ul>
+                        <li></li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              </template>
+            </DialogModal> -->
+            <!-- </div> -->
+         
+          
         </div>
-      </div>
-      <div class="mt-12">
+      <div class="block mt-12">
         <div class="grid grid-rows-1">
           <ProductList 
           :project-name="projName"
           @product-selected="showInfoDetail"
           >
             <template #buttons="{product}">
-              <form @submit.prevent="generateVoucher(product)" class="flex gap-2 items-center justify-center">
+              <form @submit.prevent="generateVoucher(product)" class="block xl:flex gap-2 items-center justify-center">
                   <button 
                   :class="{ 'opacity-25': form.processing }" :disabled="form.processing" :key="product.id"
-                  class="border w-auto h-10 px-6 py-2 bg_btn text-white font-semibold rounded-full text-sm hover:bg-black hover:opacity-80">Reserve</button>  
+                  class="md:mt-2 w-full xl:mt-0 xl:w-auto border h-10 px-6 py-2 bg_btn text-white font-semibold rounded-full text-sm hover:bg-black hover:opacity-80">Reserve</button>  
                 <!-- <button @click.prevent="createLink()" class="hover:text-white hover:bg-rose-500">
                   gener
                 </button> -->
-                <button 
-                @click.prevent="showingViewDetails(product)"
-                class="border bg_border w-auto h-10 px-4 py-2 rounded-full text-sm hover:text-white hover:bg-rose-500 ">View Details</button>
-                <div 
-                
-                @click.prevent="createLink(product)"
-                class="bg-rose-200 w-8 h-8 rounded-full flex items-center cursor-pointer hover:border hover:border-rose-500 hover:bg-white">
-                  <ShareLogo class="mx-auto h-4 w-4"/>
+                <div class="flex md:hidden items-center gap-2">
+                  <button 
+                  @click.prevent="showingViewDetails(product)"
+                  class="mt-2 w-full xl:mt-0 xl:w-auto border bg_border  h-10 sm:px-4 py-2 rounded-full text-xs sm:text-sm hover:text-white hover:bg-rose-500 ">View Details</button>
+                  <div 
+                  
+                  @click.prevent="createLink(product)"
+                  class="mt-2 mx-auto xl:mt-0 xl:mx-0 xl: w-8 bg-rose-200 h-8 rounded-full flex items-center cursor-pointer hover:border hover:border-rose-500 hover:bg-white">
+                    <ShareLogo class="mx-auto h-4 w-4"/>
+                  </div>
+                </div>
+                <div class="hidden md:flex items-center gap-2">
+                  <button 
+                  @click.prevent="showingViewDetails(product)"
+                  class="mt-2 w-full xl:mt-0 xl:w-auto border bg_border  h-10 px-4 py-2 rounded-full text-sm hover:text-white hover:bg-rose-500 ">View Details</button>
+                  <div 
+                  
+                  @click.prevent="createLink(product)"
+                  class="mt-2 mx-auto xl:mt-0 xl:mx-0 xl: w-8  bg-rose-200 h-8 rounded-full flex items-center cursor-pointer hover:border hover:border-rose-500 hover:bg-white">
+                    <ShareLogo class="mx-auto h-4 w-4"/>
+                  </div>
                 </div>
               </form>
             </template>
           </ProductList>
         </div>
       </div>
+    </form>
     </template>
     
   </RLICardv3>
@@ -720,7 +734,7 @@ const handleBlur = () => {
                   @click.prevent="closeModalInfo()"
                   class="bg-gray-50 text-gray-400 px-3 py-1 rounded-full text-xl text-right">&times;</button>
                 </div>
-                <div class="grid grid-cols-2 pt-6 pb-6 gap-2 items-center px-6">
+                <div class="hidden md:grid grid-cols-2 pt-6 pb-6 gap-2 items-center px-6">
                   <div class="px-8">
                     <h1 class="text-3xl font-bold mb-2">{{ selectedProduct.name }}</h1>
                     <h1 class="bg_text text-2xl font-semibold">Generated Link</h1>
@@ -744,6 +758,32 @@ const handleBlur = () => {
                   </div>
                   <div class="px-2">
                     <img src="../../../img/InfoImage.png" alt="infoImage" srcset="">
+                  </div>
+                </div>
+                <div class="md:hidden grid grid-rows-1">
+                  <div class="w-60 h-60 mx-auto">
+                    <img src="../../../img/InfoImage.png" alt="infoImage" srcset="">
+                  </div>
+                  <div class="px-8">
+                    <h1 class="text-2xl md:text-3xl font-bold mb-2">{{ selectedProduct.name }}</h1>
+                    <h1 class="bg_text text-xl md:text-2xl font-semibold">Generated Link</h1>
+                    <div class="text-md bg-gray-200 py-2 px-4 rounded-full flex justify-between mt-4 items-center">
+                      <div>
+                        <span class="text-sky-600 text-sm md:text-md">{{ leadGenerationLink }}</span>
+                      </div>
+                      <CopyButton @click.prevent="handleCopyClick">
+                        <template #icon>
+                          <CopyLogo class="w-4 h-4 mx-auto"/>
+                        </template>
+                      </CopyButton>
+                      <!-- <button class="bg-white rounded-full w-8 h-8">
+                      </button> -->
+                    </div>
+                    <div class="mt-4 text-sm md:text-md py-4">
+                      <p>
+                      We've generated a link for you. This link can be shared with anyone or used to create advertising materials for selling the property.
+                    </p>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -773,21 +813,21 @@ const handleBlur = () => {
                   @click.self="closeModalViewDetail()"
                   class="bg-gray-50 text-gray-400 px-3 py-1 rounded-full text-xl text-right">&times;</button>
                 </div>
-                <div class="grid grid-cols-2 pt-6 pb-6 gap-4 px-6">
+                <div class="grid sm:grid-rows-1 md:grid-cols-2 pt-6 pb-6 gap-4 px-6">
                   <div class="px-2">
                     <img :src="viewDetailed.url_links.facade" class="object-fit w-full h-full" alt="Detail Image" srcset="">
                   </div>
                   <div class="">
-                    <h1 class="text-3xl font-bold mb-2">{{ viewDetailed.name }}</h1>
-                    <div class="hidden lg:grid lg:grid-cols-5 mt-4">
-                        <div class="flex gap-2 basis-0 grow flex-shrink-0">
+                    <h1 class="text-2xl md:text-3xl font-bold mb-2">{{ viewDetailed.name }}</h1>
+                    <div class="hidden md:grid lg:grid-cols-5 mt-4">
+                        <div class="flex gap-2 basis-0 grow flex-shrink-0 text-sm md:text-md">
                             <LotAreaLogo />
                             <div>
                                 <p class="text-gray-400">Lot Area</p>
                                 <p>{{ viewDetailed.lot_area }}</p>
                             </div>
                         </div>
-                        <div class="flex gap-2 basis-0 grow flex-shrink-0">
+                        <div class="flex gap-2 basis-0 grow flex-shrink-0 text-sm md:text-md">
                             <FloorAreaLogo />
                             <div>
                                 <p class="text-gray-400">Floor Area</p>
@@ -801,14 +841,14 @@ const handleBlur = () => {
                                 <p>{{ viewDetailed.unit_type.toLowerCase().split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ') }}</p>
                             </div>
                         </div>
-                        <div class="flex gap-2 basis-0 grow flex-shrink-0">
+                        <div class="flex gap-2 basis-0 grow flex-shrink-0 text-sm md:text-md">
                             <ToiletBathLogo />
                             <div>
                                 <p class="text-gray-400">Bedrooms</p>
                                 <p>1</p>
                             </div>
                         </div>
-                        <div class="flex gap-2 basis-0 grow flex-shrink-0">
+                        <div class="flex gap-2 basis-0 grow flex-shrink-0 text-sm md:text-md">
                             <CarparkLogo />
                             <div>
                                 <p class="text-gray-400">Carpark</p>
@@ -816,27 +856,68 @@ const handleBlur = () => {
                             </div>
                         </div>
                     </div>
-                    <div class="mt-4 text-lg">
+                    <div class="block md:hidden">
+                      <div class="grid grid-cols-3 dark:text-white light:text-black">
+                        <div class="flex gap-2 text-sm md:text-md">
+                            <LotAreaLogo />
+                            <div>
+                                <p class="text-gray-400">Lot Area</p>
+                                <p>{{ viewDetailed.lot_area }}</p>
+                            </div>
+                        </div>
+                        <div class="flex gap-2 text-sm md:text-md">
+                            <FloorAreaLogo />
+                            <div>
+                                <p class="text-gray-400">Floor Area</p>
+                                <p>{{ viewDetailed.floor_area }}SQM</p>
+                            </div>
+                        </div>
+                        <div class="flex gap-2 text-sm md:text-md">
+                            <UnitTypeLogo />
+                            <div>
+                                <p class="text-gray-400">Unit Type</p>
+                                <p>{{ viewDetailed.unit_type.toLowerCase().split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ') }}</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-3 mt-4 dark:text-white light:text-black">
+                        <div class="flex gap-2 text-sm md:text-md">
+                            <ToiletBathLogo />
+                            <div>
+                                <p class="text-gray-400">Bedrooms</p>
+                                <p>1</p>
+                            </div>
+                        </div>
+                        <div class="flex gap-2 text-sm md:text-md">
+                            <CarparkLogo />
+                            <div>
+                                <p class="text-gray-400">Carparks</p>
+                                <p>1</p>
+                            </div>
+                        </div>
+                    </div>
+                    </div>
+                    <div class="block md:hidden mt-4 text-lg">
                       <div class="pb-4 py-3">
                           <div class="flex gap-1">
-                                  <p class="font-bold">Product SKU:</p>
-                                  <p class="font-semibold">{{ viewDetailed.sku }}</p>
+                                  <p class="font-bold text-sm md:text-md">Product SKU:</p>
+                                  <p class="font-semibold text-sm md:text-md">{{ viewDetailed.sku }}</p>
                           </div>
                           <div class="flex gap-1">
-                                  <p class="font-bold">Location:</p>
-                                  <p>{{ viewDetailed.location }}</p>
+                                  <p class="font-bold text-sm md:text-md">Location:</p>
+                                  <p class="text-sm md:text-md">{{ viewDetailed.location }}</p>
                           </div>
                           <div class="flex gap-1">
-                                  <p class="font-bold">Market Segment / Project Name:</p>
-                                  <p>{{ viewDetailed.category}}</p>
+                                  <p class="font-bold text-sm md:text-md">Market Segment / Project Name:</p>
+                                  <p class="text-sm md:text-md">{{ viewDetailed.category}}</p>
                           </div>
                           <div class="flex gap-1">
-                                  <p class="font-bold">Total Contract Price:</p>
-                                  <p>₱{{ viewDetailed.price.toLocaleString() }}.00</p>
+                                  <p class="font-bold text-sm md:text-md">Total Contract Price:</p>
+                                  <p class="text-sm md:text-md">₱{{ viewDetailed.price.toLocaleString() }}.00</p>
                           </div>
                           <div class="flex gap-1">
-                                  <p class="font-bold">Processing Fee:</p>
-                                  <p>₱{{ viewDetailed.processing_fee.toLocaleString() }}.00</p>
+                                  <p class="font-bold text-sm md:text-md">Processing Fee:</p>
+                                  <p class="text-sm md:text-md">₱{{ viewDetailed.processing_fee.toLocaleString() }}.00</p>
                           </div>
                       </div>
                     </div>

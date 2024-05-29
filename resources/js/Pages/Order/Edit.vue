@@ -211,7 +211,7 @@ console.log("product", props.order);
                     <div class="dark:text-white light:text-black">
                         <div class="flex gap-1 border-b-2 pb-4">
                             <p class="text-sm font-bold">Total Contract Price:</p>
-                            <p class="text-sm font-bold">₱2,900,000</p>
+                            <p class="text-sm font-bold">₱{{ props.order.product.price.toLocaleString() }}</p>
                         </div>
                         <div class="mt-4">
                             <p class="font-bold">Processing Fee:</p>
