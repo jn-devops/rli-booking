@@ -54,11 +54,11 @@ console.log('productList:', products);
 <div class="grid grid-cols-2 md:grid-cols-4 gap-2 justify-items-center dark:text-white white:text-black 2xl:w-4/5">
     <div v-for="product in products" :key="product.id"
     class="max-w-sm rounded-lg overflow-hidden shadow-lg p-2 border bg_border dark:text-white white:text-black">
-        <div class="w-full h-28 md:h-48 rounded-lg flex items-center justify-start overflow-hidden">
+        <div class="w-full h-28 lg:h-48  rounded-lg flex items-center justify-start overflow-hidden">
             <img 
             @click="showingFullImage(product)"
             :src="product.url_links.facade " 
-            class="object-contain w-full h-full rounded-lg scale-100 hover:scale-125 transition duration-300 ease-in-out hover:delay-100"/>
+            class="object-contain lg:object-cover w-full h-full rounded-lg scale-100 hover:scale-125 transition duration-300 ease-in-out hover:delay-100"/>
         </div>
         <div class="px-2 py-2 md:py-4 md:px-6 dark:text-white white:text-black">
             <div class="font-bold text-xs sm:text-sm md:text-md mb-2 dark:text-white white:text-black h-auto md:h-20 line-clamp-3">{{ product.name }}</div>

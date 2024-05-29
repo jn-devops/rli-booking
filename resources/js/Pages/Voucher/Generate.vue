@@ -683,7 +683,7 @@ const handleBlur = () => {
                 <div class="flex md:hidden items-center gap-2">
                   <button 
                   @click.prevent="showingViewDetails(product)"
-                  class="mt-2 w-full xl:mt-0 xl:w-auto border bg_border  h-10 sm:px-4 py-2 rounded-full text-xs sm:text-sm hover:text-white hover:bg-rose-500 ">View Details</button>
+                  class="mt-2 w-full xl:mt-0 xl:w-auto border bg_border h-10 sm:px-4 py-2 rounded-full text-xs sm:text-sm hover:text-white hover:bg-rose-500 ">View Details</button>
                   <div 
                   
                   @click.prevent="createLink(product)"
@@ -694,7 +694,7 @@ const handleBlur = () => {
                 <div class="hidden md:flex items-center gap-2">
                   <button 
                   @click.prevent="showingViewDetails(product)"
-                  class="mt-2 w-full xl:mt-0 xl:w-auto border bg_border  h-10 px-4 py-2 rounded-full text-sm hover:text-white hover:bg-rose-500 ">View Details</button>
+                  class="mt-2 w-full xl:mt-0 xl:w-auto border bg_border h-10 px-3 py-2 rounded-full text-sm hover:text-white hover:bg-rose-500 ">View Details</button>
                   <div 
                   
                   @click.prevent="createLink(product)"
