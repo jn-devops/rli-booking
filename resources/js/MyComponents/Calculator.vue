@@ -478,12 +478,12 @@ const submit = () => {
         :class="{'hover:text-white hover:bg-rose-600' : (form.property_code && selectedTerm && selectedDownpayment && selectedMonths),
         'block' : (props.property_code)
         }"
-        class="bg-white border border-rose-600 px-6 py-2 rounded-lg text-rose-600 capitalize">View Amortization</button>
+        class="bg-white border border-rose-600 px-6 py-2 ms-4 rounded-lg text-rose-600 capitalize text-sm md:text-md">View Amortization</button>
         <button v-else-if="selectedTerm === 'Spotcash'" 
         :disabled="!(form.property_code && selectedTerm)"
         @click="openViewAmortization"
         :class="{'hover:text-white hover:bg-rose-600' : (form.property_code && selectedTerm)}"
-        class="bg-white border border-rose-600 px-6 py-2 rounded-lg text-rose-600 capitalize">View Amortization</button>
+        class="bg-white border border-rose-600 px-6 py-2 ms-4 rounded-lg text-rose-600 capitalize text-sm md:text-md">View Amortization</button>
     <slot name="buttons" />
 
 </div>
@@ -523,11 +523,11 @@ const submit = () => {
                                     <div class="flex flex-wrap">
                                         <p class="font-bold">Location: </p>
                                         <!-- <p class="ml-2">details.location</p> -->
-                                        <p class="ml-2">Brgy. Balibago, Sta. Rosa City, Laguna</p>
+                                        <p class="ml-2">{{ props.order.product.location }}</p>
                                     </div>
                                     <div class="flex flex-wrap">
                                         <p class="font-bold">Unit Type/House Model: </p>
-                                        <p class="ml-2">Studio</p>
+                                        <p class="ml-2">{{ props.order.product.unit_type.toLowerCase().split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ') }}</p>
                                     </div>
                                 </div>
                             </div>
@@ -546,7 +546,7 @@ const submit = () => {
                                     <div class="flex flex-wrap">
                                         <p class="font-bold">Lot Area: </p>
                                         <!-- <p class="ml-2">details.lot_area</p> -->
-                                        <p class="ml-2">23SQM</p>
+                                        <p class="ml-2">{{props.order.product.lot_area}}SQM</p>
                                     </div>
                                 </div>
                             </div>

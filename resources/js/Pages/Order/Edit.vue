@@ -278,12 +278,12 @@ console.log("product", props.order);
                     <InputError class="mt-2" :message="form.errors.property_code" />
                 </div> -->
                 <div>
-                    <div class="text-3xl font-bold dark:text-white light:text-black">
+                    <div class="text-2xl md:text-3xl font-bold dark:text-white light:text-black">
                         <h1>{{ props.order.product.name }}</h1>
                     </div>
                     <div class="flex gap-1 mt-3 items-center">
-                        <p class="font-bold text-lg mb-0 dark:text-white light:text-black">Reservation Code:</p>
-                        <p class="text-sky-600 text-2xl">{{ props.voucherCode }}</p>
+                        <p class="font-bold text-md md:text-lg mb-0 dark:text-white light:text-black">Reservation Code:</p>
+                        <p class="text-sky-600 text-lg md:text-2xl">{{ props.voucherCode }}</p>
                     </div>
                 </div>
                 <div class="mt-4">

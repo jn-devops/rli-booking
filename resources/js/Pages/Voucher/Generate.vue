@@ -489,11 +489,11 @@ const handleBlur = () => {
   <RLICardv3 class="items-start relative">
     <!-- Content Left -->
     <template #title>
-      <h1 class="dark:text-white light:text-black font-bold text-3xl my-6"> Select property to reserve</h1>
+      <h1 class="dark:text-white light:text-black font-bold text-2xl md:text-3xl my-6"> Select property to reserve</h1>
     </template>
     <template #contentLeft>
       <form>
-        <div class="grid md:grid-cols-2 sm:grid-rows-1 mt-4">
+        <div class="grid md:grid-cols-2 sm:grid-rows-1 mt-4 px-2 md:px-0">
            <!-- <div class="bg-gray-100 dark:bg-gray-600 w-full py-2 my-6 rounded-lg">
             <div class="flex items-center gap-2">
                 <div v-if="$page.props.jetstream.managesProfilePhotos">
@@ -509,7 +509,7 @@ const handleBlur = () => {
                 </div>
             </div>
            </div> -->
-            <div class="rounded-full pt-2">
+            <div class="rounded-full pt-2 md:pt-0">
               <InputLabel for="sku" value="Product SKU" class="font-bold text-lg" />
               <TextInput
                   @click="dropDown()"
@@ -530,7 +530,7 @@ const handleBlur = () => {
               <InputError :message="form.errors.sku" class="mt-2" />
               <div v-show="showingDropdown"
               @click.outside="() => { showingDropdown = false; }"
-              class="bg-white shadow-2xl border rounded-lg py-2 px-3 absolute h-40 z-30 w-3/4 md:w-5/12 overflow-y-auto"
+              class="bg-white shadow-2xl border rounded-lg py-2 px-3 absolute h-40 z-30 w-4/5 md:w-5/12 overflow-y-auto"
               >
                   <div 
                   @mousedown="dropDownItem(skuItem)"
@@ -544,7 +544,7 @@ const handleBlur = () => {
                   </div>
               </div>
             </div>
-            <div class="flex gap-2 sm:px-0 md:px-4 pt-2 md:ot-0">
+            <div class="flex gap-2 sm:px-0 md:px-4 pt-2 md:pt-0">
                 <div class="grow w-1/4">
                   <InputLabel for="location" value="Location" class="font-bold text-lg" />
                           <select class="custom-select mt-2 block w-full rounded-md border-0 py-1.5 pl-3 pr-10 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6"
@@ -676,7 +676,7 @@ const handleBlur = () => {
               <form @submit.prevent="generateVoucher(product)" class="block xl:flex gap-2 items-center justify-center">
                   <button 
                   :class="{ 'opacity-25': form.processing }" :disabled="form.processing" :key="product.id"
-                  class="md:mt-2 w-full xl:mt-0 xl:w-auto border h-10 px-6 py-2 bg_btn text-white font-semibold rounded-full text-sm hover:bg-black hover:opacity-80">Reserve</button>  
+                  class="md:mt-2 w-full xl:mt-0 xl:w-auto border h-10 px-6 py-2 bg_btn text-white font-semibold rounded-full text-xs md:text-sm hover:bg-black hover:opacity-80">Reserve</button>  
                 <!-- <button @click.prevent="createLink()" class="hover:text-white hover:bg-rose-500">
                   gener
                 </button> -->
@@ -694,11 +694,11 @@ const handleBlur = () => {
                 <div class="hidden md:flex items-center gap-2">
                   <button 
                   @click.prevent="showingViewDetails(product)"
-                  class="mt-2 w-full xl:mt-0 xl:w-auto border bg_border h-10 px-3 py-2 rounded-full text-sm hover:text-white hover:bg-rose-500 ">View Details</button>
+                  class="mt-2 w-full xl:mt-0 xl:w-auto border bg_border h-10 px-3 py-2 rounded-full text-xs md:text-sm hover:text-white hover:bg-rose-500 ">View Details</button>
                   <div 
                   
                   @click.prevent="createLink(product)"
-                  class="mt-2 mx-auto xl:mt-0 xl:mx-0 xl: w-8  bg-rose-200 h-8 rounded-full flex items-center cursor-pointer hover:border hover:border-rose-500 hover:bg-white">
+                  class="mt-2 mx-auto xl:mt-0 xl:mx-0 xl:w-8  bg-rose-200 h-8 rounded-full flex items-center cursor-pointer hover:border hover:border-rose-500 hover:bg-white">
                     <ShareLogo class="mx-auto h-4 w-4"/>
                   </div>
                 </div>
@@ -897,27 +897,27 @@ const handleBlur = () => {
                         </div>
                     </div>
                     </div>
-                    <div class="block md:hidden mt-4 text-lg">
+                    <div class=" mt-4 text-lg">
                       <div class="pb-4 py-3">
                           <div class="flex gap-1">
-                                  <p class="font-bold text-sm md:text-md">Product SKU:</p>
-                                  <p class="font-semibold text-sm md:text-md">{{ viewDetailed.sku }}</p>
+                                  <p class="font-bold text-sm md:text-lg">Product SKU:</p>
+                                  <p class="font-semibold text-sm md:text-lg">{{ viewDetailed.sku }}</p>
                           </div>
                           <div class="flex gap-1">
-                                  <p class="font-bold text-sm md:text-md">Location:</p>
-                                  <p class="text-sm md:text-md">{{ viewDetailed.location }}</p>
+                                  <p class="font-bold text-sm md:text-lg">Location:</p>
+                                  <p class="text-sm md:text-lg">{{ viewDetailed.location }}</p>
                           </div>
                           <div class="flex gap-1">
-                                  <p class="font-bold text-sm md:text-md">Market Segment / Project Name:</p>
-                                  <p class="text-sm md:text-md">{{ viewDetailed.category}}</p>
+                                  <p class="font-bold text-sm md:text-lg">Market Segment / Project Name:</p>
+                                  <p class="text-sm md:text-lg">{{ viewDetailed.category}}</p>
                           </div>
                           <div class="flex gap-1">
-                                  <p class="font-bold text-sm md:text-md">Total Contract Price:</p>
-                                  <p class="text-sm md:text-md">₱{{ viewDetailed.price.toLocaleString() }}.00</p>
+                                  <p class="font-bold text-sm md:text-lg">Total Contract Price:</p>
+                                  <p class="text-sm md:text-lg">₱{{ viewDetailed.price.toLocaleString() }}.00</p>
                           </div>
                           <div class="flex gap-1">
-                                  <p class="font-bold text-sm md:text-md">Processing Fee:</p>
-                                  <p class="text-sm md:text-md">₱{{ viewDetailed.processing_fee.toLocaleString() }}.00</p>
+                                  <p class="font-bold text-sm md:text-lg">Processing Fee:</p>
+                                  <p class="text-sm md:text-lg">₱{{ viewDetailed.processing_fee.toLocaleString() }}.00</p>
                           </div>
                       </div>
                     </div>

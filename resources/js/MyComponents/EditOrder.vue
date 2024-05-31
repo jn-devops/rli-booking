@@ -13,7 +13,7 @@ const props = defineProps({
     order: Object
 })
 
-
+console.log('facde:', props.order.product.url_links.facade);
 </script>
 
 <template>
@@ -21,28 +21,28 @@ const props = defineProps({
         <!-- Tablet/Desktop -->
         <div class="hidden md:block">
             <div class="relative">
-                <img src="../../img/Rectangle_39.png" class="w-full">
+                <img :src="props.order.product.url_links.facade" class="w-full">
             </div>
             <div class="hidden lg:grid lg:grid-cols-5 mt-2 dark:text-white light:text-black">
                 <div class="flex gap-2">
                     <LotAreaLogo />
                     <div>
                         <p class="text-gray-400">Lot Area</p>
-                        <p>B</p>
+                        <p>{{ props.order.product.lot_area }}</p>
                     </div>
                 </div>
                 <div class="flex gap-2">
                     <FloorAreaLogo />
                     <div>
                         <p class="text-gray-400">Floor Area</p>
-                        <p>25SQM</p>
+                        <p>{{ props.order.product.floor_area}}SQM</p>
                     </div>
                 </div>
                 <div class="flex gap-2">
                     <UnitTypeLogo />
                     <div>
                         <p class="text-gray-400">Unit Type</p>
-                        <p>1</p>
+                        <p>{{ props.order.product.unit_type.toLowerCase().split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ') }}</p>
                     </div>
                 </div>
                 <div class="flex gap-2">
@@ -66,21 +66,21 @@ const props = defineProps({
                         <LotAreaLogo />
                         <div>
                             <p class="text-gray-400">Lot Area</p>
-                            <p>B</p>
+                            <p>{{ props.order.product.lot_area }}</p>
                         </div>
                     </div>
                     <div class="flex gap-2">
                         <FloorAreaLogo />
                         <div>
                             <p class="text-gray-400">Floor Area</p>
-                            <p>25SQM</p>
+                            <p>{{ props.order.product.floor_area}}SQM</p>
                         </div>
                     </div>
                     <div class="flex gap-2">
                         <UnitTypeLogo />
                         <div>
                             <p class="text-gray-400">Unit Type</p>
-                            <p>1</p>
+                            <p>{{ props.order.product.unit_type.toLowerCase().split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ') }}</p>
                         </div>
                     </div>
                 </div>
@@ -176,7 +176,8 @@ const props = defineProps({
         </div>
         <!-- Mobile -->
         <div class="block md:hidden">
-            <img src="../../img/Rectangle_39.png">
+            <!-- <img src="../../img/Rectangle_39.png"> -->
+            <img :src="props.order.product.url_links.facade">
             <div class="my-4 relative">
                 <div class="flex rounded-md shadow-sm">
                     <slot />
@@ -189,21 +190,21 @@ const props = defineProps({
                             <LotAreaLogo />
                             <div>
                                 <p class="text-gray-400">Lot Area</p>
-                                <p>B</p>
+                                <p>{{ props.order.product.lot_area }}</p>
                             </div>
                         </div>
                         <div class="flex gap-2">
                             <FloorAreaLogo />
                             <div>
                                 <p class="text-gray-400">Floor Area</p>
-                                <p>25SQM</p>
+                                <p>{{ props.order.product.floor_area}}SQM</p>
                             </div>
                         </div>
                         <div class="flex gap-2">
                             <UnitTypeLogo />
                             <div>
                                 <p class="text-gray-400">Unit Type</p>
-                                <p>1</p>
+                                <p>{{ props.order.product.unit_type.toLowerCase().split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ') }}</p>
                             </div>
                         </div>
                     </div>
