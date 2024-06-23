@@ -66,3 +66,4 @@ Route::get('seller/{seller}', function (\RLI\Booking\Models\Seller $seller) {
         'seller' => $seller->toData()
     ]);
 });
+Route::get('pagibig-seminar/{sku?}', \RLI\Booking\Http\Controllers\VideoController::class)->name('pagibig-seminar');
